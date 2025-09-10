@@ -1,0 +1,17 @@
+services:
+  geneweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2316:2316" # gwd
+      - "2317:2317" # gwsetup
+    volumes:
+      # On persiste UNIQUEMENT les bases (données)
+      - gw_bases:/app/geneweb/distribution/bases
+    restart: unless-stopped
+    # Pas besoin d'une IP statique/bridge custom pour du local
+    # network_mode: bridge
+
+volumes:
+  gw_bases: {}

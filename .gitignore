@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Playwright outputs
+playwright-report/
+test-results/
+blob-report/
+trace.zip
+trace/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
