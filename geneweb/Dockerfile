@@ -16,11 +16,12 @@ RUN eval "$(opam env)" \
 && ocaml ./configure.ml \
 && make distrib
 RUN echo "172.20.0.1" > /app/geneweb/distribution/gw/only.txt
+ENV DB=/app/geneweb/distribution/bases
+RUN chown -R root:root /app/geneweb/distribution
 
 EXPOSE 2316 2317
 ENTRYPOINT ["sh", "-c", " \
-cd /app/geneweb/distribution/gw/ ; \
-mkdir -p /app/geneweb/distribution/bases && \
-./gwd -bd /app/geneweb/distribution/bases -log /dev/stdout & \
-./gwsetup -bd /app/geneweb/distribution/bases -lang fr -only only.txt; \
+cd /app/geneweb/distribution && \
+./gwd.sh & \
+./gwsetup.sh -lang fr; \
 sleep infinity"]
