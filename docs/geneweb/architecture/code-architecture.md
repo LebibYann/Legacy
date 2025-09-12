@@ -89,4 +89,4 @@ Then after `Arg.parse`, logic reads these refs. This legacy pattern hampers reus
 4. Introduce structured logging (levels + context).
 5. Add CI tests for import/export roundtrip idempotence.
 
-See also: `algorithms/` and `formats/` documents.
+See also: `architecture/storage-format.md`, `algorithms/consanguinity.md`, `formats/nldb.md`.

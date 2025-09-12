@@ -82,4 +82,4 @@ This document gives a high-level map of the legacy GeneWeb code base to orient n
 - Abstract persistence behind a stable interface enabling alternate storage backends (DB, JSON, etc.).
 - Add property tests for date parsing, key uniqueness, selection closure.
 
-See also: `architecture/storage-format.md`, `architecture/data-model.md`.
+See also: `architecture/storage-format.md`, `formats/nldb.md`, `algorithms/consanguinity.md`.

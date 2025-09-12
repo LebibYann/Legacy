@@ -6,14 +6,18 @@ This hub indexes the added documentation for the legacy GeneWeb code in this rep
 
 | Goal | Start Here | Then Look At |
 |------|------------|--------------|
-| Understand overall system | `architecture/overview.md` | `architecture/code-architecture.md` |
-| Learn binary tools | `binaries/README.md` | Individual binary docs (same folder) |
-| Explore data & storage | `formats/overview.md` | (Future) detailed format specs |
-| See core algorithms | `algorithms/overview.md` | Binary docs for specifics |
-| Run maintenance after import | `binaries/ged2gwb.md` | `binaries/gwfixbase.md`, `binaries/consang.md`, `binaries/cache_files.md`, `binaries/update_nldb.md` |
-| Export / migrate data | `binaries/gwc.md` | `binaries/gwb2ged.md`, `binaries/gwu.md` |
-| Investigate differences | `binaries/gwdiff.md` | `algorithms/overview.md` (diff section) |
-| Prune / clean database | `binaries/connex.md` | `binaries/gwgc.md`, `binaries/gwfixbase.md` |
+| Understand overall system | [architecture/overview.md](architecture/overview.md) | [architecture/code-architecture.md](architecture/code-architecture.md) |
+| Learn binary tools | [binaries/README.md](binaries/README.md) | Individual binary docs (same folder) |
+| Explore data & storage | [formats/overview.md](formats/overview.md) | (Future) detailed format specs |
+| See core algorithms | [algorithms/overview.md](algorithms/overview.md) | Binary docs for specifics |
+| Run maintenance after import | [binaries/ged2gwb.md](binaries/ged2gwb.md) | [binaries/gwfixbase.md](binaries/gwfixbase.md), [binaries/consang.md](binaries/consang.md), [binaries/cache_files.md](binaries/cache_files.md), [binaries/update_nldb.md](binaries/update_nldb.md) |
+| Export / migrate data | [binaries/gwc.md](binaries/gwc.md) | [binaries/gwb2ged.md](binaries/gwb2ged.md), [binaries/gwu.md](binaries/gwu.md) |
+| Investigate differences | [binaries/gwdiff.md](binaries/gwdiff.md) | [algorithms/overview.md](algorithms/overview.md) (diff section) |
+| Prune / clean database | [binaries/connex.md](binaries/connex.md) | [binaries/gwgc.md](binaries/gwgc.md), [binaries/gwfixbase.md](binaries/gwfixbase.md) |
+| Deep storage layout | [architecture/storage-format.md](architecture/storage-format.md) | [formats/overview.md](formats/overview.md) |
+| Consanguinity math | [algorithms/consanguinity.md](algorithms/consanguinity.md) | [binaries/consang.md](binaries/consang.md) |
+| NLDB schema & links | [formats/nldb.md](formats/nldb.md) | [binaries/update_nldb.md](binaries/update_nldb.md) |
+| Security hardening | [operations/security.md](operations/security.md) | [binaries/gwd.md](binaries/gwd.md) |
 
 ## Directory Map
 
@@ -46,13 +50,6 @@ This hub indexes the added documentation for the legacy GeneWeb code in this rep
 7. Analyze (optional): connex / gwdiff / gwgc
 ```
 
-## Future Expansion Placeholders
-
-Planned (not yet added) documents you can contribute:
-- `architecture/storage-format.md` (deep binary file layout)
-- `algorithms/consanguinity.md` (mathematical detail)
-- `formats/nldb.md` (schema & invalidation)
-- `operations/security.md` (hardening guide)
 
 ## Contributing Updates
 
