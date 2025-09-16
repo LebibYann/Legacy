@@ -3,7 +3,9 @@ import { test, expect } from '@playwright/test';
 const url = 'http://localhost:2316';
 const urlBase = 'http://localhost:2316/en';
 
-test('hp1 - Home Page Elements Visibility', async ({ page }) => {
+// command npx playwright codegen http://localhost:2316/en 
+
+test('hp1 - Home Page: Home Page Elements Visibility', async ({ page }) => {
   await page.goto(urlBase);
   await expect(page.getByText('Consult', { exact: true })).toBeVisible();
   await expect(page.getByText('Create Family Tree')).toBeVisible();
@@ -12,7 +14,7 @@ test('hp1 - Home Page Elements Visibility', async ({ page }) => {
   await expect(page.getByText('Configure')).toBeVisible();
 });
 
-test('hp2 - Language Selection Functionality', async ({ page }) => {
+test('hp2 - Home Page: Language Selection Functionality', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'Corsu' }).click();
   await expect(page).toHaveURL(url + '/co');
@@ -32,14 +34,14 @@ test('hp2 - Language Selection Functionality', async ({ page }) => {
   await expect(page).toHaveURL(url + '/sv');
 });
 
-test('hp3 - GitHub Link Functionality', async ({ page }) => {
+test('hp3 - Home Page: GitHub Link Functionality', async ({ page }) => {
   await page.goto('http://localhost:2316/en');
   await page.getByRole('link').filter({ hasText: /^$/ }).click();
   await expect(page).toHaveURL('https://github.com/geneweb/geneweb/');
 });
 
 // not working
-// test('hp4 - Documentation Link Functionality', async ({ page }) => {
+// test('hp4 - Home Page: Documentation Link Functionality', async ({ page }) => {
 //   await page.goto('http://localhost:2316/en');
 //   await page.getByRole('link', { name: 'doc' }).click();
 //   await expect(page).toHaveURL('http://geneweb.tuxfamily.org/wiki/manual');
