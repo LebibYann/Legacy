@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "playwright test",
+    "test:ordered": "ts-node run-in-order.ts",
     "test:ui": "playwright test --ui",
     "codegen": "playwright codegen",
     "install:browsers": "playwright install"

@@ -5,7 +5,7 @@ const urlBase = 'http://localhost:2316/en';
 
 // command npx playwright codegen http://localhost:2316/en 
 
-test('hp1 - Home Page: Home Page Elements Visibility', async ({ page }) => {
+test('f16-hp1 - Home Page: Home Page Elements Visibility', async ({ page }) => {
   await page.goto(urlBase);
   await expect(page.getByText('Consult', { exact: true })).toBeVisible();
   await expect(page.getByText('Create Family Tree')).toBeVisible();
@@ -14,7 +14,7 @@ test('hp1 - Home Page: Home Page Elements Visibility', async ({ page }) => {
   await expect(page.getByText('Configure')).toBeVisible();
 });
 
-test('hp2 - Home Page: Language Selection Functionality', async ({ page }) => {
+test('f16-hp2 - Home Page: Language Selection Functionality', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'Corsu' }).click();
   await expect(page).toHaveURL(url + '/co');
@@ -34,7 +34,7 @@ test('hp2 - Home Page: Language Selection Functionality', async ({ page }) => {
   await expect(page).toHaveURL(url + '/sv');
 });
 
-test('hp3 - Home Page: GitHub Link Functionality', async ({ page }) => {
+test('f16-hp3 - Home Page: GitHub Link Functionality', async ({ page }) => {
   await page.goto('http://localhost:2316/en');
   await page.getByRole('link').filter({ hasText: /^$/ }).click();
   await expect(page).toHaveURL('https://github.com/geneweb/geneweb/');

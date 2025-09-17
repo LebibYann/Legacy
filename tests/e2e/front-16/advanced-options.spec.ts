@@ -4,7 +4,7 @@ const urlBase = 'http://localhost:2316/en';
 
 
 
-test('cu2 - Cleanup: Verify Cleanup Functionality', async ({ page }) => {
+test('f16-cu2 - Cleanup: Verify Cleanup Functionality', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'cleanup' }).click();
   await page.getByRole('row', { name: 'chromatophilic' }).getByRole('radio').check();
@@ -13,19 +13,19 @@ test('cu2 - Cleanup: Verify Cleanup Functionality', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'http://localhost:2317/test' })).toBeVisible();
 });
 
-test('cu1 - Cleanup: Verify No Database Message', async ({ page }) => {
+test('f16-cu1 - Cleanup: Verify No Database Message', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'cleanup' }).click();
   await expect(page.getByRole('cell')).toContainText('- here is no database at present');
 });
 
-test('d1 - Deletion: Verify No Database Message', async ({ page }) => {
+test('f16-d1 - Deletion: Verify No Database Message', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'delete' }).click();
   await expect(page.getByRole('cell')).toContainText('- here is no database at present');
 });
 
-test('d2 - Deletion: Verify Deletion Functionality', async ({ page }) => {
+test('f16-d2 - Deletion: Verify Deletion Functionality', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('link', { name: 'delete' }).click();
   await page.locator('input[name="test"]').check();

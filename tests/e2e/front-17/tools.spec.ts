@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const urlBase = 'http://localhost:2317/test?lang=en';
+const urlBase = 'http://localhost:2317/chromatophilic?lang=en';
 
-test('af1 - Add Family: Create a new family', async ({ page }) => {
+test('f17-af1 - Add Family: Create a new family', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('button', { name: 'Add family' }).click();
   // Fill all parent fields
@@ -83,4 +83,81 @@ test('af1 - Add Family: Create a new family', async ({ page }) => {
   await page.locator('#ch3_p_selct_sex').getByRole('radio', { name: 'F' }).check();
   // Submit
   await page.locator('#updfam div').filter({ hasText: 'Comment <HTML> <br/> <hr' }).getByLabel('Submit').click();
+});
+
+test('f17-co1 - Configuration: Check configuration', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Configuration' }).click();
+  await expect(page.locator('#bvar-list')).toContainText('Mode: Classic: chromatophilic.gwf ');
+});
+
+//feature not yet available
+test('f17-an1 - Add note: Create a new note', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Add note', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Name of the new note: Name of' }).click();
+  await page.getByRole('textbox', { name: 'Name of the new note: Name of' }).fill('test note chromatophilic 1');
+  await page.getByRole('textbox', { name: 'Name of the new note: Name of' }).press('Enter');
+  await page.getByRole('link', { name: ' Display' }).click();
+  await expect(page.getByTitle('Modify the note')).toBeVisible();
+  await expect(page.getByTitle('Modify the section')).toBeVisible();
+});
+
+test('f17-ans1 - Add notes: View all notes', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Add notes' }).click();
+  await page.getByRole('link', { name: 'View' }).click();
+  await expect(page.getByTitle('Modify the note')).toBeVisible();
+  await expect(page.getByTitle('Modify the section')).toBeVisible();
+});
+
+test('f17-ps1 - Places / Surname: Search for a place', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Places/surname' }).click();
+  await page.getByRole('link', { name: 'Berlin' }).click();
+  await expect(page.getByRole('searchbox', { name: 'Place (k)' })).toHaveValue('Berlin');
+  await page.getByRole('link', { name: '1', exact: true }).click();
+  await expect(page.locator('body')).toContainText('jane smith');
+});
+
+test('f17-ani1 - Anniversaries: See all anniversaries', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Anniversaries' }).click();
+  await page.getByRole('link', { name: 'Birthdays' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('paragraph')).toContainText('No anniversary.');
+});
+
+test('f17-ani2 - Anniversaries: See all anniversaries of dead people', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Anniversaries' }).click();
+  await page.getByRole('link', { name: 'Anniversaries of dead people' }).click();
+  await page.getByRole('combobox').selectOption('2');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('body')).toContainText('jane smith');
+});
+
+test('f17-ani3 - Anniversaries: See all weddings anniversaries', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Anniversaries' }).click();
+});
+
+test('f17-ca1 - Calendars: Check calendar', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Calendars' }).click();
+  await expect(page.locator('tbody')).toContainText('Gregorian');
+  await expect(page.locator('select[name="mg"]')).toHaveValue('9');
+  await expect(page.locator('input[name="dg"]')).toHaveValue('17');
+  await expect(page.locator('input[name="yg"]')).toHaveValue('2025');
+});
+
+test('f17-st1 - Statistics: See latest 20 births', async ({ page }) => {
+  await page.goto(urlBase);
+  await page.getByRole('button', { name: 'Statistics' }).click();
+  await page.getByRole('link', { name: 'latest 20 births' }).click();
+  await expect(page.locator('body')).toContainText('July 2014lisa junior, born on 7 July 2014.');
+  await expect(page.locator('body')).toContainText('May 2012alice junior, born on 5 May 2012.');
+  await expect(page.locator('body')).toContainText('March 2010johny junior, born on 3 March 2010.');
+  await expect(page.locator('body')).toContainText('February 1982jane smith, born on 2 February 1982.');
+  await expect(page.locator('body')).toContainText('January 1980john doe, born on 1 January 1980.');
 });

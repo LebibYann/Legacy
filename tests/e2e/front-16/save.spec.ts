@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const urlBase = 'http://localhost:2316/en';
 
-test('sgwsf1 - Save: Save a GeneWeb source file', async ({ page }) => {
+test('f16-sgwsf1 - Save: Save a GeneWeb source file', async ({ page }) => {
   await page.goto(urlBase);
   await page.getByRole('listitem').filter({ hasText: 'a GeneWeb source file (gwu)' }).getByRole('link').click();
   await page.getByRole('row', { name: 'chromatophilic' }).getByRole('radio').check();
