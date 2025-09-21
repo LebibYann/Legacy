@@ -1,0 +1,52 @@
+name: Unit Tests (OCaml)
+
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "geneweb/**"
+      - ".github/workflows/functional-tests.yml"
+  pull_request:
+    paths:
+      - "geneweb/**"
+  workflow_dispatch:
+
+jobs:
+  run-functional-tests:
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update -y 
+          sudo apt-get install -y opam m4 libgmp-dev libpcre3-dev zlib1g-dev pkg-config git libpcre2-dev xdot
+          opam init --disable-sandboxing -y
+          opam switch create 4.14.1 -y
+        
+      - name: build binaries
+        working-directory: geneweb
+        run: |
+          eval "$(opam env)"
+          opam install . --deps-only --with-test -y
+          ocaml ./configure.ml
+          make distrib -j2
+
+      - name: Prepare test binaries
+        run: mv geneweb/distribution/gw tests/functional/binaries
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Run pytest (functional)
+        working-directory: .
+        run: pytest tests/functional -q

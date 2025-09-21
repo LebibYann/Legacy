@@ -1,0 +1,1497 @@
+encoding: utf-8
+gwplus
+
+fam Frey Walder 0 + Royce Perra 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Stevron
+- h Emmon
+- h Aenys
+- f Perriane
+end
+fam Frey Walder + Swann Cyrenna 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Jared
+- h Luceon
+end
+fam Frey Walder + Crakehall Amarei 0
+fevt
+#marr 
+end fevt
+beg
+- h Hosteen
+- f Lythene
+- h Symond
+- h Danwell
+- h Merrett
+- h Geremy
+- h Raymund
+end
+fam Frey Walder + Blackwood Alyssa 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Lothar
+- h Jammos
+- h Whalen
+- f Morya
+- f Tyta
+end
+fam Frey Walder + Whent Sarya 0
+fevt
+#marr 
+end fevt
+fam Frey Walder + Rosby Bethany 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Perwyn
+- h Benfrey
+- h Willamen
+- h Olyvar
+- f Roslin
+end
+fam Frey Walder + Farring Annara 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Arwyn
+- h Wendel
+- h Colmar
+- h Waltyr
+- h Elmar
+- f Shirei
+end
+fam Frey Walder + Erenford Joyeuse 0
+fevt
+#marr 
+end fevt
+fam Frey Walder + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Walder Rivers
+- h Melwys Rivers
+- f Jeyne Rivers
+- h Martyn Rivers
+- h Ryger Rivers
+- h Ronel Rivers
+- f Mellara Rivers
+end
+
+fam Frey Stevron + Swann Corenna 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Ryman
+end
+fam Frey Stevron + Lydden Jeyne 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Aegon_'Jinglebell'
+- f Maegelle 0 0
+end
+fam Frey Stevron + Waynwood Marsella 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Walton
+end
+
+fam Frey Emmon + Lannister Genna
+fevt
+#marr 
+end fevt
+beg
+- h Cleos
+- h Lyonel
+- h Tion
+- h Walder_'Red_Walder'
+end
+
+fam Frey Aenys + Wylde Tyana 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Aegon_'Bloodborn'
+- h Rhaegar
+end
+
+fam Frey Ryman + ? ?
+beg
+- h Edwyn
+- h Walder_'Black_Walder'
+- h Petyr
+end
+
+fam Frey Edwyn + Hunter Janyce 0
+fevt
+#marr 
+end fevt
+beg
+- f Walda
+end
+
+fam Frey Petyr + Caron Mylenda 0
+fevt
+#marr 
+end fevt
+beg
+- f Perra
+end
+
+fam Vance Dafyn 0 + Frey Maegelle
+fevt
+#marr 
+end fevt
+beg
+- f Marianne
+- h Walder
+- h Patrek
+end
+
+fam Frey Walton + Hardyng Deana 0
+fevt
+#marr 
+end fevt
+beg
+- h Steffon
+- f Walda_'Fair_Walda'
+- h Bryan
+end
+
+fam Lannister Tytos + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Genna
+- h Tywin
+- h Kevan
+- h Tygett 0 0
+- h Gerion
+end
+
+fam Frey Cleos + Darry Jeyne 0
+fevt
+#marr 
+end fevt
+beg
+- h Tywin_'Ty'
+- h Willem
+end
+
+fam Frey Rhaegar + Beesbury Jeyne 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Robert
+- f Walda_'White_Walda'
+- h Jonos
+end
+
+fam Haigh Leslyn 0 + Frey Perriane
+fevt
+#marr 
+end fevt
+beg
+- h Harys
+- h Donnel
+- h Alyn
+end
+
+fam Haigh Harys + ? ?
+beg
+- h Walder
+end
+
+fam Frey Jared + Frey Alys 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Tytos
+- f Kyra
+end
+
+fam Frey Tytos + Blanetree Zhoe 0
+fevt
+#marr 
+end fevt
+beg
+- f Zia
+- h Zachery
+end
+
+fam Goodbrook Garse 0 + Frey Kyra
+fevt
+#marr 
+end fevt
+beg
+- h Walder
+- f Jeyne
+end
+
+fam Frey Hosteen + Hawick Bellena 0
+fevt
+#marr 
+end fevt
+beg
+- h Arwood
+end
+
+fam Vypren Lucias 0 + Frey Lythene
+fevt
+#marr 
+end fevt
+beg
+- h Damon
+- f Elyana
+end
+
+fam Frey Symond + ? Betharios #bp Braavos
+fevt
+#marr 
+end fevt
+beg
+- h Alesander
+- f Alyx
+- h Bradamar
+end
+
+fam Frey Danwell + Whent Wynafrei 0
+fevt
+#marr 
+end fevt
+
+fam Frey Merrett + Derry Mariya 0
+fevt
+#marr 
+end fevt
+beg
+- f Amerei_'Gatehouse_Ami'
+- f Walda_'Fat_Walda'
+- f Marissa
+- h Walder_'Little_Walder'
+end
+
+fam Frey Geremy + Waynwood Carolei 0
+fevt
+#marr 
+end fevt
+beg
+- h Sandor
+- f Cynthea
+end
+
+fam Frey Raymund + Beesbury Beony 0
+fevt
+#marr 
+end fevt
+beg
+- h Robert.1
+- h Malwyn
+- f Sarra
+- f Serra
+- f Cersei
+- h Tywin
+- h Jaime
+end
+
+fam Frey Arwood + Royce Ryella 0
+fevt
+#marr 
+end fevt
+beg
+- f Ryella
+- h Androw
+- h Alyn
+- f Hostella
+end
+
+fam Wylde Jon 0 + Vypren Elyana
+fevt
+#marr 
+end fevt
+beg
+- h Rickard
+end
+
+fam ? Pate + Frey Amerei_'Gatehouse_Ami'
+fevt
+#marr 
+end fevt
+
+fam Frey Lothar + Lefford Leonella 0
+fevt
+#marr 
+end fevt
+beg
+- f Tysane
+- f Walda.1
+- f Emberlei
+- f Leana
+end
+
+fam Frey Jammos + Paege Sallei 0
+fevt
+#marr 
+end fevt
+beg
+- h Walder_'Big_Walder'
+- h Dickon
+- h Mathis
+end
+
+fam Frey Whalen + Paege Sylwa 0
+fevt
+#marr 
+end fevt
+beg
+- h Hoster
+- f Merianne
+end
+
+fam Brax Flement + Frey Morya
+fevt
+#marr 
+end fevt
+beg
+- h Robert
+- h Walder
+- h Jon
+end
+
+fam Brax Andros + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Flement
+- h Tytos
+- h Robert.1
+end
+
+fam Frey Benfrey + Frey Jyanna 0
+fevt
+#marr 
+end fevt
+beg
+- f Della
+- h Osmund
+end
+
+fam Rivers Walder + ? ?
+beg
+- f Walda
+- h Aemon
+end
+
+fam Rivers Aemon + ? ?
+beg
+- f Walda.1
+end
+
+fam Brax x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Andros
+- h Rupert
+end
+
+fam Lannister x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Tytos 0 0
+- h x.1
+- h x.2
+- h x.3
+end
+
+fam Lannister Tywin + Lannister Joanna
+fevt
+#marr 
+end fevt
+beg
+- h Jaime
+- f Cersei
+- h Tyrion
+end
+
+fam Lannister Kevan + Swyft Dorna 0
+fevt
+#marr 
+end fevt
+beg
+- h Lancel
+- h Willem
+- h Martyn
+- f Janei
+end
+
+fam Lannister Tygett + Marbrand Darlessa 0
+fevt
+#marr 
+#Death_of_Spouse 
+end fevt
+beg
+- h Tyrek
+end
+
+fam Lannister Gerion + ? ?
+beg
+- f Joy Hill
+end
+
+fam Lannister x.3 + ? ?
+beg
+- f Joanna 0 0
+- h Stafford
+end
+
+fam Baratheon Robert + Lannister Cersei
+fevt
+#marr 
+end fevt
+fam Lannister Jaime + Lannister Cersei
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+beg
+- h Joffrey Baratheon
+- f Myrcella Baratheon
+- h Tommen Baratheon
+end
+fam Baratheon Robert + Florent Delena
+fevt
+#MYHERITAGE:REL\_OTHER 
+end fevt
+beg
+- h Edric Storm
+end
+fam Baratheon Robert + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Mya Stone
+- h Gendry Waters
+- f Bella Rivers
+- f Barra Waters
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+- ? ?
+end
+fam Norcross Hosman 0 + Florent Delena
+fevt
+#marr 
+end fevt
+beg
+- h Alester
+- h Renly
+end
+
+fam Baratheon Steffon + Estermont Cassana
+fevt
+#marr 
+end fevt
+beg
+- h Robert
+- h Stannis
+- h Renly
+end
+
+fam Baratheon Joffrey + #eng Stark Sansa
+fevt
+#enga 
+end fevt
+
+fam Lannister Stafford + ? ?
+beg
+- h Daven
+- f Cerenna
+- f Myrielle
+end
+
+fam Baratheon x + Targaryen Rhaelle
+fevt
+#marr 
+end fevt
+beg
+- h Steffon 0 0
+end
+
+fam Estermont Eldon 0 + Santagar Sylva_'Spotted_Sylva'
+fevt
+#marr 
+end fevt
+beg
+- f Cassana 0 0
+- h Aemon
+- h Lomas
+end
+
+fam Florent Colin + ? ?
+beg
+- f Delena
+- h Merrell
+- h Omer
+end
+
+fam Baratheon Stannis + Florent Selyse
+fevt
+#marr 
+end fevt
+beg
+- f Shireen
+end
+
+fam Baratheon Renly + #nsck mm Tyrell Loras
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+
+fam Florent Ryam + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Selyse
+- h Imry
+- h Erren
+end
+
+fam Targaryen Aegon + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Rhaelle 0 0
+- h Jaehaerys 0 0
+- h Duncan_'The_Small' 0 0
+- h x
+end
+
+fam Targaryen Maekar + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Aegon 0 0
+- h Daeron 0 0
+- h Aerion 0 0
+- h Aemon
+- f Rhaelle.1 0 0
+- f Daella 0 0
+end
+
+fam Targaryen Jaehaerys + ? ?
+beg
+- h Aerys 0 0
+- f Rhaella 0 0
+end
+
+fam Targaryen Aerys + Targaryen Rhaella
+fevt
+#marr 
+end fevt
+beg
+- h Rhaegar 0 0
+- h Viserys
+- f Daenerys
+end
+
+fam Targaryen Rhaegar + Martell Elia
+fevt
+#marr 
+#Death_of_Spouse 
+end fevt
+beg
+- f Rhaenys 0 0
+- h Aegon.1 0 0 #dp King's_Landing
+end
+fam Targaryen Rhaegar + Stark Lyanna
+fevt
+#marr 
+#Death_of_Spouse 
+end fevt
+beg
+- h Jon Snow
+end
+
+pevt Targaryen Aegon.1
+#deat  #p King's_Landing
+end pevt
+
+fam ? ? + x _'Princess_Of_Dorne'.256
+fevt
+#marr 
+end fevt
+beg
+- f Elia Martell 0 0 #dp King's_Landing
+- h Doran Martell
+- h Mors Martell 0 0
+- h Olyvar Martell 0 0
+- h Oberyn_'The_Red_Viper' Martell
+end
+
+pevt Martell Elia
+#deat  #p King's_Landing
+end pevt
+
+fam Stark Rickard + Flint x 0
+fevt
+#marr 
+end fevt
+beg
+- f Lyanna 0 0 #buri #rp Winterfell_Crypts
+- h Brandon 0 0 #dp King's_Landing
+- h Eddard
+- h Benjen
+end
+
+pevt Stark Lyanna
+#buri  #p Winterfell_Crypts
+end pevt
+
+pevt Stark Brandon
+#deat  #p King's_Landing
+end pevt
+
+fam Stark Edwyle + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Rickard 0 0 #dp King's_Landing
+end
+
+pevt Stark Rickard
+#deat  #p King's_Landing
+end pevt
+
+fam Stark Brandon + Dayne Ashara
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+
+fam Stark Eddard + Tully Catelyn
+fevt
+#marr 
+end fevt
+beg
+- h Robb
+- f Sansa
+- f Arya
+- h Brandon_'Bran'
+- h Rickon
+end
+
+fam Tully Hoster + Whent Minisa 0 0
+fevt
+#marr 
+end fevt
+beg
+- f Catelyn
+- f Lysa
+- h Edmure
+end
+
+fam Tully x 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Hoster
+- h Brynden_'Blackfish'
+end
+
+fam Arryn Jon + Tully Lysa
+fevt
+#marr 
+end fevt
+beg
+- h Robert
+end
+fam Arryn Jon + Royce Jeyne 0 0
+fevt
+#marr 
+end fevt
+fam Arryn Jon + ? Rowena 0 0
+fevt
+#marr 
+end fevt
+
+fam Arryn Jasper 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Jon
+- f Alys
+- h Ronnel 0 0
+end
+
+fam Waynwood Elys + Arryn Alys
+fevt
+#marr 
+end fevt
+beg
+- f x 0 0
+- f x.1 0 0
+- f x.2 0 0
+- f x.3 0 0
+- f x.4 0 0
+- f x.5 0 0
+- f x.6 0 0
+- f x.7 0 0
+- h Jasper 0 0
+end
+
+fam Arryn Ronnel + Belmore x 0
+fevt
+#marr 
+end fevt
+beg
+- h Elbert 0 0 #dp King's_Landing
+end
+
+pevt Arryn Elbert
+#deat  #p King's_Landing
+end pevt
+
+fam Waynwood x.8 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Elys
+- h x.9
+end
+
+fam Arryn Denys 0 0 + Waynwood x
+fevt
+#marr 
+end fevt
+beg
+- x 0 0
+end
+
+fam Hardyng x 0 + Waynwood x.1
+fevt
+#marr 
+end fevt
+beg
+- h Harrold
+end
+
+fam Waynwood x.9 + ? ?
+beg
+- f Anya
+end
+
+fam ? ? + Waynwood Anya
+beg
+- h Morton Waynwood
+- h Donnel Waynwood
+- h Wallace Waynwood
+end
+
+fam Martell x 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f _'Princess_Of_Dorne'.256 x
+- h Lewyn 0 0 #dp The_Trident
+end
+
+pevt Martell Lewyn
+#deat  #p The_Trident
+end pevt
+
+fam Martell Doran + ? Mellario #bp Norvos
+fevt
+#marr 
+end fevt
+beg
+- f Arianne
+- h Quentyn
+- h Trystane
+end
+
+fam Martell Oberyn_'The_Red_Viper' + Sand Ellaria
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+beg
+- f Elia Sand
+- f Obella Sand
+- f Dorea Sand
+- f Loreza Sand
+end
+fam Martell Oberyn_'The_Red_Viper' + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Obara Sand
+- f Nymeria Sand
+- f Tyene Sand
+- f Sarella Sand
+end
+
+fam Uller Harmen + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Ellaria Sand
+end
+
+fam Uller x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Harmen
+- h Ulwyck
+end
+
+fam Targaryen Daeron.1 + Martell Myriah 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Maekar 0 0
+- h Baelor_'Breakspear' 0 0
+- h Aerys.1 0 0
+- f Aelinor 0 0
+- h Rhaegel 0 0
+end
+
+fam Targaryen Daeron + ? ?
+beg
+- f x.1 0 0
+end
+
+fam Targaryen Aerion + ? ?
+beg
+- h x.2 0 0
+end
+
+fam Targaryen Aegon.2 + x Naerys.302
+fevt
+#marr 
+end fevt
+beg
+- h Daeron.1 0 0
+- f Daenerys.1 0 0
+end
+fam Targaryen Aegon.2 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Aegor_'Bittersteel' Rivers 0 0
+- h Brynden_'Bloodraven' 0 0
+- f Shiera Seastar 0 0
+end
+fam Targaryen Aegon.2 + Targaryen Daena
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+beg
+- h Daemon Blackfyre 0 0
+end
+
+fam Targaryen Baelor_'Breakspear' + ? ?
+beg
+- h Valarr 0 0
+- h Matarys 0 0
+end
+
+fam Targaryen Aerys.1 + Targaryen Aelinor
+fevt
+#marr 
+end fevt
+
+fam Targaryen Rhaegel + ? ?
+beg
+- h x.3 0 0
+- h x.4 0 0
+end
+
+fam Targaryen Valarr + ? ?
+beg
+- h x.5 0 0
+- h x.6 0 0
+end
+
+fam Targaryen Viserys.1 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Aegon.2 0 0
+- f Naerys.302 x 0 0
+- h Aemon_'The_Dragonknight' 0 0
+end
+
+fam Martell Maron 0 0 + Targaryen Daenerys.1
+fevt
+#marr 
+end fevt
+
+fam Targaryen x.11 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Viserys.1 0 0
+end
+
+fam Targaryen Aegon.3 + Velaryon x 0 0
+fevt
+#marr 
+end fevt
+beg
+- f Daena 0 0
+- f Elaena 0 0
+- f Rhaena 0 0
+- h Daeron.2 0 0
+- h Baelor 0 0
+end
+
+fam Blackfyre Daemon + ? ?
+beg
+- h Aegon 0 0
+- h Aemon 0 0
+- h Daemon.1 0 0
+- h Haegon 0 0
+- h x 0 0
+- h x.1 0 0
+- h x.2 0 0
+end
+
+fam Blackfyre x + ? ?
+beg
+- h Maelys_'The_Monstrous' 0 0
+end
+
+fam ? ? + x Rhaenyra.338
+fevt
+#marr 
+end fevt
+beg
+- h Aegon.3 Targaryen 0 0
+end
+
+fam ? ? 0 0 + Targaryen Elaena
+fevt
+#marr 
+end fevt
+beg
+- ? 0 0
+- ? 0 0
+- ? 0 0
+- ? 0 0
+- ? 0 0
+- ? 0 0
+- ? 0 0
+end
+fam Velaryon Alyn 0 0 + Targaryen Elaena
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+beg
+- h Jon Waters 0 0
+- f Jeyne Waters 0 0
+end
+fam Velaryon Alyn + ? x 0 0
+fevt
+#marr 
+end fevt
+
+fam Targaryen Viserys.2 0 0 + Arryn x.1 0 0
+fevt
+#marr 
+end fevt
+beg
+- f Rhaenyra.338 x 0 0
+- h x.7 0 0
+- h x.8 0 0
+end
+fam Targaryen Viserys.2 + Hightower x 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Aegon.4 0 0
+- h Aemond 0 0
+- h x.9 0 0
+- f x.10 0 0
+end
+
+fam Targaryen Jaehaerys_'The_Conciliator' + Targaryen Alysanne_'The_Good'
+fevt
+#marr 
+end fevt
+beg
+- h x.11 0 0
+end
+
+fam Targaryen Aenys + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Jaehaerys_'The_Conciliator' 0 0
+- f Alysanne_'The_Good' 0 0
+end
+
+fam Targaryen Aegon_'The_Conqueror' + Targaryen Rhaenys.1 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Aenys 0 0
+end
+fam Targaryen Aegon_'The_Conqueror' + Targaryen Visenya 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Maegor 0 0
+end
+
+fam Targaryen Aerion.1 + Velaryon Velena 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Aegon_'The_Conqueror' 0 0
+end
+fam Targaryen Aerion.1 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Orys Baratheon 0 0
+end
+
+fam Targaryen Maegor + Westerling Jeyne 0 0
+fevt
+#marr 
+end fevt
+
+fam Targaryen Daemon + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Aerion.1 0 0
+end
+
+fam Baratheon Orys + Durrendon Argella
+fevt
+#marr 
+end fevt
+
+fam Durrendon Argilac_'The_Arrogant' 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Argella 0 0
+end
+
+fam Targaryen Aerys.2 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Daemon 0 0
+- h Aelix 0 0
+- h Baelon 0 0
+end
+
+fam Targaryen Aegon.5 + Targaryen Eleana
+fevt
+#marr 
+end fevt
+beg
+- h Aerys.2 0 0
+- h Maegon 0 0
+end
+
+fam Targaryen Gaemon + Targaryen Daenys
+fevt
+#marr 
+end fevt
+beg
+- h Aegon.5 0 0
+- f Eleana 0 0
+end
+
+fam Targaryen Aenar 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Gaemon 0 0
+- f Daenys 0 0
+end
+
+fam Tyrell Mace + Hightower Alerie
+fevt
+#marr 
+end fevt
+beg
+- h Loras
+- h Garlan
+- h Willas
+- f Margaery
+end
+
+fam Tyrell Luthor + Redwyne Olenna
+fevt
+#marr 
+#Death_of_Spouse 
+end fevt
+beg
+- h Mace
+- f Janna
+- f Mina
+end
+
+fam Hightower Leyton + Florent Rhea
+fevt
+#marr 
+end fevt
+beg
+- f Alerie
+- h Baelor
+- f Alysanne
+- f Denyse
+- f Malora
+- h Garth
+- h Gunthor
+- f Leyla
+- h Humfrey
+- f Lynesse
+end
+
+fam Tyrell Garlan + Fossoway Leonette 0
+fevt
+#marr 
+end fevt
+
+fam Tyrell x 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Luthor 0 0
+- h Garth_'The_Gross'
+- h Moryn
+- h Gormon
+end
+
+fam Redwyne Runceford 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h x 0 0
+- f Olenna
+end
+
+fam Tyrell Garth_'The_Gross' + ? ?
+fevt
+#MYHERITAGE:REL\_OTHER 
+end fevt
+beg
+- h Garse Flowers
+- h Garrett Flowers
+end
+
+fam Tyrell Moryn + ? ?
+beg
+- h Luthor.1 0 0
+- h Leo_'The_Lazy'
+end
+
+fam Fossoway Jon 0 + Tyrell Janna
+fevt
+#marr 
+end fevt
+
+fam Redwyne Paxter + Tyrell Mina
+fevt
+#marr 
+end fevt
+beg
+- h Horas_'Horror'
+- h Hobber_'Slobber'
+- f Desmera
+end
+
+fam Redwyne x + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Paxter
+end
+
+fam Tyrell Luthor.1 + Norridge Elyn 0
+fevt
+#marr 
+#Death_of_Spouse 
+end fevt
+beg
+- h Theodore
+- f Olene
+- h Medwick
+end
+
+fam Tyrell Theodore + Serry Lia 0
+fevt
+#marr 
+end fevt
+beg
+- f Elinor
+- h Luthor.2
+end
+
+fam Blackbar Leo 0 + Tyrell Olene
+fevt
+#marr 
+end fevt
+
+fam Hightower x.1 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Leyton
+end
+
+fam Florent Alester + Crane Melara 0
+fevt
+#marr 
+end fevt
+beg
+- h Alekyne
+- f Melessa
+- f Rhea
+end
+
+fam Hightower Baelor + Rowan Rhonda 0
+fevt
+#marr 
+end fevt
+
+fam Ambrose Arthur 0 + Hightower Alysanne
+fevt
+#marr 
+end fevt
+beg
+- h Alyn
+end
+
+fam Redwyne Desmond 0 + Hightower Denyse
+fevt
+#marr 
+end fevt
+beg
+- h Denys
+end
+
+fam Hightower Gunthor + Fossoway Jeyne 0
+fevt
+#marr 
+end fevt
+
+fam Cupps Jon 0 + Hightower Leyla
+fevt
+#marr 
+end fevt
+
+fam Mormont Jorah + Hightower Lynesse
+fevt
+#marr 
+end fevt
+fam Ormollen Tregar 0 + Hightower Lynesse
+fevt
+#MYHERITAGE:REL\_PARTNERS 
+end fevt
+fam Mormont Jorah + Glover x 0 0
+fevt
+#marr 
+end fevt
+
+fam Mormont Jeor + ? ?
+beg
+- h Jorah
+end
+
+fam Hightower x.2 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h x.1
+- h Gerold_'The_White_Bull' 0 0
+end
+
+fam Mormont x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Maege
+- h Jeor
+end
+
+fam ? ? + Mormont Maege
+beg
+- f Dacey Mormont
+- f Alysane Mormont
+- f Lyra Mormont
+- f Jorelle Mormont
+- f Lyanna Mormont
+end
+
+fam ? ? + Mormont Alysane
+beg
+- f x Snow
+- h x.1 Snow
+end
+
+fam Florent x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h Ryam 0 0
+- h Alester
+- h Axell
+- f Rylene
+- h Colin
+end
+
+fam Crane Rycherd 0 + Florent Rylene
+fevt
+#marr 
+end fevt
+
+fam Tarly Randyll 0 + Florent Melessa
+fevt
+#marr 
+end fevt
+beg
+- h Samwell
+- f Talla
+- f x
+- f x.1
+- h Dickon
+end
+
+fam Stark x 0 0 + ? x.1 0 0
+fevt
+#marr 
+end fevt
+beg
+- h Edwyle 0 0
+- h Brandon.1 0 0
+- f x.1 0 0
+end
+
+fam Royce x 0 0 + Stark x.1
+fevt
+#marr 
+end fevt
+beg
+- f x.1
+- f x.2
+- f x.3
+end
+
+fam Arryn x.2 0 + Royce x.1
+fevt
+#marr 
+end fevt
+beg
+- x.3
+end
+
+fam Santagar Symon 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Sylva_'Spotted_Sylva'
+end
+
+fam Dayne x 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- f Ashara 0 0
+- h x.1
+- h Arthur 0 0 #dp Tower_Of_Joy
+- f Allyria
+end
+
+pevt Dayne Arthur
+#deat  #p Tower_Of_Joy
+end pevt
+
+fam Dayne x.1 + ? ?
+beg
+- h Edric
+end
+
+fam Dondarrion Beric 0 + #eng Dayne Allyria
+fevt
+#enga 
+end fevt
+
+fam Baratheon x.1 0 0 + ? ?
+fevt
+#marr 
+end fevt
+beg
+- h x 0 0
+- h Harbert 0 0
+end

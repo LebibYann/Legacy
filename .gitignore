@@ -17,3 +17,7 @@ trace/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Pytest
+__pycache__/
+tests/functional/binaries/
