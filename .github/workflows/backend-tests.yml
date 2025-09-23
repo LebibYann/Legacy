@@ -1,0 +1,102 @@
+name: backend-tests
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "new_geneweb/backend/**"
+      - ".github/workflows/backend-tests.yml"
+  pull_request:
+    branches:
+      - dev
+
+defaults:
+  run:
+    working-directory: ./new_geneweb/backend
+
+jobs:
+  lint-typecheck:
+    name: 🔍 Lint & TypeCheck
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install Poetry
+        run: pip install poetry==1.8.3
+
+      - name: Install deps
+        run: poetry install --no-root
+
+      - name: Run Black (formatting check)
+        run: poetry run black --check .
+
+      - name: Run mypy (type checking)
+        run: poetry run mypy app/
+
+  unit-tests:
+    name: 🧪 Unit & Functional Tests
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install Poetry
+        run: pip install poetry==1.8.3
+
+      - name: Install deps
+        run: poetry install --no-root
+
+      - name: Run pytest
+        env:
+          APP_ENV: test
+          APP_NAME: geneweb
+          APP_HOST: localhost
+          APP_PORT: 8000
+          DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb_test
+        run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
+
+
+  docker-build:
+    name: 🐳 Docker Build Validation
+
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install docker compose
+        run: |
+          # Add Docker's official GPG key:
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build backend Docker image
+        run: docker compose build
