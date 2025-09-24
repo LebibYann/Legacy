@@ -39,7 +39,10 @@ services:
       db:
         condition: service_healthy
 
-
+  backoffice:
+    build: new_geneweb/backoffice
+    ports:
+      - "5173:5173"
 
 volumes:
   pgdata:
