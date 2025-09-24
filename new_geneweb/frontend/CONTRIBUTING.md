@@ -149,4 +149,3 @@ docker compose exec frontend npm run test
 
 The frontend serves as the administration interface for GeneWeb.
 Refer to the [Backend README](../backend/README.md) for API details.
-
