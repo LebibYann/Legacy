@@ -1,3 +1,24 @@
 @import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@layer base {
+  a {
+    @apply underline text-blue-800 visited:text-purple-900 hover:text-blue-400;
+  }
+  hr {
+    @apply border-t-2 ;
+  }
+  body {
+    @apply p-2;
+  }
+  ul {
+    @apply list-disc pl-10;
+  }
+  h1 {
+    @apply text-3xl font-bold mt-4 mb-2;
+  }
+}
