@@ -1,0 +1,35 @@
+x-runner-base: &runner-base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  working_dir: /app/geneweb/distribution
+  ports:
+    - "2316:2316"
+    - "2317:2317"
+  networks:
+    geneweb_net:
+      ipv4_address: 172.20.0.2
+
+services:
+  runner:
+    <<: *runner-base
+    volumes:
+      - gw_bases:/app/geneweb/distribution/bases
+    profiles: [persist]
+
+  runner_ephemeral:
+    <<: *runner-base
+    tmpfs:
+      - /app/geneweb/distribution/bases
+    profiles: [ephemeral]
+
+networks:
+  geneweb_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+volumes:
+  gw_bases: {}

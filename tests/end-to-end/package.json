@@ -1,0 +1,26 @@
+{
+  "name": "geneweb-e2e",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^24.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "scripts": {
+    "test": "npm run test:chromium",
+    "test:chromium": "playwright test --project=chromium-*",
+    "test:firefox": "playwright test --project=firefox-*",
+    "test:webkit": "playwright test --project=webkit-*",
+    "test:chromium:ci": "playwright test --project=chromium-* --reporter=line",
+    "test:firefox:ci": "playwright test --project=firefox-* --reporter=line",
+    "test:webkit:ci": "playwright test --project=webkit-* --reporter=line",
+    "test:ui": "playwright test --ui",
+    "codegen": "playwright codegen",
+    "install:browsers": "playwright install"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  }
+}

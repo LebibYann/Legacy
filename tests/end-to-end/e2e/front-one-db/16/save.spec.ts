@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
+import assert from "assert";
 
-const urlBase = 'http://localhost:2316/en';
+const url = process.env.FRONT_SETUP_URL;
+assert(url, 'FRONT_SETUP_URL is not defined');
 
 test('f16-sgwsf1 - Save: Save a GeneWeb source file', async ({ page }) => {
-  await page.goto(urlBase);
+  await page.goto(url);
   await page.getByRole('listitem').filter({ hasText: 'a GeneWeb source file (gwu)' }).getByRole('link').click();
   await page.getByRole('row', { name: 'chromatophilic' }).getByRole('radio').check();
   await page.locator('input[name="o"]').click();

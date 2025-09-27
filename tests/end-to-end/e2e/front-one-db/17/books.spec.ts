@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
+import assert from "assert";
 
-const urlBase = 'http://localhost:2317/chromatophilic?lang=en';
+const url = process.env.FRONT_USER_URL;
+assert(url, 'FRONT_USER_URL is not defined');
+const urlBase = url + '/chromatophilic?lang=en';
 
 test('f17-fn1 - First names: See all first names', async ({ page }) => {
     await page.goto(urlBase);

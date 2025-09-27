@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
+import assert from "assert";
 
-// base URL for the tests in english
-const urlBase = 'http://localhost:2316/en';
+const url = process.env.FRONT_SETUP_URL;
+assert(url, 'FRONT_SETUP_URL is not defined');
 
 test('f16-faef1 - Create a family tree: from an empty file', async ({ page, browser }) => {
-  await page.goto(urlBase);
+  await page.goto(url);
   await page.getByRole('listitem').filter({ hasText: 'from an empty file (gwc)' }).getByRole('link').click();
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').fill('chromatophilic');
