@@ -16,12 +16,12 @@
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright test",
 		"lighthouse": "lhci autorun",
-	    "postinstall": "paraglide-js compile"
+		"postinstall": "paraglide-js compile"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.22.0",
-		"@inlang/paraglide-js": "^2.4.0",
+		"@inlang/paraglide-js": "2.4.0",
 		"@lhci/cli": "^0.15.1",
 		"@playwright/test": "^1.49.1",
 		"@sveltejs/adapter-auto": "^6.0.0",
