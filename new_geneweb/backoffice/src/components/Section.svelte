@@ -10,7 +10,7 @@
     }: SectionProps = $props();
 </script>
 
-<section class="pt-5">
+<section class="pt-5 flex flex-col">
     {@render main?.() }
     <hr class="mt-2">
 </section>
