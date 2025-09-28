@@ -2,6 +2,7 @@ name: End-to-End Tests (Svelte)
 
 env:
   TEST_FOLDER: tests/end-to-end
+  BACKEND_FOLDER: new_geneweb/backend
 
 on:
   pull_request:
@@ -62,7 +63,9 @@ jobs:
               ${{ runner.os }}-buildx-svelte-
 
         - name: Build New Geneweb
-          run: docker compose build
+          run: |
+            cat ${{ env.BACKEND_FOLDER }}/.env.example > ${{ env.BACKEND_FOLDER }}/.env
+            docker compose build
         - name: Start New Geneweb
           run: |
             docker compose up -d
