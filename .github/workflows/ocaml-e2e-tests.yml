@@ -65,15 +65,7 @@ jobs:
         - name: Build Geneweb
           run: |
             cd ${{ env.TEST_DOCKER_FOLDER }}
-            docker buildx build \
-              --cache-from=type=local,src=/tmp/.buildx-cache \
-              --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
-              -t geneweb:latest \
-              --load \
-              .
-            # On déplace le nouveau cache
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+            docker compose build
 
         - name: Start Geneweb
           run: |

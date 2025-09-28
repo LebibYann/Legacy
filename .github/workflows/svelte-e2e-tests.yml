@@ -2,7 +2,6 @@ name: End-to-End Tests (Svelte)
 
 env:
   TEST_FOLDER: tests/end-to-end
-  TEST_DOCKER_FOLDER: geneweb_docker
 
 on:
   pull_request:
@@ -62,18 +61,8 @@ jobs:
             restore-keys: |
               ${{ runner.os }}-buildx-svelte-
 
-        - name: Build Geneweb
-          run: |
-            docker buildx build \
-              --cache-from=type=local,src=/tmp/.buildx-cache \
-              --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
-              -t geneweb:latest \
-              --load \
-              .
-            # On déplace le nouveau cache
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
+        - name: Build New Geneweb
+          run: docker compose build
         - name: Start New Geneweb
           run: |
             docker compose up -d
