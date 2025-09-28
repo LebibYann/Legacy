@@ -51,7 +51,6 @@ class TestAlchemyEncapsulationClass:
         assert isinstance(is_connected, bool)
         assert is_connected is True
 
-
     ####  take a long time
     # @pytest.mark.asyncio
     # async def test_is_connected_with_invalid_connection(self) -> None:
