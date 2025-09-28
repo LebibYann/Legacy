@@ -15,6 +15,10 @@
   });
 </script>
 
+{#snippet geneweb()}
+  <text class="font-bold text-lime-800">GeneWeb</text>
+{/snippet}
+
 <Section>
   {#snippet main()}
   <div class="max-w-4xl mx-auto p-2 mb-7 \
@@ -22,25 +26,25 @@
   text-align-left overflow-auto \
   flex justify-between flex-col md:flex-row">
     <div>
-      <DefaultList title="Consult">
+      <DefaultList title={rm.list_consult()}>
         {#snippet main()}
-        <li>family Trees (<a href="gwsetup?lang=en;v=list.htm">list</a>)</li>
-        <li>the error history and statistics (<a href="gwsetup?lang=en;v=traces.htm">errors</a>)</li>
+        <li>{rm.consult_list()} (<a href="gwsetup?lang=en;v=list.htm">list</a>)</li>
+        <li>{rm.consult_errors()} (<a href="gwsetup?lang=en;v=traces.htm">errors</a>)</li>
         {/snippet}
       </DefaultList>
-      <DefaultList title="Save">
+      <DefaultList title={rm.list_save()}>
         {#snippet main()}
-        <li>a GEDCOM source file (<a href="gwsetup?lang=en;v=gwb2ged.htm">gwb2ged</a>)</li>
-        <li>a <b><font color="#2f6400">GeneWeb</font></b> source file (<a href="gwsetup?lang=en;v=gwu.htm">gwu</a>)</li>
+        <li>{rm.save_gedcom()} (<a href="gwsetup?lang=en;v=gwb2ged.htm">gwb2ged</a>)</li>
+        <li>{rm.save_gwb_start()} {@render geneweb()} {rm.save_gwb_end()} (<a href="gwsetup?lang=en;v=gwu.htm">gwu</a>)</li>
         {/snippet}
       </DefaultList>
     </div>
     <div class="pr-5">
-      <DefaultList title="Create Family Tree">
+      <DefaultList title={rm.list_create()}>
         {#snippet main()}
-        <li>from a GEDCOM source file (<a href="gwsetup?lang=en;v=ged2gwb.htm">ged2gwb</a>)</li>
-        <li>from a GeneWeb source file (<a href="gwsetup?lang=en;v=gwc.htm">gwc</a>)</li>
-        <li>from an empty file (<a href="gwsetup?lang=en;v=simple.htm">gwc</a>)</li>
+        <li>{rm.create_gedcom()} (<a href="gwsetup?lang=en;v=ged2gwb.htm">ged2gwb</a>)</li>
+        <li>{rm.create_gwb_start()} {@render geneweb()} {rm.create_gwb_end()} (<a href="gwsetup?lang=en;v=gwc.htm">gwc</a>)</li>
+        <li>{rm.create_empty()} (<a href="gwsetup?lang=en;v=simple.htm">gwc</a>)</li>
         {/snippet}
       </DefaultList>
     </div>
@@ -51,35 +55,35 @@
   {#snippet main()}
   <div>
     <div style="float:left;">
-      <DefaultList title="Advanced Options">
+      <DefaultList title={rm.list_advanced_options()}>
         {#snippet main()}
-        <li>Clean up (<a href="gwsetup?lang=en;v=cleanup.htm">cleanup</a>)</li>
-        <li>Renaming (<a href="gwsetup?lang=en;v=rename.htm">rename</a>)</li>
-        <li>Deletion (<a href="gwsetup?lang=en;v=delete.htm">delete</a>)</li>
-        <li>Merging with other databases (<a href="gwsetup?lang=en;v=merge.htm">merge</a>)</li>
-        <li>Saving and restoring (<a href="gwsetup?lang=en;v=save.htm">gwu</a>)</li>
-        <li>initialisation of consanguinities (<a href="gwsetup?lang=en;v=consang.htm">consang</a>)</li>
-        <li>Update links page / family chronicle (<a href="gwsetup?lang=en;v=update_nldb.htm">update_nldb</a>)</li>
-        <li>Compute connected componants (<a href="gwsetup?lang=en;v=connex.htm">connex</a>)</li>
-        <li>Compute the difference between two bases (<a href="gwsetup?lang=en;v=gwdiff.htm">gwdiff</a>)</li>
-        <li>Fixes problems in a base (<a href="gwsetup?lang=en;v=gwfix.htm">gwfixbase</a>)</li>
+        <li>{rm.ao_cleanup()} (<a href="gwsetup?lang=en;v=cleanup.htm">cleanup</a>)</li>
+        <li>{rm.ao_rename()} (<a href="gwsetup?lang=en;v=rename.htm">rename</a>)</li>
+        <li>{rm.ao_delete()} (<a href="gwsetup?lang=en;v=delete.htm">delete</a>)</li>
+        <li>{rm.ao_merge()} (<a href="gwsetup?lang=en;v=merge.htm">merge</a>)</li>
+        <li>{rm.ao_restore()} (<a href="gwsetup?lang=en;v=save.htm">gwu</a>)</li>
+        <li>{rm.ao_consang()} (<a href="gwsetup?lang=en;v=consang.htm">consang</a>)</li>
+        <li>{rm.ao_update()} (<a href="gwsetup?lang=en;v=update_nldb.htm">update_nldb</a>)</li>
+        <li>{rm.ao_compute()} (<a href="gwsetup?lang=en;v=connex.htm">connex</a>)</li>
+        <li>{rm.ao_compute_diff()} (<a href="gwsetup?lang=en;v=gwdiff.htm">gwdiff</a>)</li>
+        <li>{rm.ao_fix()} (<a href="gwsetup?lang=en;v=gwfix.htm">gwfixbase</a>)</li>
         {/snippet}
       </DefaultList>
       <ul>
         </ul>
     </div>
     <div style="float:left;">
-      <DefaultList title="Configure">
+      <DefaultList title={rm.list_configure()}>
         {#snippet main()}
-        <li>The parameters of a database (<a href="gwsetup?lang=en;v=gwf.htm">.gwf</a>)</li>
-        <li>The parameters of the gwd service (<a href="gwd?lang=en;v=gwd.htm">gwd</a>)</li>
-        <li>Name and places cache files for auto completion. (<a href="gwsetup?lang=en;v=cache_files.htm">cache_files</a>)</li>
+        <li>{rm.config_db_param()} (<a href="gwsetup?lang=en;v=gwf.htm">.gwf</a>)</li>
+        <li>{rm.config_front_param()} (<a href="gwd?lang=en;v=gwd.htm">gwd</a>)</li>
+        <li>{rm.config_cache()} (<a href="gwsetup?lang=en;v=cache_files.htm">cache_files</a>)</li>
         {/snippet}
       </DefaultList>
     </div>
   </div>
   <p style="clear:both"></p>
-  <p>You can also consult the complete documentation of <b><font color="#2f6400">GeneWeb</font></b>. (<a href="http://geneweb.tuxfamily.org/wiki/manual" target="_blank">doc</a>)
+  <p>{rm.doc()} {@render geneweb()}. (<a href="http://geneweb.tuxfamily.org/wiki/manual" target="_blank">doc</a>)
   <br><br></p>
   <LanguageSelector />
   <br>

@@ -1,5 +1,39 @@
 {
-  "display_in": "[Display in]:",
+  "display_in": "Mostrar en:",
 
-  "homepage_title": "Ggestión y Creación"
+  "homepage_title": "Gestión y Creación",
+
+  "list_consult": "Consultar",
+  "consult_list": "árboles genealógicos",
+  "consult_errors": "el historial de errores y estadísticas",
+
+  "list_save": "Guardar",
+  "save_gedcom": "un archivo fuente GEDCOM",
+  "save_gwb_start": "un archivo fuente",
+  "save_gwb_end": "",
+
+  "list_create": "Crear árbol genealógico",
+  "create_gedcom": "desde un archivo fuente GEDCOM",
+  "create_gwb_start": "desde un archivo fuente",
+  "create_gwb_end": "",
+  "create_empty": "desde un archivo vacío",
+
+  "list_advanced_options": "Opciones avanzadas",
+  "ao_cleanup": "Limpieza",
+  "ao_rename": "Renombrado",
+  "ao_delete": "Eliminación",
+  "ao_merge": "Fusión con otras bases de datos",
+  "ao_restore": "Guardar y restaurar",
+  "ao_consang": "Inicialización de consanguinidades",
+  "ao_update": "Actualizar enlaces de página / crónica familiar",
+  "ao_compute": "Calcular componentes conectados",
+  "ao_compute_diff": "Calcular la diferencia entre dos bases",
+  "ao_fix": "Corregir problemas en una base",
+
+  "list_configure": "Configurar",
+  "config_db_param": "Los parámetros de una base de datos",
+  "config_front_param": "Los parámetros del servicio gwd",
+  "config_cache": "Archivos de caché de nombres y lugares para autocompletado",
+
+  "doc": "También puede consultar la documentación completa de"
 }

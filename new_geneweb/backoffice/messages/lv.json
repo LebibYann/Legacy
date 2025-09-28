@@ -1,5 +1,39 @@
 {
-  "display_in": "[Display in]:",
+  "display_in": "Rādīt latviski:",
 
-  "homepage_title": "Vadiba un veidosana"
+  "homepage_title": "Vadība un veidošana",
+
+  "list_consult": "Konsultēt",
+  "consult_list": "dzimtas kokus",
+  "consult_errors": "kļūdu vēsturi un statistiku",
+
+  "list_save": "Saglabāt",
+  "save_gedcom": "GEDCOM avota datni",
+  "save_gwb_start": "",
+  "save_gwb_end": "avota datni",
+
+  "list_create": "Izveidot dzimtas koku",
+  "create_gedcom": "no GEDCOM avota datnes",
+  "create_gwb_start": "no",
+  "create_gwb_end": "avota datnes",
+  "create_empty": "no tukšas datnes",
+
+  "list_advanced_options": "Papildu opcijas",
+  "ao_cleanup": "Tīrīšana",
+  "ao_rename": "Pārdēvēšana",
+  "ao_delete": "Dzēšana",
+  "ao_merge": "Sapludināšana ar citām datu bāzēm",
+  "ao_restore": "Saglabāšana un atjaunošana",
+  "ao_consang": "Asinsradniecības inicializācija",
+  "ao_update": "Atjaunot saišu lapas / ģimenes hronikas",
+  "ao_compute": "Aprēķināt savienoto komponentu",
+  "ao_compute_diff": "Aprēķināt starpību starp divām bāzēm",
+  "ao_fix": "Labot problēmas bāzē",
+
+  "list_configure": "Konfigurēt",
+  "config_db_param": "Datu bāzes parametri",
+  "config_front_param": "gwd pakalpojuma parametri",
+  "config_cache": "Vārdu un vietu kešatmiņas datnes automātiskajam pabeigšanai",
+
+  "doc": "Jūs varat arī iepazīties ar pilno dokumentāciju"
 }

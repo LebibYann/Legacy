@@ -1,5 +1,39 @@
 {
-  "display_in": "[Display in]:",
+  "display_in": "Visa på:",
 
-  "homepage_title": "ledning och skapande"
+  "homepage_title": "Hantering och skapande",
+
+  "list_consult": "Konsultera",
+  "consult_list": "släktträd",
+  "consult_errors": "felhistoriken och statistik",
+
+  "list_save": "Spara",
+  "save_gedcom": "en GEDCOM-källfil",
+  "save_gwb_start": "en",
+  "save_gwb_end": "källfil",
+
+  "list_create": "Skapa släktträd",
+  "create_gedcom": "från en GEDCOM-källfil",
+  "create_gwb_start": "från en",
+  "create_gwb_end": "källfil",
+  "create_empty": "från en tom fil",
+
+  "list_advanced_options": "Avancerade alternativ",
+  "ao_cleanup": "Rensning",
+  "ao_rename": "Namnbyte",
+  "ao_delete": "Radering",
+  "ao_merge": "Sammanfogning med andra databaser",
+  "ao_restore": "Spara och återställa",
+  "ao_consang": "Initialisering av blodsförvantskap",
+  "ao_update": "Uppdatera länksidor / familjekrönika",
+  "ao_compute": "Beräkna anslutna komponenter",
+  "ao_compute_diff": "Beräkna skillnaden mellan två baser",
+  "ao_fix": "Åtgärda problem i en bas",
+
+  "list_configure": "Konfigurera",
+  "config_db_param": "Parametrarna för en databas",
+  "config_front_param": "Parametrarna för gwd-tjänsten",
+  "config_cache": "Namn- och platscachefiler för automatisk komplettering",
+
+  "doc": "Du kan också konsultera den fullständiga dokumentationen av"
 }
