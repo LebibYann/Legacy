@@ -40,6 +40,22 @@ jobs:
   unit-tests:
     name: 🧪 Unit & Functional Tests
     runs-on: [self-hosted]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: geneweb_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -52,6 +68,33 @@ jobs:
 
       - name: Install deps
         run: poetry install --no-root
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL
+        run: |
+          echo "Checking PostgreSQL connection..."
+          timeout=30
+          count=0
+          until pg_isready -h localhost -p 5432 -U user; do
+            echo "Waiting for PostgreSQL... ($count/$timeout)"
+            sleep 2
+            count=$((count + 2))
+            if [ $count -ge $timeout ]; then
+              echo "PostgreSQL failed to start within $timeout seconds"
+              exit 1
+            fi
+          done
+          echo "PostgreSQL is ready!"
+
+      - name: Test database connection
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "Testing database connection..."
+          psql -h localhost -p 5432 -U user -d geneweb_test -c "SELECT 1;" || exit 1
+          echo "Database connection successful!"
 
       - name: Run pytest
         env:
