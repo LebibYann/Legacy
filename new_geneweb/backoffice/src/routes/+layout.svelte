@@ -1,14 +1,14 @@
 <script lang="ts">
 	import '$/app.css';
-	import { onMount } from "svelte";
+	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon_gwsetup.png';
 	import Footer from '$components/Footer.svelte';
 	import Header from '$components/Header.svelte';
-	import { detectAndSetBrowserLanguage } from "$utils/languageDetection";
+	import { detectAndSetBrowserLanguage } from '$utils/languageDetection';
 
-    onMount(() => {
-        detectAndSetBrowserLanguage();
-    });
+	onMount(() => {
+		detectAndSetBrowserLanguage();
+	});
 
 	let { children } = $props();
 </script>

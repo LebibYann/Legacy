@@ -1,42 +1,39 @@
 {
-  "display_in": "Display in:",
+	"display_in": "Display in:",
 
+	"homepage_title": "Management and Creation",
 
+	"list_consult": "Consult",
+	"consult_list": "family Trees",
+	"consult_errors": "the error history and statistics",
 
+	"list_save": "Save",
+	"save_gedcom": "a GEDCOM source file",
+	"save_gwb_start": "a",
+	"save_gwb_end": "source file",
 
-  "homepage_title": "Management and Creation",
+	"list_create": "Create Family Tree",
+	"create_gedcom": "from a GEDCOM source file",
+	"create_gwb_start": "from a",
+	"create_gwb_end": "source file",
+	"create_empty": "from an empty file",
 
-  "list_consult": "Consult",
-  "consult_list": "family Trees",
-  "consult_errors": "the error history and statistics",
+	"list_advanced_options": "Advanced Options",
+	"ao_cleanup": "Clean up",
+	"ao_rename": "Renaming",
+	"ao_delete": "Deletion",
+	"ao_merge": "Merging with other databases",
+	"ao_restore": "Saving and restoring ",
+	"ao_consang": "Initialisation of consanguinities",
+	"ao_update": "Update links page / family chronicle",
+	"ao_compute": "Compute connected components",
+	"ao_compute_diff": "Compute the difference between two bases",
+	"ao_fix": "Fixes problems in a base",
 
-  "list_save": "Save",
-  "save_gedcom": "a GEDCOM source file",
-  "save_gwb_start": "a",
-  "save_gwb_end": "source file",
+	"list_configure": "Configure",
+	"config_db_param": "The parameters of a database",
+	"config_front_param": "The parameters of the gwd service",
+	"config_cache": "Name and places cache files for auto completion",
 
-  "list_create": "Create Family Tree",
-  "create_gedcom": "from a GEDCOM source file",
-  "create_gwb_start": "from a",
-  "create_gwb_end": "source file",
-  "create_empty": "from an empty file",
-
-  "list_advanced_options": "Advanced Options",
-  "ao_cleanup": "Clean up",
-  "ao_rename": "Renaming",
-  "ao_delete": "Deletion",
-  "ao_merge": "Merging with other databases",
-  "ao_restore": "Saving and restoring ",
-  "ao_consang": "Initialisation of consanguinities",
-  "ao_update": "Update links page / family chronicle",
-  "ao_compute": "Compute connected components",
-  "ao_compute_diff": "Compute the difference between two bases",
-  "ao_fix": "Fixes problems in a base",
-
-  "list_configure": "Configure",
-  "config_db_param": "The parameters of a database",
-  "config_front_param": "The parameters of the gwd service",
-  "config_cache": "Name and places cache files for auto completion",
-
-  "doc": "You can also consult the complete documentation of"
+	"doc": "You can also consult the complete documentation of"
 }

@@ -20,7 +20,7 @@ const config = {
 			$utils: 'src/utils',
 			$: 'src' // Ajout de l'alias pour le dossier racine
 		}
-	},
+	}
 };
 
 export default config;

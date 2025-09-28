@@ -1,37 +1,37 @@
 import * as m from '$lib/paraglide/messages.js';
 import { onLanguageChange } from './languageDetection.js';
 
+type Messages = typeof m;
+
 /**
  * Creates a reactive wrapper around Paraglide messages that automatically
  * updates when the language changes, without needing to manually define each message.
  */
-export function createReactiveMessages() {
-    let updateTrigger = $state(0);
+export function createReactiveMessages(): Messages {
+	let updateTrigger = $state(0);
 
-    // Subscribe to language changes and trigger updates
-    if (typeof window !== 'undefined') {
-        onLanguageChange(() => {
-            updateTrigger++;
-        });
-    }
+	if (typeof window !== 'undefined') {
+		onLanguageChange(() => {
+			updateTrigger++;
+		});
+	}
 
-    // Create reactive wrappers for each message function
-    const reactiveMessages = {} as typeof m;
+	const reactiveMessages: Partial<Messages> = {};
 
-    for (const key in m) {
-        const originalFunction = (m as any)[key];
-        if (typeof originalFunction === 'function') {
-            (reactiveMessages as any)[key] = (...args: any[]) => {
-                // Reference updateTrigger to make this reactive
-                updateTrigger;
-                return originalFunction(...args);
-            };
-        } else {
-            (reactiveMessages as any)[key] = originalFunction;
-        }
-    }
+	for (const key of Object.keys(m) as Array<keyof Messages>) {
+		const originalFunction = m[key];
+		if (typeof originalFunction === 'function') {
+			reactiveMessages[key] = ((...args: unknown[]) => {
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+				updateTrigger;
+				return originalFunction(...args);
+			}) as Messages[typeof key];
+		} else {
+			reactiveMessages[key] = originalFunction;
+		}
+	}
 
-    return reactiveMessages;
+	return reactiveMessages as Messages;
 }
 
 /**

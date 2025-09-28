@@ -1,16 +1,14 @@
 <script lang="ts">
-    import type { Snippet } from "svelte";
+	import type { Snippet } from 'svelte';
 
-    interface SectionProps {
-        main: Snippet<[]>;
-    }
+	interface SectionProps {
+		main: Snippet<[]>;
+	}
 
-    const {
-        main
-    }: SectionProps = $props();
+	const { main }: SectionProps = $props();
 </script>
 
-<section class="pt-5 flex flex-col">
-    {@render main?.() }
-    <hr class="mt-2">
+<section class="flex flex-col pt-5">
+	{@render main?.()}
+	<hr class="mt-2" />
 </section>
