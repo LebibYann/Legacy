@@ -37,7 +37,6 @@
 		"eslint-plugin-jsx-a11y": "^6.10.2",
 		"eslint-plugin-svelte": "^3.12.4",
 		"globals": "^16.0.0",
-		"playwright": "^1.53.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",

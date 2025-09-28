@@ -6,7 +6,7 @@ import path from 'path';
 import assert from "assert";
 
 // Determine which environment to load based on command line argument or environment variable
-const envFile = process.argv.find(arg => arg.startsWith('--env='))?.split('=')[1] || '.env.caml';
+const envFile = process.env.ENV_FILE || '.env.caml';
 // Load the specific environment file
 const envPath = path.resolve(process.cwd(), envFile);
 dotenv.config({ path: envPath, quiet: true });
