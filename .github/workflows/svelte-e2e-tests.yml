@@ -1,0 +1,115 @@
+name: End-to-End Tests (OCaml)
+
+env:
+  TEST_FOLDER: tests/end-to-end
+  TEST_DOCKER_FOLDER: geneweb_docker
+
+on:
+  pull_request:
+    paths:
+      - "new_geneweb/**"
+      - ".github/workflows/svelte-e2e-tests.yml"
+      - "tests/end-to-end/**"
+      - "!**/*.md"
+  workflow_dispatch:
+
+jobs:
+    e2e-tests:
+      runs-on: self-hosted
+
+      services:
+        docker:
+          image: docker:dind
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Install docker compose
+          run: |
+            # Add Docker's official GPG key:
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates curl
+            sudo install -m 0755 -d /etc/apt/keyrings
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+            # Add the repository to Apt sources:
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+        - name: Install xvfb
+          run: sudo apt-get update && sudo apt-get install -y xvfb
+
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 24
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Cache Docker layers
+          uses: actions/cache@v4
+          with:
+            path: /tmp/.buildx-cache
+            key: ${{ runner.os }}-buildx-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-buildx-
+
+        - name: Build Geneweb
+          run: |
+            docker buildx build \
+              --cache-from=type=local,src=/tmp/.buildx-cache \
+              --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
+              -t geneweb:latest \
+              --load \
+              .
+            # On déplace le nouveau cache
+            rm -rf /tmp/.buildx-cache
+            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+        - name: Start New Geneweb
+          run: |
+            docker compose up -d
+            timeout=600  # 10 minutes in seconds
+            interval=5   # check every 5 seconds
+            elapsed=0
+
+            echo "Waiting for localhost:2317 to respond..."
+            while [ $elapsed -lt $timeout ]; do
+                if curl -s --connect-timeout 3 http://localhost:2317 > /dev/null 2>&1; then
+                    echo "localhost:2317 is ready!"
+                    break
+                fi
+                echo "localhost:2317 not ready yet, waiting... ($elapsed/$timeout seconds)"
+                sleep $interval
+                elapsed=$((elapsed + interval))
+            done
+
+            if [ $elapsed -ge $timeout ]; then
+                echo "Timeout: localhost:2317 did not respond within 10 minutes"
+                exit 1
+            fi
+
+            echo "Checking localhost:2316 responds..."
+            curl -s --connect-timeout 3 http://localhost:2316 > /dev/null 2>&1
+            echo "localhost:2316 is ready!"
+
+        - name: Setup end-to-end tests
+          run: |
+            cd ${{ env.TEST_FOLDER }}
+            sudo npx playwright install-deps
+            npm i
+            npm run install:browsers
+        - name: Run end-to-end tests
+          run: |
+            cd ${{ env.TEST_FOLDER }}
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:chromium:ci
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:firefox:ci
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:webkit:ci

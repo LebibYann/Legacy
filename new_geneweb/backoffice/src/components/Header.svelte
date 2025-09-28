@@ -3,24 +3,30 @@
     import { onMount } from 'svelte';
     import { pageTitle } from '$lib/stores/pageStore';
     import ClickableImage from './ClickableImage.svelte';
+	import { page } from "$app/state";
 
 
     let headerRef: HTMLElement | undefined;
     let logoRef: HTMLElement | undefined;
-    let titleRef: HTMLElement | undefined;
+    let titleRef: HTMLElement | undefined = $state(undefined);
     let isStacked = $state(false);
 
-    onMount(() => {
-        const checkOverlap = () => {
-            if (headerRef && logoRef && titleRef) {
-                const headerWidth = headerRef.clientWidth;
-                const logoWidth = logoRef.clientWidth;
-                const titleWidth = titleRef.clientWidth; // Use scrollWidth to get full text width
-                isStacked = (logoWidth + titleWidth / 2) * 2.1 >= headerWidth;
-                console.log(titleWidth, logoWidth, titleWidth + logoWidth, ">", headerWidth, isStacked);
+    const checkOverlap = () => {
+        if (headerRef && logoRef && titleRef) {
+            const headerWidth = headerRef.clientWidth;
+            const logoWidth = logoRef.clientWidth;
+            const titleWidth = titleRef.clientWidth; // Use scrollWidth to get full text width
+            isStacked = (logoWidth + titleWidth / 2) * 2.1 >= headerWidth;
+        }
+    };
 
-            }
-        };
+    $effect(() => {
+        if (titleRef && $pageTitle) {
+            checkOverlap();
+        }
+    });
+
+    onMount(() => {
 
         // Initial check
         checkOverlap();

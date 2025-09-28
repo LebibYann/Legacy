@@ -112,4 +112,4 @@ jobs:
         - name: Run end-to-end tests
           run: |
             cd ${{ env.TEST_FOLDER }}
-            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:chromium:ci --env=.env.caml
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:caml:chromium:ci
