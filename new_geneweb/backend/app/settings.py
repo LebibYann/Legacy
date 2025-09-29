@@ -1,6 +1,7 @@
 from __future__ import annotations
-
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import List
 
 
 class Settings(BaseSettings):
@@ -10,13 +11,24 @@ class Settings(BaseSettings):
     app_port: int
 
     database_url: str
-    allowed_ips: list[str] = ["127.0.0.1", "::1"]
+    allowed_ips: str | list[str] = "127.0.0.1,::1"
 
     model_config = SettingsConfigDict(
-        env_file=".env",  # read a .env file at the root of the project
-        env_prefix="",  # no prefix required
+        env_file=".env",
+        env_prefix="",
         case_sensitive=False,
     )
+
+    @field_validator("allowed_ips", mode="before")
+    @classmethod
+    def parse_ips(cls, v):
+        # Déjà une liste (JSON)
+        if isinstance(v, list):
+            return v
+        # CSV
+        if isinstance(v, str):
+            return [ip.strip() for ip in v.split(",")]
+        return v
 
 
 settings = Settings()

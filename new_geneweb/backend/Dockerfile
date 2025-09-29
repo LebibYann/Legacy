@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libpq-dev \
     postgresql-client \
+    bash \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
@@ -23,7 +25,7 @@ RUN poetry install --only main --no-root
 COPY app ./app
 
 COPY entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
+RUN sed $'s/\r$//' ./entrypoint.sh > ./entrypoint.sh && dos2unix ./entrypoint.sh && chmod +x ./entrypoint.sh
 
 EXPOSE 8000
 
