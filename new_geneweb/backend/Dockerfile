@@ -25,7 +25,7 @@ RUN poetry install --only main --no-root
 COPY app ./app
 
 COPY entrypoint.sh ./entrypoint.sh
-RUN sed $'s/\r$//' ./entrypoint.sh > ./entrypoint.sh && dos2unix ./entrypoint.sh && chmod +x ./entrypoint.sh
+RUN dos2unix ./entrypoint.sh && chmod +x ./entrypoint.sh
 
 EXPOSE 8000
 
