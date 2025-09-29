@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     @field_validator("allowed_ips", mode="before")
     @classmethod
     def parse_ips(cls, v):
-        # Déjà une liste (JSON)
+        # Already a list (JSON)
         if isinstance(v, list):
             return v
         # CSV
