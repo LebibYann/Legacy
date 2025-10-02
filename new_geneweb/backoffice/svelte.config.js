@@ -13,12 +13,14 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			// $lib est déjà configuré par défaut (pointe vers src/lib)
+			// $lib is natively mapped to src/lib
 			$components: 'src/components',
 			$assets: 'src/assets',
-			// $stores: 'src/stores',
+			$stores: 'src/lib/stores',
 			$utils: 'src/utils',
-			$: 'src' // Ajout de l'alias pour le dossier racine
+			$routes: 'src/routes',
+			$: 'src', // Adding alias for root folder
+			$test: 'tests' // If ever needed
 		}
 	}
 };

@@ -44,7 +44,7 @@
 							<li>
 								{rm.save_gwb_start()}
 								{@render geneweb()}
-								{rm.save_gwb_end()} (<Link href="/export/gwb" title="gwu" />
+								{rm.save_gwb_end()} (<Link href="/export/gwb" title="gwu" />)
 							</li>
 						{/snippet}
 					</DefaultList>
@@ -58,9 +58,9 @@
 							<li>
 								{rm.create_gwb_start()}
 								{@render geneweb()}
-								{rm.create_gwb_end()} (<Link href="/import/gwb" title="gwc" />
+								{rm.create_gwb_end()} (<Link href="/import/gwb" title="gwc" />)
 							</li>
-							<li>{rm.create_empty()} (<Link href="/new-db" title="gwc" /></li>
+							<li>{rm.create_empty()} (<Link href="/new-db" title="gwc" />)</li>
 						{/snippet}
 					</DefaultList>
 				</div>
@@ -74,16 +74,16 @@
 			<div style="float:left;">
 				<DefaultList title={rm.list_advanced_options()}>
 					{#snippet main()}
-						<li>{rm.ao_cleanup()} (<Link href="/cleanup" title="cleanup" /></li>
-						<li>{rm.ao_rename()} (<Link href="/rename" title="rename" /></li>
-						<li>{rm.ao_delete()} (<Link href="/delete" title="delete" /></li>
-						<li>{rm.ao_merge()} (<Link href="/merge" title="merge" /></li>
-						<li>{rm.ao_restore()} (<Link href="/save" title="gwu" /></li>
-						<li>{rm.ao_consang()} (<Link href="/consang" title="consang" /></li>
-						<li>{rm.ao_update()} (<Link href="/update-nldb" title="update_nldb" /></li>
-						<li>{rm.ao_compute()} (<Link href="/connex" title="connex" /></li>
-						<li>{rm.ao_compute_diff()} (<Link href="/gwdiff" title="gwdiff" /></li>
-						<li>{rm.ao_fix()} (<Link href="/gwfix" title="gwfixbase" /></li>
+						<li>{rm.ao_cleanup()} (<Link href="/cleanup" title="cleanup" />)</li>
+						<li>{rm.ao_rename()} (<Link href="/rename" title="rename" />)</li>
+						<li>{rm.ao_delete()} (<Link href="/delete" title="delete" />)</li>
+						<li>{rm.ao_merge()} (<Link href="/merge" title="merge" />)</li>
+						<li>{rm.ao_restore()} (<Link href="/save" title="gwu" />)</li>
+						<li>{rm.ao_consang()} (<Link href="/consang" title="consang" />)</li>
+						<li>{rm.ao_update()} (<Link href="/update-nldb" title="update_nldb" />)</li>
+						<li>{rm.ao_compute()} (<Link href="/connex" title="connex" />)</li>
+						<li>{rm.ao_compute_diff()} (<Link href="/gwdiff" title="gwdiff" />)</li>
+						<li>{rm.ao_fix()} (<Link href="/gwfix" title="gwfixbase" />)</li>
 					{/snippet}
 				</DefaultList>
 				<ul></ul>
@@ -91,9 +91,9 @@
 			<div style="float:left;">
 				<DefaultList title={rm.list_configure()}>
 					{#snippet main()}
-						<li>{rm.config_db_param()} (<Link href="/gwf" title=".gwf" /></li>
-						<li>{rm.config_front_param()} (<Link href="/gwd" title="gwd" /></li>
-						<li>{rm.config_cache()} (<Link href="/cache-files" title="cache_files" /></li>
+						<li>{rm.config_db_param()} (<Link href="/gwf" title=".gwf" />)</li>
+						<li>{rm.config_front_param()} (<Link href="/gwd" title="gwd" />)</li>
+						<li>{rm.config_cache()} (<Link href="/cache-files" title="cache_files" />)</li>
 					{/snippet}
 				</DefaultList>
 			</div>
