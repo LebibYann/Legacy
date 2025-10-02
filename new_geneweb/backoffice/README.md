@@ -72,6 +72,7 @@ npm run build
 ```
 
 This will:
+
 1. Compile Paraglide translations
 2. Build the SvelteKit application
 
@@ -110,6 +111,7 @@ npm run test:unit -- --watch
 ```
 
 The project uses:
+
 - **Vitest** for unit testing
 - **@vitest/browser** for browser-based testing
 - **vitest-browser-svelte** for Svelte component testing
@@ -158,6 +160,7 @@ npm run lighthouse
 ```
 
 This will:
+
 1. Build the production version
 2. Run Lighthouse CI automated tests
 
@@ -235,6 +238,7 @@ coverage/               # Test coverage reports
 ## 🌍 Internationalization
 
 The project supports multiple languages using Paraglide:
+
 - English (en)
 - French (fr)
 - German (de)
