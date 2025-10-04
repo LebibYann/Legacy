@@ -21,14 +21,12 @@ class Settings(BaseSettings):
 
     @field_validator("allowed_ips", mode="before")
     @classmethod
-    def parse_ips(cls, v):
+    def parse_ips(cls, v: str | list[str]) -> list[str]:
         # Already a list (JSON)
         if isinstance(v, list):
             return v
         # CSV
-        if isinstance(v, str):
-            return [ip.strip() for ip in v.split(",")]
-        return v
+        return [ip.strip() for ip in v.split(",")]
 
 
 settings = Settings()
