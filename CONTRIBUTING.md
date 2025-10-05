@@ -14,6 +14,55 @@ This document explains how to submit high‑quality contributions and keep histo
 
 ---
 
+## ⚙️ Git Configuration Setup
+
+**Important for Windows users**: Configure Git to use Unix line endings (LF) instead of Windows line endings (CRLF) to maintain consistency across different operating systems.
+
+### Initial Git Setup
+
+Run these commands once after cloning the repository:
+
+```bash
+# Configure line ending handling globally (recommended)
+git config --global core.autocrlf false
+git config --global core.eol lf
+
+# Or configure only for this repository
+git config core.autocrlf false
+git config core.eol lf
+
+# Ensure existing files use correct line endings
+git add --renormalize .
+git commit -m "chore: normalize line endings to LF"
+```
+
+### Verify Configuration
+
+Check your Git configuration:
+
+```bash
+git config --list | grep -E "(autocrlf|eol)"
+```
+
+Expected output:
+```
+core.autocrlf=false
+core.eol=lf
+```
+
+### Why This Matters
+
+- **Consistency**: All developers work with the same line endings regardless of OS
+- **CI/CD**: Prevents build failures due to line ending differences
+- **Diffs**: Avoids false changes in Git diffs caused by line ending conversions
+- **Cross-platform**: Ensures code works identically on Linux, macOS, and Windows
+
+### .gitattributes File
+
+The repository includes a `.gitattributes` file that enforces LF line endings for text files. This works in conjunction with your Git configuration.
+
+---
+
 ## 🌿 Branching Strategy
 
 * `main`: always deployable
@@ -51,8 +100,8 @@ No PR should decrease test or coverage thresholds.
 
 ## 🔐 Security
 
-Never commit secrets (API keys, tokens).  
-Report vulnerabilities privately (security contact / SECURITY.md).  
+Never commit secrets (API keys, tokens).
+Report vulnerabilities privately (security contact / SECURITY.md).
 Avoid unmaintained or license-unclear dependencies.
 
 ---
@@ -68,7 +117,7 @@ Avoid unmaintained or license-unclear dependencies.
 7. Open a Pull Request using the template.
 8. Address review feedback.
 9. Clean up your branch history before merge if requested:
-   - **Rebase**: use it if your commits are already clean, logical, and well-structured (keeps full history).  
+   - **Rebase**: use it if your commits are already clean, logical, and well-structured (keeps full history).
    - **Squash**: use it if you made many small, noisy, or fix commits (combines them into one or a few meaningful commits).
 10. Merge according to project policy.
 
@@ -124,7 +173,7 @@ Suggested labels:
   - `status: in-progress` → Being worked on
   - `status: in-review` → Being reviewed
   - `status: done` → Completed Issue
-  
+
 ---
 
 ## 💬 Communication
@@ -136,7 +185,7 @@ Architecture decisions: captured in Issue or ADR (docs/adr/NNN-title.md).
 
 ## 🧱 Technical Debt
 
-Track debt via dedicated issues (label: tech-debt).  
+Track debt via dedicated issues (label: tech-debt).
 Do not leave silent TODOs.
 
 TODO format:

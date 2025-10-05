@@ -20,3 +20,4 @@ Thumbs.db
 # Pytest
 __pycache__/
 tests/functional/binaries/
+.vscode/

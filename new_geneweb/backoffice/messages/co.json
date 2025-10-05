@@ -1,0 +1,39 @@
+{
+	"display_in": "Affissà in :",
+
+	"homepage_title": "Ghjestione è Creazione",
+
+	"list_consult": "Cunsultà",
+	"consult_list": "arburi genealògichi",
+	"consult_errors": "a storia di l'errori è e statistiche",
+
+	"list_save": "Salvà",
+	"save_gedcom": "un schedariu fonte GEDCOM",
+	"save_gwb_start": "un schedariu fonte",
+	"save_gwb_end": "",
+
+	"list_create": "Creà l'arburu genealògicu",
+	"create_gedcom": "da un schedariu fonte GEDCOM",
+	"create_gwb_start": "da un schedariu fonte",
+	"create_gwb_end": "",
+	"create_empty": "da un schedariu viotu",
+
+	"list_advanced_options": "Opzioni avanzate",
+	"ao_cleanup": "Nettezza",
+	"ao_rename": "Rinuminazione",
+	"ao_delete": "Sguassatura",
+	"ao_merge": "Fusione cù altre banche di dati",
+	"ao_restore": "Salvamentu è ristorazione",
+	"ao_consang": "Inizializazione di e cunsanguinità",
+	"ao_update": "Attualità di i ligami pagina / cronaca famigliare",
+	"ao_compute": "Calculu di i cumpunenti cunnessi",
+	"ao_compute_diff": "Calculu di a diffarenza trà duie basi",
+	"ao_fix": "Currezione di i prublemi in una basa",
+
+	"list_configure": "Cunfigurà",
+	"config_db_param": "I parametri di una banca di dati",
+	"config_front_param": "I parametri di u serviziu gwd",
+	"config_cache": "Schedarii di cache di i nomi è i lochi per l'autocompletamentu",
+
+	"doc": "Pudete ancu cunsultà a documentazione cumpleta di"
+}

@@ -1,4 +1,4 @@
-name: End-to-End Tests (OCaml)
+name: ocaml-e2e-tests
 
 env:
   TEST_FOLDER: tests/end-to-end
@@ -15,6 +15,7 @@ on:
 
 jobs:
     e2e-tests:
+      name: 🛣️ OCaml End-to-End Tests
       runs-on: self-hosted
 
       services:
@@ -65,15 +66,7 @@ jobs:
         - name: Build Geneweb
           run: |
             cd ${{ env.TEST_DOCKER_FOLDER }}
-            docker buildx build \
-              --cache-from=type=local,src=/tmp/.buildx-cache \
-              --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
-              -t geneweb:latest \
-              --load \
-              .
-            # On déplace le nouveau cache
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+            docker compose build
 
         - name: Start Geneweb
           run: |
@@ -112,4 +105,4 @@ jobs:
         - name: Run end-to-end tests
           run: |
             cd ${{ env.TEST_FOLDER }}
-            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:chromium:ci --env=.env.caml
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:caml:chromium:ci
