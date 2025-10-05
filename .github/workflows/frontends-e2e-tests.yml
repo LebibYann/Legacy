@@ -5,8 +5,6 @@ env:
   BACKEND_FOLDER: new_geneweb/backend
   BACKOFFICE_URL: http://localhost:5173
   FRONTEND_URL: http://localhost:5174
-  REPO_NAME_LOWER: $(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-  ORGA_NAME_LOWER: $(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
 on:
   push:
@@ -75,6 +73,11 @@ jobs:
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
 
+        - name: Add ghcr path to environment
+          run: |
+            REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+            echo "GHCR_PATH=ghcr.io/${REPO_NAME}" >> $GITHUB_ENV
+
         # ----------------------------------------------------------
         # BACKEND (FastAPI)
         # ----------------------------------------------------------
@@ -83,7 +86,7 @@ jobs:
           with:
             context: ./new_geneweb/backend
             file: ./new_geneweb/backend/Dockerfile
-            tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:backend
+            tags: ${{ env.GHCR_PATH }}:backend
             push: true
             cache-from: type=gha,scope=backend
             cache-to: type=gha,scope=backend,mode=max
@@ -96,7 +99,7 @@ jobs:
           with:
             context: ./new_geneweb/backoffice
             file: ./new_geneweb/backoffice/Dockerfile
-            tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:backoffice
+            tags: ${{ env.GHCR_PATH }}:backoffice
             push: true
             cache-from: type=gha,scope=backoffice
             cache-to: type=gha,scope=backoffice,mode=max
@@ -109,7 +112,7 @@ jobs:
           with:
             context: ./new_geneweb/frontend
             file: ./new_geneweb/frontend/Dockerfile
-            tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:frontend
+            tags: ${{ env.GHCR_PATH }}:frontend
             push: true
             cache-from: type=gha,scope=frontend
             cache-to: type=gha,scope=frontend,mode=max
@@ -117,9 +120,9 @@ jobs:
         - name: Build New Geneweb
           run: |
             cat ${{ env.BACKEND_FOLDER }}/.env.example > ${{ env.BACKEND_FOLDER }}/.env
-            docker pull ghcr.io/${{ env.REPO_NAME_LOWER }}:backend
-            docker pull ghcr.io/${{ env.REPO_NAME_LOWER }}:frontend
-            docker pull ghcr.io/${{ env.REPO_NAME_LOWER }}:backoffice
+            docker pull ${{ env.GHCR_PATH }}:backend
+            docker pull ${{ env.GHCR_PATH }}:frontend
+            docker pull ${{ env.GHCR_PATH }}:backoffice
 
         - name: Start New Geneweb
           run: |
