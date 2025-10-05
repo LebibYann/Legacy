@@ -75,8 +75,9 @@ jobs:
 
         - name: Add ghcr path to environment
           run: |
+            ORGA_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
             REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-            echo "GHCR_PATH=ghcr.io/${REPO_NAME}" >> $GITHUB_ENV
+            echo "GHCR_PATH=ghcr.io/${ORGA_NAME}/${REPO_NAME}" >> $GITHUB_ENV
 
         # ----------------------------------------------------------
         # BACKEND (FastAPI)
