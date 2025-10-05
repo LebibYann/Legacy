@@ -18,3 +18,5 @@ alembic/*-cache
 # VSCode / IDE
 .vscode/
 .idea/
+.coverage
+coverage.xml

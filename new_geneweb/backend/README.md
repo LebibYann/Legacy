@@ -1,13 +1,13 @@
 # 🧬 GeneWeb Backend
 
-Backend for the modernized **GeneWeb** project, built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.  
-It exposes REST APIs, applies business logic, and persists genealogy data in a relational database.  
+Backend for the modernized **GeneWeb** project, built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
+It exposes REST APIs, applies business logic, and persists genealogy data in a relational database.
 
 ---
 
 ## 📦 Requirements
 
-- **Python 3.12+**
+- **Python 3.13.x**
 - [Poetry](https://python-poetry.org/) (`>=1.8.3`)
 - [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
@@ -84,13 +84,14 @@ Run locally with Poetry:
 ```bash
 # Run tests
 poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
+# Show coverage report
+poetry run coverage report
 
-# Code formatting (Black + isort)
+# Linting + autofixing
+poetry run ruff check --fix .
+
+# Code formatting (Black)
 poetry run black .
-poetry run isort .
-
-# Linting
-poetry run flake8 .
 
 # Type checking
 poetry run mypy app/
