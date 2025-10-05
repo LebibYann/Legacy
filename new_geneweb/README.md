@@ -14,10 +14,8 @@ flowchart TD
     %% =========================================
     %% Frontends
     %% =========================================
-    subgraph Frontend
-        FrontGWSetup["🧱 GeneWeb Setup Frontend - Svelte 5<br/>(IP restricted)"]:::webapp
-        FrontGW["🧱 GeneWeb Frontend - Svelte 5"]:::webapp
-    end
+      FrontGWSetup["🧱 GeneWeb Backoffice Frontend (gwsetup) - Svelte 5<br/>(IP restricted)"]:::webapp
+      FrontGW["🧱 GeneWeb Frontend - Svelte 5"]:::webapp
 
     %% =========================================
     %% Backend
@@ -133,7 +131,7 @@ Encapsulates migrated logic of legacy binaries:
 | Legacy Binary | New Form | Notes |
 |---------------|----------|-------|
 | gw / gwc (read) | API1 endpoints | Aggregated under resource controllers |
-| gwsetup | API2 endpoints + Admin UI | Auth & IP restriction applied |
+| gwsetup | API2 endpoints + Admin UI | IP restriction applied |
 | ged2gwb | Import service + background task | Streams GEDCOM -> staging -> normalized tables |
 | gwb2ged | Export service | Query -> assemble GEDCOM with consistent ordering |
 | gwu | Maintenance endpoints | Idempotent operations (rebuild indexes, recalc metrics) |
@@ -147,38 +145,13 @@ Encapsulates migrated logic of legacy binaries:
 - Consistency enforcement: database constraints + service invariant checks (e.g. no circular parentage, chronological sanity for life events).
 
 ## Security & Access Control
-- Split open vs restricted routers; enforce authentication/authorization middleware on restricted routes.
-- Optional IP allowlist for sensitive operations (import/export, system maintenance) as defense-in-depth.
-- Input validation & size limits (upload GEDCOM, media attachments) to mitigate resource exhaustion.
-- Planned rate limiting + audit logging of administrative actions.
-
-## Observability
-- Structured logging (JSON) with correlation IDs per request.
-- Metrics (Prometheus): request latency, DB query counts, background job durations.
-- Tracing (OpenTelemetry) optional for complex import/export flows.
-
-## Deployment & Scaling
-- Stateless API layer (horizontal scale with load balancer).
-- Background workers scaled separately for CPU-heavy tasks (consanguinity, diff, import parsing).
-- PostgreSQL vertical scaling + read replicas (future) for heavy read patterns.
-- Plugin hot-reload optional in development; disabled in production for determinism.
-
-## Extensibility Principles
-- Stable public API versioning (`/api/v1/...`).
-- Backward-compatible schema migrations (Liquibase/Alembic) with downgrade scripts where feasible.
-- Domain services expose pure functions for core transforms -> easier unit testing.
-
-## Future Enhancements
-- GraphQL overlay for richer client queries (optional).
-- WebSocket channels for long-running job progress updates (imports, consang recalculation).
-- Caching layer (Redis) for high-traffic endpoints (e.g. person detail, ancestry views).
-- Fine-grained authorization (role/permission matrix) beyond current open/restricted split.
-- Incremental adoption of event sourcing for auditing critical mutations.
+- Split open vs restricted routers
+- Mandatory IP allowlist for sensitive operations (import/export, system maintenance)
 
 ## Related Documentation
-- Legacy storage format: `../docs/geneweb/architecture/storage-format.md`
-- Enumerations & schema: `./database_schemas/README.md`
-- Consanguinity algorithm deep-dive: `../docs/geneweb/algorithms/consanguinity.md`
+- [Legacy storage format](../docs/geneweb/architecture/storage-format.md)
+- [Enumerations & schema](./database_schemas/README.md)
+- [Consanguinity algorithm deep-dive](../docs/geneweb/algorithms/consanguinity.md)
 
 ## Change Log
 - 2025-09-12: Added architecture explanation sections below diagram.
