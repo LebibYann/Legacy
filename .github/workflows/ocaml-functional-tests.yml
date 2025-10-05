@@ -14,6 +14,7 @@ on:
 
 jobs:
   run-functional-tests:
+    name: 🧪 OCaml Functional Tests
     runs-on: [self-hosted]
     steps:
       - name: Checkout

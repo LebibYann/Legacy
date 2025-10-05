@@ -15,6 +15,7 @@ on:
 
 jobs:
     e2e-tests:
+      name: 🛣️ Frontends End-to-End Tests
       runs-on: self-hosted
 
       services:
