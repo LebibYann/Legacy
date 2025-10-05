@@ -19,17 +19,17 @@ from sqlalchemy.ext.asyncio import (
 from app.settings import settings
 
 
-class AlchemyEncapsulationClass:
+class DBConnector:
     """
-    Minimal database encapsulation class that wraps SQLAlchemy.
+    Database connector class that provides a clean abstraction layer.
 
-    Designed to be simple to use for API developers with minimal configuration required.
-    Handles connection management, session lifecycle, and basic operations.
+    Designed to be ORM-agnostic and easily swappable with other database solutions.
+    Handles connection management, session lifecycle, and data access operations.
     """
 
     def __init__(self, database_url: str | None = None) -> None:
         """
-        Initialize the Alchemy encapsulation class.
+        Initialize the database connector.
 
         Args:
             database_url: Optional database URL. If not provided, uses settings.database_url
@@ -67,6 +67,10 @@ class AlchemyEncapsulationClass:
     async def execute_query(self, query: str, params: dict[str, Any] | None = None) -> Any:
         """
         Execute a raw SQL query and return the result.
+
+        Note:
+            API developers should avoid using this method directly. Instead, create specific
+            methods for your use cases to maintain proper encapsulation and data validation.
 
         Args:
             query: SQL query string
