@@ -1,11 +1,11 @@
 name: backoffice-tests
 
 on:
-  pull_request:
+  push:
     paths:
-      - "new_geneweb/backoffice/**"
       - ".github/workflows/backoffice-tests.yml"
-      - "!**/*.md"
+  pull_request:
+    branches: ["**"]
 
 defaults:
   run:

@@ -339,5 +339,7 @@ In addition to this global guide, some parts of the project include their own
 `CONTRIBUTING.md` with technical details and conventions specific to that area:
 
 - [`new_geneweb/backend/CONTRIBUTING.md`](./backend/CONTRIBUTING.md) → FastAPI, Alembic, SQLAlchemy, Pytest
+- [`new_geneweb/backoffice/CONTRIBUTING.md`](./backoffice/CONTRIBUTING.md) → Svelte 5, Typescript, Vitest
+- [`new_geneweb/frontend/CONTRIBUTING.md`](./frontend/CONTRIBUTING.md) → Svelte 5, Typescript, Vitest
 
 Always check the local guide before contributing to a specific component.
