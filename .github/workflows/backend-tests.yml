@@ -2,13 +2,10 @@ name: backend-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "new_geneweb/backend/**"
       - ".github/workflows/backend-tests.yml"
   pull_request:
-    branches:
-      - dev
+    branches: ["**"]
 
 env:
   PYTHON_VERSION: "3.13"

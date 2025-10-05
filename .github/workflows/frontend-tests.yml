@@ -2,13 +2,10 @@ name: frontend-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "new_geneweb/frontend/**"
       - ".github/workflows/frontend-tests.yml"
   pull_request:
-    branches:
-      - dev
+    branches: ["**"]
 
 defaults:
   run:
