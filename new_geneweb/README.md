@@ -6,31 +6,73 @@ config:
   layout: elk
 ---
 flowchart TD
- subgraph Frontends["Frontends"]
-        F1["**Open frontend**<br><br>Front svelte base (gw)<br>Same behaviour and feature as gw"]
-        F2["**Front svelte config (gwsetup)**<br><br>Same behaviour and feature as gwsetup"]
-  end
- subgraph API["API (Framework FAST API)"]
-        API1["**Open endpoints**<br><br>Same behaviour and feature as gw"]
-        API2["**Restricted endpoints (IP restricted)**<br><br>Same behaviour and feature as gwsetup<br>New endpoints to replace binaries:<br>• gwc<br>• gwb2ged<br>• ged2gwb<br>• etc..."]
-  end
- subgraph DB["DB Connector (Encapsulation)"]
-        DBS["DB Connector (SQLAlchemy)"]
-  end
- subgraph Backend_Python["Backend Python (gw/gwsetup)"]
-        API
-        DP["**Data processing**<br><br>consang<br>ged2gwb<br>gwb2ged<br>gwu"]
-        DB
-  end
-    ENV["env file<br>to set parameters"] --> Backend_Python
-    PLUG["Plugins"] --> Backend_Python
-    F1 <--> API1
-    F2 <--> API2
-    API --> DP
-    DP <--> DB
-    DBS --> DB
-    DBP["DB postgre (.gwb)"] <--> DBS
-    API1 <--> DB
+    %% =========================================
+    %% Title
+    %% =========================================
+    %% Geneweb modernized version architecture
+
+    %% =========================================
+    %% Frontends
+    %% =========================================
+    subgraph Frontend
+        FrontGWSetup["🧱 GeneWeb Setup Frontend - Svelte 5<br/>(IP restricted)"]:::webapp
+        FrontGW["🧱 GeneWeb Frontend - Svelte 5"]:::webapp
+    end
+
+    %% =========================================
+    %% Backend
+    %% =========================================
+    subgraph BACK["Backend - Python 3"]
+        subgraph API["REST API Layer - FastAPI"]
+            REND["🔒 Restricted Endpoints<br/>(IP restricted)"]:::controller
+            OEND["🌐 Open Endpoints"]:::controller
+        end
+
+        LOGIC["🧠 Domain Layer<br/>Logic & recalculation"]:::logic
+
+        subgraph PERSISTENCE["Persistence Layer"]
+            REPO["📦 Repository"]:::repo
+            ORM["🧩 SQLAlchemy (ORM)"]:::orm
+        end
+    end
+
+    %% =========================================
+    %% External components
+    %% =========================================
+    DB[("🗄️ Genealogy Database - PostgreSQL<br/>Replaces .gwb database")]:::db
+    PLUGINS["⚙️ Plugins"]:::plugin
+    ENV["🧾 .env<br/>Configuration"]:::config
+
+    %% =========================================
+    %% Relationships
+    %% =========================================
+    BACK --> PLUGINS:::arrowtext
+    BACK --> ENV:::arrowtext
+
+    OEND -.-> REND
+    FrontGW --> OEND:::http
+    FrontGWSetup --> REND:::http
+
+    API --> LOGIC
+    LOGIC --> REPO
+    API --> REPO
+    REPO --> ORM
+    ORM --> DB
+
+    %% =========================================
+    %% Styles
+    %% =========================================
+    classDef webapp fill:#e3f2fd,stroke:#1e88e5,color:#0d47a1;
+    classDef controller fill:#fff3e0,stroke:#f57c00,color:#e65100;
+    classDef logic fill:#e8f5e9,stroke:#43a047,color:#1b5e20;
+    classDef repo fill:#ede7f6,stroke:#5e35b1,color:#311b92;
+    classDef orm fill:#f3e5f5,stroke:#8e24aa,color:#4a148c;
+    classDef db fill:#e0f7fa,stroke:#00838f,color:#004d40;
+    classDef plugin fill:#fce4ec,stroke:#c2185b,color:#880e4f;
+    classDef config fill:#f9fbe7,stroke:#9e9d24,color:#827717;
+
+    classDef arrowtext stroke-width:0px,stroke-dasharray:3,3,color:#555,font-size:11px;
+    classDef http stroke-dasharray:5 5,stroke:#90a4ae,color:#455a64,font-size:11px;
 ```
 
 ## Purpose

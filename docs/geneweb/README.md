@@ -1,6 +1,6 @@
 # GeneWeb Legacy Documentation Hub
 
-This hub indexes the added documentation for the legacy GeneWeb code in this repository. Use it as an entry point.
+This hub indexes the complementary documentation for the legacy GeneWeb code in this repository. Use it as an entry point.
 
 ## Quick Start Paths
 

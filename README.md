@@ -2,6 +2,10 @@
 
 **Migration/modernization of an OCaml genealogy application to a Python 3 (backend) + Svelte 5 (frontend) stack.**
 
+
+
+
+
 ## Context and Goals
 
 ### Why the migration?
@@ -18,9 +22,13 @@ GeneWeb is a powerful genealogy software originally written in OCaml. While the 
 
 Deliver a new version of GeneWeb with equivalent (or improved) functionality while preserving the core genealogy algorithms and data integrity that users depend on. The migration will maintain backward compatibility with existing databases and provide a clear migration path for current users.
 
+
+
+
+
 ## Overall Architecture
 
-The project is organized into distinct components that facilitate both the legacy system maintenance and the new implementation development:
+The project is organized into distinct components that facilitate both the legacy system consulting and testing as well asthe new implementation development:
 
 ```
 .
@@ -34,60 +42,59 @@ The project is organized into distinct components that facilitate both the legac
 └── README.md           # This file
 ```
 
+You can have more detail on new project [here](new_geneweb/README.md).
+
+
+
 ## Prerequisites
 
 ### System Requirements
 - **Operating System**: Linux, macOS, or Windows with WSL2
 - **Docker**: Version 20.10+ with Docker Compose
-- **Python**: 3.12+
+- **Python**: 3.13+
 - **Node.js**: 20+
 
 ### Package Managers
-- **Python**: Poetry (preferred) or pip
-- **Node.js**: pnpm (preferred) or npm
-- **OCaml**: opam (for legacy code maintenance)
+- **Python**: poetry
+- **Node.js**: npm
+- **OCaml**: opam (only for legacy code)
 
-## Installation & Usage
 
-### Running the Legacy Project
+
+
+
+## Running the Legacy Project
 
 The original OCaml-based GeneWeb can be run using Docker:
 
 ```bash
 cd geneweb_docker
-docker-compose up -d
+docker-compose up --build
 ```
 
-Access the legacy application at `http://localhost:2317`
+Access the legacy application at `http://localhost:2316` (setup) and `http://localhost:2317` (user)
 
-### Running the New Project
 
-#### Backend (Python)
+
+
+
+## Installing & Running the New Project
+
+### Docker
 ```bash
-cd new_geneweb/backend
-poetry install
-poetry run python -m app.main
+docker-compose up --build
 ```
 
-#### Frontend (Svelte)
-```bash
-cd new_geneweb/frontend
-pnpm install
-pnpm run dev
-```
+### Manual
+Follow the respective readme files in each component directory.
+- [Backend](new_geneweb/backend/README.md)
+- [Frontend](new_geneweb/frontend/README.md)
+- [Backoffice](new_geneweb/backoffice/README.md)
+- [Database](new_geneweb/database/README.md)
 
-#### Backoffice (Svelte)
-```bash
-cd new_geneweb/backoffice
-pnpm install
-pnpm run dev
-```
 
-### Common Commands
-- `docker-compose up -d` - Start legacy services
-- `make test` - Run all tests
-- `pnpm run build` - Build frontend for production
-- `poetry run pytest` - Run backend tests
+
+
 
 ## Testing
 
@@ -99,18 +106,19 @@ Comprehensive testing documentation is available in [`TESTING.md`](TESTING.md).
 - **End-to-end tests**: `cd tests/end-to-end && pnpm run test`
 - **Functional tests**: `cd tests/functional && python -m pytest`
 
+
+
+
+
 ## Documentation
 
 Technical and functional documentation is organized in the [`docs/`](docs/README.md) folder:
 
-
-- **Architecture**: System design and component interactions
-- **Algorithms**: Core genealogy algorithms and calculations
-- **Binaries**: Command-line tools documentation
-- **Formats**: Data formats and schemas
-- **Operations**: Deployment and maintenance guides
-
 All documentation is written in plain Markdown for easy reading and contribution.
+
+
+
+
 
 ## Contributing
 
@@ -125,6 +133,10 @@ Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed contribution guide
 - **Testing**: Add tests for new features and bug fixes
 - **Documentation**: Update relevant docs for user-facing changes
 - **PR process**: Create detailed pull requests with clear descriptions
+
+
+
+
 
 ## Roadmap / Project Status
 
@@ -142,6 +154,10 @@ Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed contribution guide
 - Database schema design and migration tools
 - API endpoint implementation
 - Mobile-responsive design
+
+
+
+
 
 ## License
 
