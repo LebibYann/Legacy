@@ -1,4 +1,4 @@
-name: End-to-End Tests (OCaml)
+name: ocaml-e2e-tests
 
 env:
   TEST_FOLDER: tests/end-to-end
