@@ -44,22 +44,6 @@ jobs:
   unit-tests:
     name: 🧪 Unit & Functional Tests
     runs-on: [self-hosted]
-    
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: geneweb_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    
     steps:
       - uses: actions/checkout@v4
 
@@ -73,33 +57,6 @@ jobs:
       - name: Install deps
         run: poetry install --no-root
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
-
-      - name: Wait for PostgreSQL
-        run: |
-          echo "Checking PostgreSQL connection..."
-          timeout=30
-          count=0
-          until pg_isready -h localhost -p 5432 -U user; do
-            echo "Waiting for PostgreSQL... ($count/$timeout)"
-            sleep 2
-            count=$((count + 2))
-            if [ $count -ge $timeout ]; then
-              echo "PostgreSQL failed to start within $timeout seconds"
-              exit 1
-            fi
-          done
-          echo "PostgreSQL is ready!"
-
-      - name: Test database connection
-        env:
-          PGPASSWORD: password
-        run: |
-          echo "Testing database connection..."
-          psql -h localhost -p 5432 -U user -d geneweb_test -c "SELECT 1;" || exit 1
-          echo "Database connection successful!"
-
       - name: Run pytest
         env:
           APP_ENV: test
@@ -108,42 +65,3 @@ jobs:
           APP_PORT: 8000
           DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb_test
         run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
-
-
-  docker-build:
-    name: 🐳 Docker Build Validation
-
-    runs-on: [self-hosted]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install docker compose
-        run: |
-          # Add Docker's official GPG key:
-          sudo apt-get update
-          sudo apt-get install -y ca-certificates curl
-          sudo install -m 0755 -d /etc/apt/keyrings
-          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-          sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-          # Add the repository to Apt sources:
-          echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build backend Docker image
-        run: docker compose build

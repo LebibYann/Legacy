@@ -3,13 +3,19 @@ name: frontends-e2e-tests
 env:
   TEST_FOLDER: tests/end-to-end
   BACKEND_FOLDER: new_geneweb/backend
+  BACKOFFICE_URL: http://localhost:5173
+  FRONTEND_URL: http://localhost:5174
 
 on:
+  push:
+    paths:
+      - ".github/workflows/svelte-e2e-tests.yml"
   pull_request:
     paths:
       - "new_geneweb/**"
-      - ".github/workflows/svelte-e2e-tests.yml"
       - "tests/end-to-end/**"
+      - "docker-compose.yml"
+      - "./**/Dockerfile"
       - "!**/*.md"
   workflow_dispatch:
 
@@ -21,6 +27,11 @@ jobs:
       services:
         docker:
           image: docker:dind
+
+      permissions:
+        contents: read
+        packages: write   # required to push to GHCR
+        id-token: write
 
       steps:
         - name: Checkout code
@@ -55,18 +66,59 @@ jobs:
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3
 
-        - name: Cache Docker layers
-          uses: actions/cache@v4
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v3
           with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-svelte-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-svelte-
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        # ----------------------------------------------------------
+        # BACKEND (FastAPI)
+        # ----------------------------------------------------------
+        - name: Build backend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ./new_geneweb/backend
+            file: ./new_geneweb/backend/Dockerfile
+            tags: ghcr.io/${{ github.repository }}:backend
+            push: true
+            cache-from: type=gha,scope=backend
+            cache-to: type=gha,scope=backend,mode=max
+
+        # ----------------------------------------------------------
+        # BACKOFFICE (Svelte ou autre front interne)
+        # ----------------------------------------------------------
+        - name: Build backoffice image
+          uses: docker/build-push-action@v6
+          with:
+            context: ./new_geneweb/backoffice
+            file: ./new_geneweb/backoffice/Dockerfile
+            tags: ghcr.io/${{ github.repository }}:backoffice
+            push: true
+            cache-from: type=gha,scope=backoffice
+            cache-to: type=gha,scope=backoffice,mode=max
+
+        # ----------------------------------------------------------
+        # FRONTEND (public webapp)
+        # ----------------------------------------------------------
+        - name: Build frontend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ./new_geneweb/frontend
+            file: ./new_geneweb/frontend/Dockerfile
+            tags: ghcr.io/${{ github.repository }}:frontend
+            push: true
+            cache-from: type=gha,scope=frontend
+            cache-to: type=gha,scope=frontend,mode=max
 
         - name: Build New Geneweb
           run: |
             cat ${{ env.BACKEND_FOLDER }}/.env.example > ${{ env.BACKEND_FOLDER }}/.env
-            docker compose build
+            docker pull ghcr.io/${{ github.repository }}:backend
+            docker pull ghcr.io/${{ github.repository }}:frontend
+            docker pull ghcr.io/${{ github.repository }}:backoffice
+
         - name: Start New Geneweb
           run: |
             docker compose up -d
@@ -74,25 +126,25 @@ jobs:
             interval=5   # check every 5 seconds
             elapsed=0
 
-            echo "Waiting for localhost:2317 to respond..."
+            echo "Waiting for ${{ env.BACKOFFICE_URL }} to respond..."
             while [ $elapsed -lt $timeout ]; do
-                if curl -s --connect-timeout 3 http://localhost:2317 > /dev/null 2>&1; then
-                    echo "localhost:2317 is ready!"
+                if curl -s --connect-timeout 3 ${{ env.BACKOFFICE_URL }} > /dev/null 2>&1; then
+                    echo "${{ env.BACKOFFICE_URL }} is ready!"
                     break
                 fi
-                echo "localhost:2317 not ready yet, waiting... ($elapsed/$timeout seconds)"
+                echo "${{ env.BACKOFFICE_URL }} not ready yet, waiting... ($elapsed/$timeout seconds)"
                 sleep $interval
                 elapsed=$((elapsed + interval))
             done
 
             if [ $elapsed -ge $timeout ]; then
-                echo "Timeout: localhost:2317 did not respond within 10 minutes"
+                echo "Timeout: ${{ env.BACKOFFICE_URL }} did not respond within 10 minutes"
                 exit 1
             fi
 
-            echo "Checking localhost:2316 responds..."
-            curl -s --connect-timeout 3 http://localhost:2316 > /dev/null 2>&1
-            echo "localhost:2316 is ready!"
+            echo "Checking ${{ env.FRONTEND_URL }} responds..."
+            curl -s --connect-timeout 3 ${{ env.FRONTEND_URL }} > /dev/null 2>&1
+            echo "${{ env.FRONTEND_URL }} is ready!"
 
         - name: Setup end-to-end tests
           run: |
@@ -100,9 +152,16 @@ jobs:
             sudo npx playwright install-deps
             npm i
             npm run install:browsers
+
         - name: Run end-to-end tests (chromium / firefox / webkit)
           run: |
             cd ${{ env.TEST_FOLDER }}
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:chromium:ci
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:firefox:ci
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:webkit:ci
+
+        - name: Cleanup Docker
+          if: always()
+          run: |
+            docker compose down -v || true
+            docker system prune -af || true
