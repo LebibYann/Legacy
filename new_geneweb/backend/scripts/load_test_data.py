@@ -15,7 +15,7 @@ from pathlib import Path
 # Add parent directory to path to import app modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.persistence.models import (
     Child,
@@ -24,7 +24,6 @@ from app.persistence.models import (
     FamilyEvent,
     GenewebDatabase,
     Individual,
-    IndividualEvent,
 )
 from app.settings import settings
 
