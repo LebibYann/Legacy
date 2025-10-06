@@ -13,6 +13,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.persistence.DBConnector import DBConnector
+from app.persistence.models import GenewebDatabase
 
 
 class TestDBConnector:
@@ -174,6 +175,168 @@ class TestDBConnector:
         row = result.fetchone()
         assert row is not None
         assert row.answer == 42  # type: ignore
+
+
+class TestCreateGenealogyDatabase:
+    """Test suite for the create_genealogy_database method."""
+
+    @pytest.mark.asyncio
+    async def test_create_genealogy_database_minimal(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test creating a genealogy database with minimal parameters."""
+        # Create a database with just a name
+        db_name = "test_minimal_db"
+
+        db_entry = await db_connector.create_genealogy_database(name=db_name)
+
+        # Verify the returned object
+        assert isinstance(db_entry, GenewebDatabase)
+        assert db_entry.name == db_name
+        assert db_entry.id is not None
+        assert db_entry.is_active is True
+        assert db_entry.individual_count == 0
+        assert db_entry.family_count == 0
+        assert db_entry.access_level == 1  # default value
+        assert db_entry.description is None
+        assert db_entry.owner is None
+
+        # Clean up: delete the test database
+        async with db_connector.get_session() as session:
+            await session.execute(
+                text("DELETE FROM geneweb_database WHERE name = :name"),
+                {"name": db_name},
+            )
+            await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_create_genealogy_database_full(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test creating a genealogy database with all parameters."""
+        # Create a database with all parameters
+        db_name = "test_full_db"
+        description = "A test genealogy database"
+        owner = "test_owner@example.com"
+        access_level = 2
+
+        db_entry = await db_connector.create_genealogy_database(
+            name=db_name,
+            description=description,
+            owner=owner,
+            access_level=access_level,
+        )
+
+        # Verify the returned object
+        assert isinstance(db_entry, GenewebDatabase)
+        assert db_entry.name == db_name
+        assert db_entry.description == description
+        assert db_entry.owner == owner
+        assert db_entry.access_level == access_level
+        assert db_entry.id is not None
+        assert db_entry.is_active is True
+        assert db_entry.individual_count == 0
+        assert db_entry.family_count == 0
+
+        # Clean up: delete the test database
+        async with db_connector.get_session() as session:
+            await session.execute(
+                text("DELETE FROM geneweb_database WHERE name = :name"),
+                {"name": db_name},
+            )
+            await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_create_genealogy_database_duplicate_name(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test that creating a database with duplicate name raises ValueError."""
+        db_name = "test_duplicate_db"
+
+        # Create the first database
+        db_entry1 = await db_connector.create_genealogy_database(name=db_name)
+        assert db_entry1.name == db_name
+
+        # Try to create a second database with the same name
+        with pytest.raises(ValueError, match="already exists"):
+            await db_connector.create_genealogy_database(name=db_name)
+
+        # Clean up: delete the test database
+        async with db_connector.get_session() as session:
+            await session.execute(
+                text("DELETE FROM geneweb_database WHERE name = :name"),
+                {"name": db_name},
+            )
+            await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_create_genealogy_database_persisted(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test that the created database is persisted in the database."""
+        db_name = "test_persisted_db"
+
+        # Create the database
+        db_entry = await db_connector.create_genealogy_database(name=db_name)
+        created_id = db_entry.id
+
+        # Verify it's in the database by querying
+        async with db_connector.get_session() as session:
+            result = await session.execute(
+                text(
+                    "SELECT id, name, is_active, individual_count, family_count "
+                    "FROM geneweb_database WHERE name = :name"
+                ),
+                {"name": db_name},
+            )
+            row = result.fetchone()
+
+            assert row is not None
+            assert row.id == created_id  # type: ignore
+            assert row.name == db_name  # type: ignore
+            assert row.is_active is True  # type: ignore
+            assert row.individual_count == 0  # type: ignore
+            assert row.family_count == 0  # type: ignore
+
+            # Clean up
+            await session.execute(
+                text("DELETE FROM geneweb_database WHERE name = :name"),
+                {"name": db_name},
+            )
+            await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_create_multiple_genealogy_databases(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test creating multiple genealogy databases."""
+        db_names = ["test_db_1", "test_db_2", "test_db_3"]
+        created_ids = []
+
+        # Create multiple databases
+        for db_name in db_names:
+            db_entry = await db_connector.create_genealogy_database(name=db_name)
+            created_ids.append(db_entry.id)
+
+        # Verify all are in the database
+        async with db_connector.get_session() as session:
+            for i, db_name in enumerate(db_names):
+                result = await session.execute(
+                    text("SELECT id, name FROM geneweb_database WHERE name = :name"),
+                    {"name": db_name},
+                )
+                row = result.fetchone()
+                assert row is not None
+                assert row.id == created_ids[i]  # type: ignore
+                assert row.name == db_name  # type: ignore
+
+            # Clean up
+            for db_name in db_names:
+                await session.execute(
+                    text("DELETE FROM geneweb_database WHERE name = :name"),
+                    {"name": db_name},
+                )
+            await session.commit()
 
 
 @pytest_asyncio.fixture
