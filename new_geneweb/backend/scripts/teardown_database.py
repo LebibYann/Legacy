@@ -63,9 +63,12 @@ async def main():
     print("=" * 60)
     print("🗑️  GeneWeb Database Teardown")
     print("=" * 60)
-    print(
-        f"Database URL: {settings.database_url.split('@')[1] if '@' in settings.database_url else settings.database_url}"
+    db_url_display = (
+        settings.database_url.split("@")[1]
+        if "@" in settings.database_url
+        else settings.database_url
     )
+    print(f"Database URL: {db_url_display}")
     print()
 
     # Create engine

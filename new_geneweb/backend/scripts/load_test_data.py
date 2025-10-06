@@ -213,17 +213,20 @@ async def main():
     print("=" * 60)
     print("📊 Loading Test Data into GeneWeb Database")
     print("=" * 60)
-    print(
-        f"Database URL: {settings.database_url.split('@')[1] if '@' in settings.database_url else settings.database_url}"
+    db_url_display = (
+        settings.database_url.split("@")[1]
+        if "@" in settings.database_url
+        else settings.database_url
     )
+    print(f"Database URL: {db_url_display}")
     print()
 
     # Create engine and session
     engine = create_async_engine(settings.database_url, echo=False)
-    SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
+    session_local = async_sessionmaker(engine, expire_on_commit=False)
 
     try:
-        async with SessionLocal() as session:
+        async with session_local() as session:
             print("🔨 Creating test database entry...")
             db = await create_test_database(session)
             print(f"✅ Created database: {db.name} (ID: {db.id})")
@@ -248,10 +251,10 @@ async def main():
         print("✅ Test Data Loading Completed!")
         print("=" * 60)
         print("\n📊 Summary:")
-        print(f"   • 1 test database")
-        print(f"   • 6 individuals (grandparents, parents, children)")
-        print(f"   • 2 families")
-        print(f"   • 2 marriage events")
+        print("   • 1 test database")
+        print("   • 6 individuals (grandparents, parents, children)")
+        print("   • 2 families")
+        print("   • 2 marriage events")
         print("\n💡 You can now query this data through the API")
 
         return 0
