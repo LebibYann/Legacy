@@ -38,7 +38,9 @@ class DBConnector:
 
         # Create async engine
         self._engine: AsyncEngine = create_async_engine(
-            self.database_url, echo=False, future=True  # Set to True for debugging SQL queries
+            self.database_url,
+            echo=False,
+            future=True,  # Set to True for debugging SQL queries
         )
 
         # Create session factory
@@ -64,7 +66,9 @@ class DBConnector:
         finally:
             await session.close()
 
-    async def execute_query(self, query: str, params: dict[str, Any] | None = None) -> Any:
+    async def execute_query(
+        self, query: str, params: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute a raw SQL query and return the result.
 
