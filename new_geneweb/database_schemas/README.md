@@ -1,9 +1,20 @@
-# GeneWeb New Database Schema
+# GeneWeb Database Schema Reference
 
 ## Overview
-This directory defines a proposed relational schema for a new GeneWeb backend. It normalizes persons (individual), family units, events, titles, relationships between individuals, and witness roles attached to events.
+This directory contains SQL schema definitions as **reference documentation** for the GeneWeb database structure.
 
-Core tables:
+**⚠️ Important:** The actual database is managed through **SQLAlchemy models** (`backend/app/persistence/models.py`) and **Alembic migrations**. These SQL files serve as reference only.
+
+## Implementation
+The database is implemented using:
+- **SQLAlchemy ORM** - Models in `backend/app/persistence/models.py`
+- **Alembic migrations** - Version control in `backend/alembic/versions/`
+- **Python scripts** - Management in `backend/scripts/`
+
+For database setup, see [backend/QUICKSTART.md](../backend/QUICKSTART.md).
+
+## Core Tables
+- `geneweb_database`: Root table for multi-database support (NEW)
 - `individual`: Biographical core entity (names, birth/baptism/death/burial metadata, status flags, access control & gender)
 - `family`: Parental couple (optionally same-sex) linking mother/father
 - `child`: Association table linking families to their children
@@ -19,6 +30,12 @@ Mermaid visual graph of tables and their foreign-key connections:
 
 ```mermaid
 erDiagram
+    GENEWEB_DATABASE ||--o{ INDIVIDUAL : "database_id"
+    GENEWEB_DATABASE ||--o{ FAMILY : "database_id"
+    GENEWEB_DATABASE ||--o{ EVENT : "database_id"
+    GENEWEB_DATABASE ||--o{ RELATIONSHIP : "database_id"
+    GENEWEB_DATABASE ||--o{ TITLE : "database_id"
+    GENEWEB_DATABASE ||--o{ WITNESS : "database_id"
     INDIVIDUAL ||--o{ FAMILY : "father_id"
     INDIVIDUAL ||--o{ FAMILY : "mother_id"
     FAMILY ||--o{ CHILD : "family_id"
@@ -40,6 +57,7 @@ Legend:
 - Self references appear via multiple roles pointing back to `individual`.
 
 ## Table Notes & Cardinalities
+- `geneweb_database` is the root table supporting multiple genealogical databases in a single PostgreSQL instance. All major tables reference it via `database_id`.
 - A `family` row optionally references up to two parent individuals (`father_id`, `mother_id`). Children are linked to families through the `child` association table, allowing for complex family structures.
 - `child` table manages the many-to-many relationship between families and individuals, supporting cases where an individual may be associated with multiple family units.
 - `relationship` expresses pairwise links with a typed semantic meaning (`relationship_type_id`). Direction is significant only by convention; both `person1_id` and `person2_id` are required.
@@ -83,10 +101,8 @@ NOTE: Values 1 and 2 are identical; confirm whether 2 should instead represent a
 | 0   | Killed      |
 | 1   | Murdered    |
 | 2   | Executed    |
-| 3   | Dissapeared |
+| 3   | Disappeared |
 | 4   | Unspecified |
-
-(Spelling: consider `Disappeared`.)
 
 ### date_range (date qualifier semantics)
 | id  | label         |
