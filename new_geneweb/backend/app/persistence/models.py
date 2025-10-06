@@ -6,7 +6,6 @@ Based on the SQL schemas defined in database_schemas/
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Optional
 
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -29,13 +28,13 @@ class GenewebDatabase(Base):
 
     # Database information
     name: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Metadata
-    owner: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    owner: Mapped[str | None] = mapped_column(Text, nullable=True)
     access_level: Mapped[int] = mapped_column(Integer, default=1)
 
     # Statistics
@@ -43,22 +42,22 @@ class GenewebDatabase(Base):
     family_count: Mapped[int] = mapped_column(Integer, default=0)
 
     # Relationships
-    individuals: Mapped[list["Individual"]] = relationship(
+    individuals: Mapped[list[Individual]] = relationship(
         "Individual", back_populates="database", cascade="all, delete-orphan"
     )
-    families: Mapped[list["Family"]] = relationship(
+    families: Mapped[list[Family]] = relationship(
         "Family", back_populates="database", cascade="all, delete-orphan"
     )
-    events: Mapped[list["Event"]] = relationship(
+    events: Mapped[list[Event]] = relationship(
         "Event", back_populates="database", cascade="all, delete-orphan"
     )
-    relationships: Mapped[list["Relationship"]] = relationship(
+    relationships: Mapped[list[Relationship]] = relationship(
         "Relationship", back_populates="database", cascade="all, delete-orphan"
     )
-    titles: Mapped[list["Title"]] = relationship(
+    titles: Mapped[list[Title]] = relationship(
         "Title", back_populates="database", cascade="all, delete-orphan"
     )
-    witnesses: Mapped[list["Witness"]] = relationship(
+    witnesses: Mapped[list[Witness]] = relationship(
         "Witness", back_populates="database", cascade="all, delete-orphan"
     )
 
@@ -83,19 +82,19 @@ class Individual(Base):
     )
 
     # Basic information
-    first_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    last_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    public_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    first_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    last_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    public_name: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    nickname: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    alias: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    alias_first_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    alias_last_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    nickname: Mapped[str | None] = mapped_column(Text, nullable=True)
+    alias: Mapped[str | None] = mapped_column(Text, nullable=True)
+    alias_first_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    alias_last_name: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    professions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    professions: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Status fields
     number: Mapped[int] = mapped_column(Integer, default=0)
@@ -109,75 +108,75 @@ class Individual(Base):
     insert_lastname_alias: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Birth information
-    birth_place: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    birth_date_1: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    birth_date_range: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    birth_date_2: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    birth_date_3: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    birth_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    birth_source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    birth_place: Mapped[str | None] = mapped_column(Text, nullable=True)
+    birth_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
+    birth_date_range: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    birth_date_2: Mapped[date | None] = mapped_column(Date, nullable=True)
+    birth_date_3: Mapped[str | None] = mapped_column(Text, nullable=True)
+    birth_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    birth_source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Baptism information
-    baptism_place: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    baptism_date_1: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    baptism_date_range: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    baptism_date_2: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    baptism_date_3: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    baptism_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    baptism_source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    baptism_place: Mapped[str | None] = mapped_column(Text, nullable=True)
+    baptism_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
+    baptism_date_range: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    baptism_date_2: Mapped[date | None] = mapped_column(Date, nullable=True)
+    baptism_date_3: Mapped[str | None] = mapped_column(Text, nullable=True)
+    baptism_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    baptism_source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Death information
     death_status_id: Mapped[int] = mapped_column(Integer, default=0)
-    death_kind: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    death_place: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    death_date_1: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    death_date_range: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    death_date_2: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    death_date_3: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    death_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    death_source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    death_kind: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    death_place: Mapped[str | None] = mapped_column(Text, nullable=True)
+    death_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
+    death_date_range: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    death_date_2: Mapped[date | None] = mapped_column(Date, nullable=True)
+    death_date_3: Mapped[str | None] = mapped_column(Text, nullable=True)
+    death_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    death_source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Burial information
-    burial_place: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    burial_date_1: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    burial_date_range: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    burial_date_2: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    burial_date_3: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    burial_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    burial_source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    burial_place: Mapped[str | None] = mapped_column(Text, nullable=True)
+    burial_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
+    burial_date_range: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    burial_date_2: Mapped[date | None] = mapped_column(Date, nullable=True)
+    burial_date_3: Mapped[str | None] = mapped_column(Text, nullable=True)
+    burial_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    burial_source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Free notes
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="individuals"
     )
-    father_families: Mapped[list["Family"]] = relationship(
+    father_families: Mapped[list[Family]] = relationship(
         "Family", foreign_keys="Family.father_id", back_populates="father"
     )
-    mother_families: Mapped[list["Family"]] = relationship(
+    mother_families: Mapped[list[Family]] = relationship(
         "Family", foreign_keys="Family.mother_id", back_populates="mother"
     )
-    child_links: Mapped[list["Child"]] = relationship(
+    child_links: Mapped[list[Child]] = relationship(
         "Child", back_populates="child_individual", cascade="all, delete-orphan"
     )
-    individual_events: Mapped[list["IndividualEvent"]] = relationship(
+    individual_events: Mapped[list[IndividualEvent]] = relationship(
         "IndividualEvent", back_populates="individual", cascade="all, delete-orphan"
     )
-    titles: Mapped[list["Title"]] = relationship(
+    titles: Mapped[list[Title]] = relationship(
         "Title", back_populates="individual", cascade="all, delete-orphan"
     )
-    relationships_as_person1: Mapped[list["Relationship"]] = relationship(
+    relationships_as_person1: Mapped[list[Relationship]] = relationship(
         "Relationship", foreign_keys="Relationship.person1_id", back_populates="person1"
     )
-    relationships_as_person2: Mapped[list["Relationship"]] = relationship(
+    relationships_as_person2: Mapped[list[Relationship]] = relationship(
         "Relationship", foreign_keys="Relationship.person2_id", back_populates="person2"
     )
-    witness_roles: Mapped[list["Witness"]] = relationship(
+    witness_roles: Mapped[list[Witness]] = relationship(
         "Witness", foreign_keys="Witness.witness_id", back_populates="witness"
     )
-    subject_witnesses: Mapped[list["Witness"]] = relationship(
+    subject_witnesses: Mapped[list[Witness]] = relationship(
         "Witness", foreign_keys="Witness.subject_id", back_populates="subject"
     )
 
@@ -202,10 +201,10 @@ class Family(Base):
     )
 
     # Parent references
-    father_id: Mapped[Optional[int]] = mapped_column(
+    father_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("individual.id", ondelete="SET NULL"), nullable=True
     )
-    mother_id: Mapped[Optional[int]] = mapped_column(
+    mother_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("individual.id", ondelete="SET NULL"), nullable=True
     )
 
@@ -213,29 +212,32 @@ class Family(Base):
     same_sex_couple: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Sources and comments
-    source_individuals: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    source_family: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    source_individuals: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_family: Mapped[str | None] = mapped_column(Text, nullable=True)
+    comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="families"
     )
-    father: Mapped[Optional["Individual"]] = relationship(
+    father: Mapped[Individual | None] = relationship(
         "Individual", foreign_keys=[father_id], back_populates="father_families"
     )
-    mother: Mapped[Optional["Individual"]] = relationship(
+    mother: Mapped[Individual | None] = relationship(
         "Individual", foreign_keys=[mother_id], back_populates="mother_families"
     )
-    child_links: Mapped[list["Child"]] = relationship(
+    child_links: Mapped[list[Child]] = relationship(
         "Child", back_populates="family", cascade="all, delete-orphan"
     )
-    family_events: Mapped[list["FamilyEvent"]] = relationship(
+    family_events: Mapped[list[FamilyEvent]] = relationship(
         "FamilyEvent", back_populates="family", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
-        return f"<Family(id={self.id}, father_id={self.father_id}, mother_id={self.mother_id})>"
+        return (
+            f"<Family(id={self.id}, father_id={self.father_id}, "
+            f"mother_id={self.mother_id})>"
+        )
 
 
 class Event(Base):
@@ -256,29 +258,29 @@ class Event(Base):
 
     # Event details
     event_name: Mapped[str] = mapped_column(Text, nullable=False)
-    place: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    place: Mapped[str | None] = mapped_column(Text, nullable=True)
     event_position: Mapped[int] = mapped_column(Integer, default=0)
 
     # Date information
-    event_date_1: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    event_date_2: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    date_range: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    event_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
+    event_date_2: Mapped[date | None] = mapped_column(Date, nullable=True)
+    date_range: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     # Additional information
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="events"
     )
-    individual_events: Mapped[list["IndividualEvent"]] = relationship(
+    individual_events: Mapped[list[IndividualEvent]] = relationship(
         "IndividualEvent", back_populates="event", cascade="all, delete-orphan"
     )
-    family_events: Mapped[list["FamilyEvent"]] = relationship(
+    family_events: Mapped[list[FamilyEvent]] = relationship(
         "FamilyEvent", back_populates="event", cascade="all, delete-orphan"
     )
-    witnesses: Mapped[list["Witness"]] = relationship(
+    witnesses: Mapped[list[Witness]] = relationship(
         "Witness", back_populates="event", cascade="all, delete-orphan"
     )
 
@@ -322,22 +324,26 @@ class Relationship(Base):
     person2_public: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="relationships"
     )
-    person1: Mapped["Individual"] = relationship(
+    person1: Mapped[Individual] = relationship(
         "Individual",
         foreign_keys=[person1_id],
         back_populates="relationships_as_person1",
     )
-    person2: Mapped["Individual"] = relationship(
+    person2: Mapped[Individual] = relationship(
         "Individual",
         foreign_keys=[person2_id],
         back_populates="relationships_as_person2",
     )
 
     def __repr__(self) -> str:
-        return f"<Relationship(id={self.id}, person1_id={self.person1_id}, person2_id={self.person2_id}, type={self.relationship_type_id})>"
+        return (
+            f"<Relationship(id={self.id}, person1_id={self.person1_id}, "
+            f"person2_id={self.person2_id}, "
+            f"type={self.relationship_type_id})>"
+        )
 
 
 class Title(Base):
@@ -362,28 +368,29 @@ class Title(Base):
     )
 
     # Title information
-    title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    fief: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    fief: Mapped[str | None] = mapped_column(Text, nullable=True)
     rank: Mapped[int] = mapped_column(Integer, default=0)
     main_title: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Date range
-    begin_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    end_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    begin_date_alt: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    end_date_alt: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
+    begin_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    begin_date_alt: Mapped[date | None] = mapped_column(Date, nullable=True)
+    end_date_alt: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="titles"
     )
-    individual: Mapped["Individual"] = relationship(
-        "Individual", back_populates="titles"
-    )
+    individual: Mapped[Individual] = relationship("Individual", back_populates="titles")
 
     def __repr__(self) -> str:
-        return f"<Title(id={self.id}, individual_id={self.individual_id}, title='{self.title}')>"
+        return (
+            f"<Title(id={self.id}, individual_id={self.individual_id}, "
+            f"title='{self.title}')>"
+        )
 
 
 class Witness(Base):
@@ -415,7 +422,7 @@ class Witness(Base):
 
     # Witness details
     role_id: Mapped[int] = mapped_column(Integer, default=0)
-    occupation: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    occupation: Mapped[str | None] = mapped_column(Text, nullable=True)
     number: Mapped[int] = mapped_column(Integer, default=0)
 
     # Status flags
@@ -424,19 +431,22 @@ class Witness(Base):
     is_public: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
-    database: Mapped["GenewebDatabase"] = relationship(
+    database: Mapped[GenewebDatabase] = relationship(
         "GenewebDatabase", back_populates="witnesses"
     )
-    event: Mapped["Event"] = relationship("Event", back_populates="witnesses")
-    subject: Mapped["Individual"] = relationship(
+    event: Mapped[Event] = relationship("Event", back_populates="witnesses")
+    subject: Mapped[Individual] = relationship(
         "Individual", foreign_keys=[subject_id], back_populates="subject_witnesses"
     )
-    witness: Mapped["Individual"] = relationship(
+    witness: Mapped[Individual] = relationship(
         "Individual", foreign_keys=[witness_id], back_populates="witness_roles"
     )
 
     def __repr__(self) -> str:
-        return f"<Witness(id={self.id}, event_id={self.event_id}, witness_id={self.witness_id}, role={self.role_id})>"
+        return (
+            f"<Witness(id={self.id}, event_id={self.event_id}, "
+            f"witness_id={self.witness_id}, role={self.role_id})>"
+        )
 
 
 class Child(Base):
@@ -459,13 +469,16 @@ class Child(Base):
     )
 
     # Relationships
-    family: Mapped["Family"] = relationship("Family", back_populates="child_links")
-    child_individual: Mapped["Individual"] = relationship(
+    family: Mapped[Family] = relationship("Family", back_populates="child_links")
+    child_individual: Mapped[Individual] = relationship(
         "Individual", back_populates="child_links"
     )
 
     def __repr__(self) -> str:
-        return f"<Child(id={self.id}, family_id={self.family_id}, subject_id={self.subject_id})>"
+        return (
+            f"<Child(id={self.id}, family_id={self.family_id}, "
+            f"subject_id={self.subject_id})>"
+        )
 
 
 class IndividualEvent(Base):
@@ -485,13 +498,16 @@ class IndividualEvent(Base):
     )
 
     # Relationships
-    individual: Mapped["Individual"] = relationship(
+    individual: Mapped[Individual] = relationship(
         "Individual", back_populates="individual_events"
     )
-    event: Mapped["Event"] = relationship("Event", back_populates="individual_events")
+    event: Mapped[Event] = relationship("Event", back_populates="individual_events")
 
     def __repr__(self) -> str:
-        return f"<IndividualEvent(individual_id={self.individual_id}, event_id={self.event_id})>"
+        return (
+            f"<IndividualEvent(individual_id={self.individual_id}, "
+            f"event_id={self.event_id})>"
+        )
 
 
 class FamilyEvent(Base):
@@ -511,8 +527,8 @@ class FamilyEvent(Base):
     )
 
     # Relationships
-    family: Mapped["Family"] = relationship("Family", back_populates="family_events")
-    event: Mapped["Event"] = relationship("Event", back_populates="family_events")
+    family: Mapped[Family] = relationship("Family", back_populates="family_events")
+    event: Mapped[Event] = relationship("Event", back_populates="family_events")
 
     def __repr__(self) -> str:
         return f"<FamilyEvent(family_id={self.family_id}, event_id={self.event_id})>"
