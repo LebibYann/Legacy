@@ -99,6 +99,47 @@ poetry run mypy app/
 
 ---
 
+## 🗄️ Database Management
+
+### Quick Start
+
+```bash
+# Setup database with sample data
+poetry run python scripts/setup_database.py
+poetry run python scripts/load_test_data.py
+
+# Reset database
+poetry run python scripts/teardown_database.py
+poetry run python scripts/setup_database.py --drop-all
+```
+
+### Available Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `scripts/setup_database.py` | Create all tables | `poetry run python scripts/setup_database.py` |
+| `scripts/teardown_database.py` | Drop all tables | `poetry run python scripts/teardown_database.py` |
+| `scripts/load_test_data.py` | Load sample data | `poetry run python scripts/load_test_data.py` |
+
+**See** [`scripts/README.md`](scripts/README.md) for detailed documentation.
+
+### Production Migrations
+
+For production deployments, use Alembic:
+
+```bash
+# Generate migration
+poetry run alembic revision --autogenerate -m "Description"
+
+# Apply migrations
+poetry run alembic upgrade head
+
+# Rollback
+poetry run alembic downgrade -1
+```
+
+---
+
 ## ⚙️ Project Structure
 
 ```
@@ -109,7 +150,11 @@ backend/
 │   ├── persistence/      # SQLAlchemy models & repository
 │   ├── utils/            # Helpers (e.g. IP filter)
 │   └── main.py           # Application entrypoint
-├── alembic/              # Migrations
+├── scripts/              # Database management scripts ✨ NEW
+│   ├── setup_database.py
+│   ├── teardown_database.py
+│   └── load_test_data.py
+├── alembic/              # Production migrations
 ├── tests/                # Unit & functional tests
 ├── Dockerfile
 ├── docker-compose.yml
