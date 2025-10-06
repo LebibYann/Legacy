@@ -28,6 +28,13 @@ fi
 echo -e "${YELLOW}📦 Installing dependencies...${NC}"
 poetry install --no-root
 
+# Linting
+echo -e "${YELLOW}🔍 Linting (ruff)...${NC}"
+poetry run ruff check . || {
+    echo -e "${RED}❌ Linting errors detected${NC}"
+    exit 1
+}
+
 # Code formatting
 echo -e "${YELLOW}🎨 Checking formatting (Black)...${NC}"
 poetry run black --check . || {
