@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from app.persistence.models import GenewebDatabase
 from app.settings import settings
 
 
@@ -126,6 +127,67 @@ class DBConnector:
         Should be called when shutting down the application.
         """
         await self._engine.dispose()
+
+    async def create_genealogy_database(
+        self,
+        name: str,
+        description: str | None = None,
+        owner: str | None = None,
+        access_level: int = 1,
+    ) -> GenewebDatabase:
+        """
+        Create a new empty genealogy database entry.
+
+        This method creates a new entry in the geneweb_database table,
+        which serves as the root for a separate genealogical database.
+        The database will be empty with no individuals or families initially.
+
+        Args:
+            name: Unique name for the genealogy database
+            description: Optional description of the database
+            owner: Optional owner identifier
+            access_level: Access level (0=private, 1=public, 2=restricted)
+
+        Returns:
+            GenewebDatabase: The created database object
+
+        Raises:
+            ValueError: If the database name already exists
+            Exception: If database creation fails
+
+        Example:
+            db_entry = await db.create_genealogy_database(
+                name="smith_family",
+                description="Smith Family Genealogy",
+                owner="john.smith@example.com",
+                access_level=1
+            )
+        """
+        async with self.get_session() as session:
+            # Check if database with this name already exists
+            existing = await session.execute(
+                text("SELECT id FROM geneweb_database WHERE name = :name"),
+                {"name": name},
+            )
+            if existing.fetchone() is not None:
+                raise ValueError(f"Database with name '{name}' already exists")
+
+            # Create new database entry
+            new_db = GenewebDatabase(
+                name=name,
+                description=description,
+                owner=owner,
+                access_level=access_level,
+                is_active=True,
+                individual_count=0,
+                family_count=0,
+            )
+
+            session.add(new_db)
+            await session.commit()
+            await session.refresh(new_db)
+
+            return new_db
 
     @property
     def engine(self) -> AsyncEngine:
