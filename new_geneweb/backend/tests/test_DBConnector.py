@@ -12,7 +12,7 @@ import pytest_asyncio
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.persistence.DBConnector import DBConnector
+from app.persistence.DBConnector import DatabaseInfo, DBConnector
 from app.persistence.models import GenewebDatabase
 
 
@@ -345,3 +345,152 @@ async def db_connector() -> AsyncIterator[DBConnector]:
     connector = DBConnector()
     yield connector
     await connector.close()
+
+
+class TestListDatabases:
+    """Test suite for the list_databases method."""
+
+    @pytest.mark.asyncio
+    async def test_list_databases_returns_list(self, db_connector: DBConnector) -> None:
+        """Test that list_databases returns a list."""
+        databases = await db_connector.list_databases()
+        assert isinstance(databases, list)
+
+    @pytest.mark.asyncio
+    async def test_list_databases_returns_database_info_objects(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test that list_databases returns DatabaseInfo objects."""
+        # Create a test database first
+        db_name = "test_list_db_1"
+        await db_connector.create_genealogy_database(name=db_name)
+
+        try:
+            databases = await db_connector.list_databases()
+
+            # Should have at least one database
+            assert len(databases) > 0
+
+            # All items should be DatabaseInfo objects
+            for db_info in databases:
+                assert isinstance(db_info, DatabaseInfo)
+                assert hasattr(db_info, "name")
+                assert isinstance(db_info.name, str)
+        finally:
+            # Clean up
+            async with db_connector.get_session() as session:
+                await session.execute(
+                    text("DELETE FROM geneweb_database WHERE name = :name"),
+                    {"name": db_name},
+                )
+                await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_list_databases_with_multiple_databases(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test listing multiple databases."""
+        db_names = ["test_list_db_a", "test_list_db_b", "test_list_db_c"]
+
+        # Create multiple test databases
+        for db_name in db_names:
+            await db_connector.create_genealogy_database(name=db_name)
+
+        try:
+            databases = await db_connector.list_databases()
+
+            # Get the names from the returned list
+            returned_names = [db.name for db in databases]
+
+            # All created databases should be in the list
+            for db_name in db_names:
+                assert db_name in returned_names
+        finally:
+            # Clean up
+            async with db_connector.get_session() as session:
+                for db_name in db_names:
+                    await session.execute(
+                        text("DELETE FROM geneweb_database WHERE name = :name"),
+                        {"name": db_name},
+                    )
+                await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_list_databases_empty(self, db_connector: DBConnector) -> None:
+        """Test listing databases when database is empty."""
+        # First, clean up all test databases
+        async with db_connector.get_session() as session:
+            await session.execute(
+                text("DELETE FROM geneweb_database WHERE name LIKE 'test_%'")
+            )
+            await session.commit()
+
+        databases = await db_connector.list_databases()
+
+        # Should return an empty list or only non-test databases
+        assert isinstance(databases, list)
+        # Verify no test databases exist
+        test_dbs = [db for db in databases if db.name.startswith("test_")]
+        assert len(test_dbs) == 0
+
+    @pytest.mark.asyncio
+    async def test_list_databases_sorted_alphabetically(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test that databases are returned in alphabetical order."""
+        db_names = ["test_zebra_db", "test_alpha_db", "test_middle_db"]
+        expected_order = sorted(db_names)
+
+        # Create databases in random order
+        for db_name in db_names:
+            await db_connector.create_genealogy_database(name=db_name)
+
+        try:
+            databases = await db_connector.list_databases()
+
+            # Filter only our test databases
+            test_databases = [db for db in databases if db.name in db_names]
+            test_db_names = [db.name for db in test_databases]
+
+            # Should be in alphabetical order
+            assert test_db_names == expected_order
+        finally:
+            # Clean up
+            async with db_connector.get_session() as session:
+                for db_name in db_names:
+                    await session.execute(
+                        text("DELETE FROM geneweb_database WHERE name = :name"),
+                        {"name": db_name},
+                    )
+                await session.commit()
+
+    @pytest.mark.asyncio
+    async def test_list_databases_dataclass_structure(
+        self, db_connector: DBConnector
+    ) -> None:
+        """Test that DatabaseInfo has the correct dataclass structure."""
+        db_name = "test_dataclass_db"
+        await db_connector.create_genealogy_database(name=db_name)
+
+        try:
+            databases = await db_connector.list_databases()
+
+            # Find our test database
+            test_db = next((db for db in databases if db.name == db_name), None)
+            assert test_db is not None
+
+            # Verify it's a dataclass with the expected field
+            assert isinstance(test_db, DatabaseInfo)
+            assert test_db.name == db_name
+
+            # Verify we can create DatabaseInfo manually
+            manual_db_info = DatabaseInfo(name="manual_test")
+            assert manual_db_info.name == "manual_test"
+        finally:
+            # Clean up
+            async with db_connector.get_session() as session:
+                await session.execute(
+                    text("DELETE FROM geneweb_database WHERE name = :name"),
+                    {"name": db_name},
+                )
+                await session.commit()
