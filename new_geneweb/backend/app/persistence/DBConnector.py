@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from typing import Any
 
 from sqlalchemy import text
@@ -19,6 +20,18 @@ from sqlalchemy.ext.asyncio import (
 
 from app.persistence.models import GenewebDatabase
 from app.settings import settings
+
+
+@dataclass
+class DatabaseInfo:
+    """
+    Dataclass representing database information.
+
+    Attributes:
+        name: The name of the database
+    """
+
+    name: str
 
 
 class DBConnector:
@@ -188,6 +201,26 @@ class DBConnector:
             await session.refresh(new_db)
 
             return new_db
+
+    async def list_databases(self) -> list[DatabaseInfo]:
+        """
+        Get a list of all available genealogy databases.
+
+        Returns:
+            list[DatabaseInfo]: List of database information objects containing
+                the names of all existing databases
+
+        Example:
+            databases = await db.list_databases()
+            for db_info in databases:
+                print(f"Database: {db_info.name}")
+        """
+        async with self.get_session() as session:
+            result = await session.execute(
+                text("SELECT name FROM geneweb_database ORDER BY name")
+            )
+            rows = result.fetchall()
+            return [DatabaseInfo(name=row.name) for row in rows]
 
     @property
     def engine(self) -> AsyncEngine:
