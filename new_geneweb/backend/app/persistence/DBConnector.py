@@ -41,8 +41,8 @@ class DBConnector:
         # Create async engine
         self._engine: AsyncEngine = create_async_engine(
             self.database_url,
-            echo=False,
-            future=True,  # Set to True for debugging SQL queries
+            echo=settings.database_echo,
+            future=settings.database_future,
         )
 
         # Create session factory

@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     app_port: int
 
     database_url: str
+    database_echo: bool = False  # Enable SQL query logging (useful for debugging)
+    database_future: bool = True  # Use SQLAlchemy 2.0 style (recommended)
     allowed_ips: str | list[str] = "127.0.0.1,::1"
 
     model_config = SettingsConfigDict(
