@@ -36,6 +36,11 @@ It exposes REST APIs, applies business logic, and persists genealogy data in a r
    cp .env.example .env
    ```
 
+   **Important environment variables:**
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `DATABASE_ECHO` - Set to `true` to log all SQL queries (useful for debugging)
+   - `ALLOWED_IPS` - IP whitelist for API access
+
 4. Run database migrations:
 
    ```bash
