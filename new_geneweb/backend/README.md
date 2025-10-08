@@ -114,7 +114,7 @@ poetry run python scripts/setup_database.py
 poetry run python scripts/load_test_data.py
 
 # Reset database
-poetry run python scripts/teardown_database.py
+poetry run python scripts/delete_database.py
 poetry run python scripts/setup_database.py --drop-all
 ```
 
@@ -123,7 +123,7 @@ poetry run python scripts/setup_database.py --drop-all
 | Script | Purpose | Usage |
 |--------|---------|-------|
 | `scripts/setup_database.py` | Create all tables | `poetry run python scripts/setup_database.py` |
-| `scripts/teardown_database.py` | Drop all tables | `poetry run python scripts/teardown_database.py` |
+| `scripts/delete_database.py` | Drop all tables | `poetry run python scripts/delete_database.py` |
 | `scripts/load_test_data.py` | Load sample data | `poetry run python scripts/load_test_data.py` |
 
 **See** [`scripts/README.md`](scripts/README.md) for detailed documentation.
@@ -157,7 +157,7 @@ backend/
 │   └── main.py           # Application entrypoint
 ├── scripts/              # Database management scripts ✨ NEW
 │   ├── setup_database.py
-│   ├── teardown_database.py
+│   ├── delete_database.py
 │   └── load_test_data.py
 ├── alembic/              # Production migrations
 ├── tests/                # Unit & functional tests

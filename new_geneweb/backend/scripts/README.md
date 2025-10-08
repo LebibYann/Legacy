@@ -24,13 +24,13 @@ poetry run python scripts/setup_database.py --drop-all
 
 ---
 
-### 2. `teardown_database.py`
+### 2. `delete_database.py`
 **Purpose**: Remove all database tables (DESTRUCTIVE)
 
 **Usage**:
 ```bash
 # Drop all tables (with confirmation prompts)
-poetry run python scripts/teardown_database.py
+poetry run python scripts/delete_database.py
 ```
 
 **What it does**:
@@ -80,7 +80,7 @@ poetry run uvicorn app.main:app --reload
 ### Reset Database
 ```bash
 # 1. Drop all tables
-poetry run python scripts/teardown_database.py
+poetry run python scripts/delete_database.py
 
 # 2. Recreate tables
 poetry run python scripts/setup_database.py
@@ -143,7 +143,7 @@ poetry run alembic upgrade head
 1. **These scripts bypass Alembic**: They create tables directly from SQLAlchemy models
 2. **No migration history**: Alembic won't track changes made by these scripts
 3. **Development only**: Use Alembic migrations for production deployments
-4. **Data loss**: `teardown_database.py` and `--drop-all` delete ALL data
+4. **Data loss**: `delete_database.py` and `--drop-all` delete ALL data
 
 ---
 

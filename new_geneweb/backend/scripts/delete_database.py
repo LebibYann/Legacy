@@ -6,7 +6,7 @@ This script removes all tables defined in app.persistence.models
 ⚠️  WARNING: This is DESTRUCTIVE and will delete ALL data!
 
 Usage:
-    python scripts/teardown_database.py
+    python scripts/delete_database.py
 """
 
 import asyncio

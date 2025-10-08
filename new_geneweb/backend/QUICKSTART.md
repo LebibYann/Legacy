@@ -47,7 +47,7 @@ poetry run python scripts/load_test_data.py
 
 ```bash
 # Safely remove all tables (with double confirmation)
-poetry run python scripts/teardown_database.py
+poetry run python scripts/delete_database.py
 ```
 
 ## 📊 Alembic Migrations (Production)
@@ -190,7 +190,7 @@ mkdir -p alembic/versions
 **Cause:** Tables already exist in database.
 
 **Solution:** 
-1. Use `teardown_database.py` to clean database
+1. Use `delete_database.py` to clean database
 2. Regenerate migration with `alembic revision --autogenerate`
 
 ## 🎓 Workflow Summary
