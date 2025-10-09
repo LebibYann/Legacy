@@ -51,6 +51,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Install PostgreSQL Client
+        run: sudo apt-get install -y postgresql-client
+
       - name: Install docker compose
         run: |
           # Add Docker's official GPG key:
