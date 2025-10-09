@@ -52,7 +52,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install PostgreSQL Client
-        run: sudo apt-get install -y postgresql-client
+        run: sudo apt-get install -y postgresql
 
       - name: Install docker compose
         run: |
