@@ -1,3 +1,44 @@
+x-backoffice-base: &backoffice-base
+  build:
+    context: ./new_geneweb/backoffice/
+    dockerfile: Dockerfile
+  volumes:
+    - ./new_geneweb/backoffice:/src
+  ports:
+    - "5173:5173"
+
+x-frontend-base: &frontend-base
+  build:
+    context: ./new_geneweb/frontend
+    dockerfile: Dockerfile
+  volumes:
+    - ./new_geneweb/frontend:/src
+  ports:
+    - "5174:5174"
+
+x-backend-base: &backend-base
+  build:
+    context: ./new_geneweb/backend
+    dockerfile: Dockerfile
+  restart: always
+  container_name: geneweb-backend
+  volumes:
+    - ./new_geneweb/backend/:/app
+  env_file:
+    - ./new_geneweb/backend/.env
+  environment:
+    DB_HOST: db
+    DB_PORT: 5432
+    DB_USER: user
+    DB_PASSWORD: password
+    DB_NAME: geneweb
+    DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
+  ports:
+    - "8000:8000"
+  depends_on:
+    db:
+      condition: service_healthy
+
 services:
   db:
     image: postgres:16
@@ -18,39 +59,40 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: ./new_geneweb/backend
-    restart: always
-    container_name: geneweb-backend
-    volumes:
-      - ./new_geneweb/backend/:/app
-    env_file:
-      - ./new_geneweb/backend/.env
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: geneweb
-      DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
+    <<: *backend-base
+    profiles: [prod]
 
   backoffice:
-    build: new_geneweb/backoffice
-    volumes:
-      - ./new_geneweb/backoffice:/src
-    ports:
-      - "5173:5173"
+    <<: *backoffice-base
+    profiles: [prod]
+
   frontend:
-    build: new_geneweb/frontend
-    volumes:
-      - ./new_geneweb/frontend:/src
-    ports:
-      - "5174:5174"
+    <<: *frontend-base
+    profiles: [prod]
+
+  # ===== DEV =====
+
+  backend_dev:
+    <<: *backend-base
+    profiles: [dev]
+    build:
+      context: ./new_geneweb/backend/
+      dockerfile: Dockerfile.dev
+
+  backoffice_dev:
+    <<: *backoffice-base
+    profiles: [dev]
+    build:
+      context: ./new_geneweb/backoffice/
+      dockerfile: Dockerfile.dev
+
+  frontend_dev:
+    <<: *frontend-base
+    profiles: [dev]
+    build:
+      context: ./new_geneweb/frontend/
+      dockerfile: Dockerfile.dev
+
 
 volumes:
   pgdata:

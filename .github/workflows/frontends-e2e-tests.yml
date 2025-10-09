@@ -2,7 +2,9 @@ name: frontends-e2e-tests
 
 env:
   TEST_FOLDER: tests/end-to-end
-  BACKEND_FOLDER: new_geneweb/backend
+  BACKEND_PATH: ./new_geneweb/backend/
+  BACKOFFICE_PATH: ./new_geneweb/backoffice/
+  FRONTEND_PATH: ./new_geneweb/frontend/
   BACKOFFICE_URL: http://localhost:5173
   FRONTEND_URL: http://localhost:5174
 
@@ -21,6 +23,11 @@ on:
 
 jobs:
     e2e-tests:
+      strategy:
+        matrix:
+          include:
+            - dockerfile: Dockerfile
+            - dockerfile: Dockerfile.dev
       name: 🛣️ Frontends End-to-End Tests
       runs-on: self-hosted
 
@@ -85,8 +92,8 @@ jobs:
         - name: Build backend image
           uses: docker/build-push-action@v6
           with:
-            context: ./new_geneweb/backend
-            file: ./new_geneweb/backend/Dockerfile
+            context: ${{ env.BACKEND_PATH }}
+            file: ${{ env.BACKEND_PATH }}/${{ matrix.dockerfile}}
             tags: ${{ env.GHCR_PATH }}:backend
             push: true
             cache-from: type=gha,scope=backend
@@ -98,8 +105,8 @@ jobs:
         - name: Build backoffice image
           uses: docker/build-push-action@v6
           with:
-            context: ./new_geneweb/backoffice
-            file: ./new_geneweb/backoffice/Dockerfile
+            context: ${{ env.BACKOFFICE_PATH }}
+            file: ${{ env.BACKOFFICE_PATH }}/${{ matrix.dockerfile }}
             tags: ${{ env.GHCR_PATH }}:backoffice
             push: true
             cache-from: type=gha,scope=backoffice
@@ -111,8 +118,8 @@ jobs:
         - name: Build frontend image
           uses: docker/build-push-action@v6
           with:
-            context: ./new_geneweb/frontend
-            file: ./new_geneweb/frontend/Dockerfile
+            context: ${{ env.FRONTEND_PATH }}
+            file: ${{ env.FRONTEND_PATH }}/${{ matrix.dockerfile }}
             tags: ${{ env.GHCR_PATH }}:frontend
             push: true
             cache-from: type=gha,scope=frontend
@@ -120,7 +127,7 @@ jobs:
 
         - name: Build New Geneweb
           run: |
-            cat ${{ env.BACKEND_FOLDER }}/.env.example > ${{ env.BACKEND_FOLDER }}/.env
+            cat ${{ env.BACKEND_PATH }}/.env.example > ${{ env.BACKEND_PATH }}/.env
             docker pull ${{ env.GHCR_PATH }}:backend
             docker pull ${{ env.GHCR_PATH }}:frontend
             docker pull ${{ env.GHCR_PATH }}:backoffice
