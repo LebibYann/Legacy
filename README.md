@@ -44,6 +44,19 @@ Open Questions (track via issues):
 
 If you plan a Python migration PR: open an issue labeled `migration` describing scope, boundary, expected gains, and deprecation timeline.
 
+## Running the docker
+
+To run the Docker containers for the New Geneweb project, you can use the provided `docker-compose.yml` file at the root of this project. Make sure you have Docker and Docker Compose installed on your machine.
+
+Here's how to start it:
+```bash
+docker compose up --build
+```
+Alternatively if you want to run it in development mode, you can use:
+```bash
+docker compose --profile="dev" up --build
+```
+
 ## Documentation
 * Main OCaml project README (build, usage, links): [`geneweb/README.md`](geneweb/README.md)
 * Community wiki: https://geneweb.tuxfamily.org/
