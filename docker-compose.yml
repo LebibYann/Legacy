@@ -41,6 +41,7 @@ x-backend-base: &backend-base
 
 services:
   db:
+    profiles: [prod, dev, db]
     image: postgres:16
     container_name: geneweb-db
     restart: always
@@ -78,6 +79,7 @@ services:
     build:
       context: ./new_geneweb/backend/
       dockerfile: Dockerfile.dev
+    container_name: geneweb-backend-dev
 
   backoffice_dev:
     <<: *backoffice-base

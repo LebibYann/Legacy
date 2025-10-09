@@ -5,8 +5,9 @@ Provides a minimal interface for API developers to interact with the database.
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Any, AsyncIterator
+from typing import Any
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
@@ -32,13 +33,16 @@ class DBConnector:
         Initialize the database connector.
 
         Args:
-            database_url: Optional database URL. If not provided, uses settings.database_url
+            database_url: Optional database URL.
+            If not provided, uses settings.database_url
         """
         self.database_url = database_url or settings.database_url
 
         # Create async engine
         self._engine: AsyncEngine = create_async_engine(
-            self.database_url, echo=False, future=True  # Set to True for debugging SQL queries
+            self.database_url,
+            echo=False,
+            future=True,  # Set to True for debugging SQL queries
         )
 
         # Create session factory
@@ -64,13 +68,16 @@ class DBConnector:
         finally:
             await session.close()
 
-    async def execute_query(self, query: str, params: dict[str, Any] | None = None) -> Any:
+    async def execute_query(
+        self, query: str, params: dict[str, Any] | None = None
+    ) -> Any:
         """
         Execute a raw SQL query and return the result.
 
         Note:
-            API developers should avoid using this method directly. Instead, create specific
-            methods for your use cases to maintain proper encapsulation and data validation.
+            API developers should avoid using this method directly.
+            Instead, create specific methods for your use cases
+            to maintain proper encapsulation and data validation.
 
         Args:
             query: SQL query string
@@ -80,7 +87,9 @@ class DBConnector:
             Query result
 
         Example:
-            result = await db.execute_query("SELECT * FROM users WHERE id = :user_id", {"user_id": 1})
+            result = await db.execute_query(
+                "SELECT * FROM users WHERE id = :user_id", {"user_id": 1}
+            )
         """
         async with self.get_session() as session:
             result = await session.execute(text(query), params or {})

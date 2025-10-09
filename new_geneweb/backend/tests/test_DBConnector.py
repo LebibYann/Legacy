@@ -105,10 +105,10 @@ class TestDBConnector:
         assert hasattr(db, "close")
 
         # Methods should be callable
-        assert callable(getattr(db, "get_session"))
-        assert callable(getattr(db, "execute_query"))
-        assert callable(getattr(db, "is_connected"))
-        assert callable(getattr(db, "close"))
+        assert callable(db.get_session)
+        assert callable(db.execute_query)
+        assert callable(db.is_connected)
+        assert callable(db.close)
 
     @pytest.mark.asyncio
     async def test_execute_simple_query(self) -> None:

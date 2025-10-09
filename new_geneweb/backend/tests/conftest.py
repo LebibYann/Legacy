@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
 import os
+from collections.abc import AsyncIterator
 
 import pytest
 import pytest_asyncio
@@ -29,7 +29,8 @@ async def test_db_engine() -> AsyncIterator[AsyncEngine]:
     """Provide a test database engine."""
     # Use a test database URL, defaulting to a local test DB
     test_db_url = os.getenv(
-        "TEST_DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/geneweb_test"
+        "TEST_DATABASE_URL",
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/geneweb_test",
     )
 
     engine = create_async_engine(test_db_url, echo=False)
