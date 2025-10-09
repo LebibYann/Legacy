@@ -22,7 +22,7 @@ router = APIRouter(prefix="/bases/{base_id}/individuals", tags=["Individual"])
     response_model=IndividualCreateResponse,
     status_code=201,
 )
-async def create_family(
+async def create_individual(
     individual: IndividualCreateRequest,
     base_id: int = Path(..., description="Target base ID"),
 ) -> IndividualCreateResponse:
