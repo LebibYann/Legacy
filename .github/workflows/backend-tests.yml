@@ -78,7 +78,6 @@ jobs:
       - name: Start New Geneweb
         run: |
           docker compose --profile="db" up -d
-          cd ./new_geneweb/backend
           bash ./wait-db.sh
 
       - name: Install Poetry
