@@ -22,8 +22,9 @@ RUN poetry install --only main --no-root
 
 COPY app ./app
 
+COPY wait-db.sh ./wait-db.sh
 COPY entrypoint.sh ./entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["bash", "entrypoint.sh"]

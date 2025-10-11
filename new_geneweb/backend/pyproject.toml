@@ -12,6 +12,7 @@ pydantic-settings = "^2.10.1"
 sqlalchemy = "^2.0.43"
 asyncpg = "^0.30.0"
 alembic = "^1.16.5"
+gunicorn = "^23.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"

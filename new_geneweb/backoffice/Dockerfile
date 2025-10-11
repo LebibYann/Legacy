@@ -1,4 +1,3 @@
-# ---- Dev stage ----
 FROM node:24-alpine
 
 # Set working directory

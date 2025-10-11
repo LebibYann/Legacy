@@ -5,10 +5,12 @@ env:
   TEST_DOCKER_FOLDER: geneweb_docker
 
 on:
+  push:
+    paths:
+      - ".github/workflows/ocaml-e2e-tests.yml"
   pull_request:
     paths:
       - "geneweb/**"
-      - ".github/workflows/ocaml-e2e-tests.yml"
       - "tests/end-to-end/**"
       - "!**/*.md"
   workflow_dispatch:
@@ -51,6 +53,13 @@ jobs:
           uses: actions/setup-node@v4
           with:
             node-version: 24
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            registry: docker.io
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3

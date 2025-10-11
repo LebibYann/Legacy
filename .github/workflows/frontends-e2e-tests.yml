@@ -2,25 +2,45 @@ name: frontends-e2e-tests
 
 env:
   TEST_FOLDER: tests/end-to-end
-  BACKEND_FOLDER: new_geneweb/backend
+  BACKEND_PATH: ./new_geneweb/backend/
+  BACKOFFICE_PATH: ./new_geneweb/backoffice/
+  FRONTEND_PATH: ./new_geneweb/frontend/
+  BACKOFFICE_URL: http://localhost:5173
+  FRONTEND_URL: http://localhost:5174
 
 on:
+  push:
+    paths:
+      - ".github/workflows/frontends-e2e-tests.yml"
   pull_request:
     paths:
       - "new_geneweb/**"
-      - ".github/workflows/svelte-e2e-tests.yml"
       - "tests/end-to-end/**"
+      - "docker-compose.yml"
+      - "./**/Dockerfile"
       - "!**/*.md"
   workflow_dispatch:
 
 jobs:
     e2e-tests:
+      strategy:
+        matrix:
+          include:
+            - profile: prod
+              dockerfile: Dockerfile
+            - profile: dev
+              dockerfile: Dockerfile.dev
       name: 🛣️ Frontends End-to-End Tests
       runs-on: self-hosted
 
       services:
         docker:
           image: docker:dind
+
+      permissions:
+        contents: read
+        packages: write   # required to push to GHCR
+        id-token: write
 
       steps:
         - name: Checkout code
@@ -52,47 +72,80 @@ jobs:
           with:
             node-version: 24
 
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            registry: docker.io
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3
 
-        - name: Cache Docker layers
-          uses: actions/cache@v4
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v3
           with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-svelte-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-svelte-
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Add ghcr path to environment
+          run: |
+            ORGA_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+            REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+            echo "GHCR_PATH=ghcr.io/${ORGA_NAME}/${REPO_NAME}" >> $GITHUB_ENV
+
+        # ----------------------------------------------------------
+        # BACKEND (FastAPI)
+        # ----------------------------------------------------------
+        - name: Build backend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.BACKEND_PATH }}
+            file: ${{ env.BACKEND_PATH }}/Dockerfile
+            tags: ${{ env.GHCR_PATH }}:backend
+            push: true
+            cache-from: type=gha,scope=backend
+            cache-to: type=gha,scope=backend,mode=max
+
+        # ----------------------------------------------------------
+        # BACKOFFICE (Svelte ou autre front interne)
+        # ----------------------------------------------------------
+        - name: Build backoffice image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.BACKOFFICE_PATH }}
+            file: ${{ env.BACKOFFICE_PATH }}/${{ matrix.dockerfile }}
+            tags: ${{ env.GHCR_PATH }}:backoffice
+            push: true
+            cache-from: type=gha,scope=backoffice
+            cache-to: type=gha,scope=backoffice,mode=max
+
+        # ----------------------------------------------------------
+        # FRONTEND (public webapp)
+        # ----------------------------------------------------------
+        - name: Build frontend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.FRONTEND_PATH }}
+            file: ${{ env.FRONTEND_PATH }}/${{ matrix.dockerfile }}
+            tags: ${{ env.GHCR_PATH }}:frontend
+            push: true
+            cache-from: type=gha,scope=frontend
+            cache-to: type=gha,scope=frontend,mode=max
 
         - name: Build New Geneweb
           run: |
-            cat ${{ env.BACKEND_FOLDER }}/.env.example > ${{ env.BACKEND_FOLDER }}/.env
-            docker compose build
+            cat ${{ env.BACKEND_PATH }}/.env.example > ${{ env.BACKEND_PATH }}/.env
+            docker pull ${{ env.GHCR_PATH }}:backend
+            docker pull ${{ env.GHCR_PATH }}:frontend
+            docker pull ${{ env.GHCR_PATH }}:backoffice
+
         - name: Start New Geneweb
           run: |
-            docker compose up -d
-            timeout=600  # 10 minutes in seconds
-            interval=5   # check every 5 seconds
-            elapsed=0
-
-            echo "Waiting for localhost:2317 to respond..."
-            while [ $elapsed -lt $timeout ]; do
-                if curl -s --connect-timeout 3 http://localhost:2317 > /dev/null 2>&1; then
-                    echo "localhost:2317 is ready!"
-                    break
-                fi
-                echo "localhost:2317 not ready yet, waiting... ($elapsed/$timeout seconds)"
-                sleep $interval
-                elapsed=$((elapsed + interval))
-            done
-
-            if [ $elapsed -ge $timeout ]; then
-                echo "Timeout: localhost:2317 did not respond within 10 minutes"
-                exit 1
-            fi
-
-            echo "Checking localhost:2316 responds..."
-            curl -s --connect-timeout 3 http://localhost:2316 > /dev/null 2>&1
-            echo "localhost:2316 is ready!"
+            docker compose --profile="${{ matrix.profile }}" up -d
+            sh ./scripts/wait-for-url.sh ${{ env.BACKOFFICE_URL }}
+            sh ./scripts/wait-for-url.sh ${{ env.FRONTEND_URL }}
 
         - name: Setup end-to-end tests
           run: |
@@ -100,9 +153,16 @@ jobs:
             sudo npx playwright install-deps
             npm i
             npm run install:browsers
+
         - name: Run end-to-end tests (chromium / firefox / webkit)
           run: |
             cd ${{ env.TEST_FOLDER }}
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:chromium:ci
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:firefox:ci
             xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:webkit:ci
+
+        - name: Cleanup Docker
+          if: always()
+          run: |
+            docker compose down -v || true
+            docker system prune -af || true

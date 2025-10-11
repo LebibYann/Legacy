@@ -2,9 +2,7 @@ name: ocaml-unit-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "geneweb/**"
       - ".github/workflows/unit-tests.yml"
   pull_request:
     paths:
