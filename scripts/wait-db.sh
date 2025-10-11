@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-# Check for pg_isready
-if ! command -v pg_isready > /dev/null 2>&1; then
-  echo "❌ pg_isready command not found. Please install PostgreSQL client tools."
+# Check for nc (netcat)
+if ! command -v nc > /dev/null 2>&1; then
+  echo "❌ nc (netcat) command not found. Please install netcat."
   exit 1
 fi
 
