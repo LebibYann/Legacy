@@ -33,6 +33,9 @@ x-backend-base: &backend-base
     DB_PASSWORD: password
     DB_NAME: geneweb
     DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
+    MODE: prod
+    PORT: 8000
+    HOST: 0.0.0.0
   ports:
     - "8000:8000"
   depends_on:
@@ -76,9 +79,16 @@ services:
   backend_dev:
     <<: *backend-base
     profiles: [dev]
-    build:
-      context: ./new_geneweb/backend/
-      dockerfile: Dockerfile.dev
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: geneweb
+      DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
+      MODE: dev
+      PORT: 8000
+      HOST: 0.0.0.0
     container_name: geneweb-backend-dev
 
   backoffice_dev:
