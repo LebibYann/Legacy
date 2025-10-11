@@ -23,10 +23,8 @@ RUN poetry install --only main --no-root
 COPY app ./app
 
 COPY wait-db.sh ./wait-db.sh
+COPY entrypoint-dev.sh ./entrypoint-dev.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["bash", "-c", " \
-./wait-db.sh & \
-exec poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload \
-"]
+ENTRYPOINT ["bash", "entrypoint-dev.sh"]
