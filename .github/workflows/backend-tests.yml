@@ -94,7 +94,7 @@ jobs:
       - name: Start New Geneweb
         run: |
           docker compose --profile="db" up -d
-          bash ./wait-db.sh
+          bash ../../wait-db.sh
 
       - name: Install Poetry
         run: pip install poetry==${{ env.POETRY_VERSION }}
