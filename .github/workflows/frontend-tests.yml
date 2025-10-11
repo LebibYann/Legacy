@@ -5,7 +5,10 @@ on:
     paths:
       - ".github/workflows/frontend-tests.yml"
   pull_request:
-    branches: ["**"]
+    paths:
+      - "new_geneweb/frontend/**"
+      - "!**/*.md"
+  workflow_dispatch:
 
 defaults:
   run:

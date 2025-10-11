@@ -5,10 +5,12 @@ env:
   TEST_DOCKER_FOLDER: geneweb_docker
 
 on:
+  push:
+    paths:
+      - ".github/workflows/ocaml-e2e-tests.yml"
   pull_request:
     paths:
       - "geneweb/**"
-      - ".github/workflows/ocaml-e2e-tests.yml"
       - "tests/end-to-end/**"
       - "!**/*.md"
   workflow_dispatch:

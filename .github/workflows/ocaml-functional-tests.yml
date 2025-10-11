@@ -1,15 +1,13 @@
 name: ocaml-functional-tests
 
-
 on:
   push:
-    branches: ["**"]
     paths:
-      - "geneweb/**"
       - ".github/workflows/functional-tests.yml"
   pull_request:
     paths:
       - "geneweb/**"
+      - "tests/functional/**"
   workflow_dispatch:
 
 jobs:
