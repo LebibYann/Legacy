@@ -115,7 +115,7 @@ jobs:
           APP_NAME: geneweb
           APP_HOST: localhost
           APP_PORT: 8000
-          DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb_test
+          DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb
         run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
 
       - name: Cleanup Docker
