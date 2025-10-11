@@ -58,6 +58,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - geneweb-network
 
   backend:
     <<: *backend-base
@@ -98,3 +100,7 @@ services:
 
 volumes:
   pgdata:
+
+networks:
+  geneweb-network:
+    driver: bridge

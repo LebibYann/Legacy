@@ -17,4 +17,4 @@ EXPOSE 5174
 RUN echo "PORT=5174" > .env
 
 # Start the dev server
-ENTRYPOINT [ "npm", "run", "dev" ]
+ENTRYPOINT [ "npm", "run", "dev", "--", "--host" ]
