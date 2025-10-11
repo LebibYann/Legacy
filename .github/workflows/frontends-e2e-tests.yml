@@ -26,10 +26,10 @@ jobs:
       strategy:
         matrix:
           include:
-            - dockerfile: Dockerfile
-              profile: prod
-            - dockerfile: Dockerfile.dev
-              profile: dev
+            - profile: prod
+              dockerfile: Dockerfile
+            - profile: dev
+              dockerfile: Dockerfile.dev
       name: 🛣️ Frontends End-to-End Tests
       runs-on: self-hosted
 
@@ -102,7 +102,7 @@ jobs:
           uses: docker/build-push-action@v6
           with:
             context: ${{ env.BACKEND_PATH }}
-            file: ${{ env.BACKEND_PATH }}/${{ matrix.dockerfile}}
+            file: ${{ env.BACKEND_PATH }}/Dockerfile
             tags: ${{ env.GHCR_PATH }}:backend
             push: true
             cache-from: type=gha,scope=backend
