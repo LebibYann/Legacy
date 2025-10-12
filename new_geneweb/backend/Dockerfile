@@ -24,6 +24,7 @@ COPY app ./app
 
 COPY wait-db.sh ./wait-db.sh
 COPY entrypoint.sh ./entrypoint.sh
+RUN echo "" > .env
 
 EXPOSE 8000
 

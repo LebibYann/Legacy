@@ -6,6 +6,15 @@
 	import LanguageSelector from '$components/LanguageSelector.svelte';
 	import { rm } from '$utils/reactiveMessages.svelte';
 	import Link from '$components/Link.svelte';
+	import { makeLegacyUrl } from '$utils/legacyUrl';
+	import { onLanguageChange } from '$utils/languageDetection';
+	import { getLocale } from '$lib/paraglide/runtime.js';
+
+	let lang: string = $state(getLocale());
+
+	onLanguageChange((newLang) => {
+		lang = getLocale();
+	});
 
 	// Set the page title when this component mounts
 	$effect(() => {
@@ -32,19 +41,19 @@
 				<div class="lg:pr-35">
 					<DefaultList title={rm.list_consult()}>
 						{#snippet main()}
-							<li>{rm.consult_list()} (<Link href="/list" title="list" />)</li>
-							<li>{rm.consult_errors()} (<Link href="/errors" title="errors" />)</li>
+							<li>{rm.consult_list()} (<Link href={makeLegacyUrl({ lang: lang, v: 'list.htm' })} title="list" />)</li>
+							<li>{rm.consult_errors()} (<Link href={makeLegacyUrl({ lang: lang, v: 'traces.htm' })} title="errors" />)</li>
 						{/snippet}
 					</DefaultList>
 					<DefaultList title={rm.list_save()}>
 						{#snippet main()}
 							<li>
-								{rm.save_gedcom()} (<Link href="/export/gedcom" title="gwb2ged" />)
+								{rm.save_gedcom()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwb2ged.htm' })} title="gwb2ged" />)
 							</li>
 							<li>
 								{rm.save_gwb_start()}
 								{@render geneweb()}
-								{rm.save_gwb_end()} (<Link href="/export/gwb" title="gwu" />)
+								{rm.save_gwb_end()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwu.htm' })} title="gwu" />)
 							</li>
 						{/snippet}
 					</DefaultList>
@@ -53,14 +62,14 @@
 					<DefaultList title={rm.list_create()}>
 						{#snippet main()}
 							<li>
-								{rm.create_gedcom()} (<Link href="/import/gedcom" title="ged2gwb" />)
+								{rm.create_gedcom()} (<Link href={makeLegacyUrl({ lang: lang, v: 'ged2gwb.htm' })} title="ged2gwb" />)
 							</li>
 							<li>
 								{rm.create_gwb_start()}
 								{@render geneweb()}
-								{rm.create_gwb_end()} (<Link href="/import/gwb" title="gwc" />)
+								{rm.create_gwb_end()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwc.htm' })} title="gwc" />)
 							</li>
-							<li>{rm.create_empty()} (<Link href="/new-db" title="gwc" />)</li>
+							<li>{rm.create_empty()} (<Link href={makeLegacyUrl({ lang: lang, v: 'simple.htm' })} title="gwc" />)</li>
 						{/snippet}
 					</DefaultList>
 				</div>
@@ -74,16 +83,16 @@
 			<div style="float:left;">
 				<DefaultList title={rm.list_advanced_options()}>
 					{#snippet main()}
-						<li>{rm.ao_cleanup()} (<Link href="/cleanup" title="cleanup" />)</li>
-						<li>{rm.ao_rename()} (<Link href="/rename" title="rename" />)</li>
-						<li>{rm.ao_delete()} (<Link href="/delete" title="delete" />)</li>
-						<li>{rm.ao_merge()} (<Link href="/merge" title="merge" />)</li>
-						<li>{rm.ao_restore()} (<Link href="/save" title="gwu" />)</li>
-						<li>{rm.ao_consang()} (<Link href="/consang" title="consang" />)</li>
-						<li>{rm.ao_update()} (<Link href="/update-nldb" title="update_nldb" />)</li>
-						<li>{rm.ao_compute()} (<Link href="/connex" title="connex" />)</li>
-						<li>{rm.ao_compute_diff()} (<Link href="/gwdiff" title="gwdiff" />)</li>
-						<li>{rm.ao_fix()} (<Link href="/gwfix" title="gwfixbase" />)</li>
+						<li>{rm.ao_cleanup()} (<Link href={makeLegacyUrl({ lang: lang, v: 'cleanup.htm' })} title="cleanup" />)</li>
+						<li>{rm.ao_rename()} (<Link href={makeLegacyUrl({ lang: lang, v: 'rename.htm' })} title="rename" />)</li>
+						<li>{rm.ao_delete()} (<Link href={makeLegacyUrl({ lang: lang, v: 'delete.htm' })} title="delete" />)</li>
+						<li>{rm.ao_merge()} (<Link href={makeLegacyUrl({ lang: lang, v: 'merge.htm' })} title="merge" />)</li>
+						<li>{rm.ao_restore()} (<Link href={makeLegacyUrl({ lang: lang, v: 'save.htm' })} title="gwu" />)</li>
+						<li>{rm.ao_consang()} (<Link href={makeLegacyUrl({ lang: lang, v: 'consang.htm' })} title="consang" />)</li>
+						<li>{rm.ao_update()} (<Link href={makeLegacyUrl({ lang: lang, v: 'update_nldb.htm' })} title="update_nldb" />)</li>
+						<li>{rm.ao_compute()} (<Link href={makeLegacyUrl({ lang: lang, v: 'connex.htm' })} title="connex" />)</li>
+						<li>{rm.ao_compute_diff()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwdiff.htm' })} title="gwdiff" />)</li>
+						<li>{rm.ao_fix()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwfix.htm' })} title="gwfixbase" />)</li>
 					{/snippet}
 				</DefaultList>
 				<ul></ul>
@@ -91,9 +100,9 @@
 			<div style="float:left;">
 				<DefaultList title={rm.list_configure()}>
 					{#snippet main()}
-						<li>{rm.config_db_param()} (<Link href="/gwf" title=".gwf" />)</li>
-						<li>{rm.config_front_param()} (<Link href="/gwd" title="gwd" />)</li>
-						<li>{rm.config_cache()} (<Link href="/cache-files" title="cache_files" />)</li>
+						<li>{rm.config_db_param()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwf.htm' })} title=".gwf" />)</li>
+						<li>{rm.config_front_param()} (<Link href={makeLegacyUrl({ lang: lang, v: 'gwd.htm' })} title="gwd" />)</li>
+						<li>{rm.config_cache()} (<Link href={makeLegacyUrl({ lang: lang, v: 'cache-files' })} title="cache_files" />)</li>
 					{/snippet}
 				</DefaultList>
 			</div>

@@ -1,3 +1,41 @@
+# ===== ENV =====
+
+x-frontends-env: &frontends-env
+  FRONTEND_DNS: frontend
+  BACKOFFICE_DNS: backoffice
+  LEGACY_DNS: legacy-geneweb
+  NEW_BACKOFFICE_PORT: 5173
+  OLD_BACKOFFICE_PORT: 2316
+  NEW_FRONTEND_PORT: 5174
+  OLD_FRONTEND_PORT: 2317
+
+x-frontends-dev-env: &frontends-dev-env
+  <<: *frontends-env
+  FRONTEND_DNS: frontend-dev
+  BACKOFFICE_DNS: backoffice-dev
+
+x-backend-env: &backend-env
+  MODE: prod
+  DB_HOST: db
+  DB_PORT: 5432
+  DB_USER: user
+  DB_PASSWORD: password
+  DB_NAME: geneweb
+  DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
+  PORT: 8000
+  HOST: 0.0.0.0
+
+x-backend-dev-env: &backend-dev-env
+  <<: [*backend-env, *frontends-dev-env]
+  MODE: dev
+
+x-backend-prod-env: &backend-prod-env
+  <<: [*backend-env, *frontends-env]
+  MODE: prod
+
+
+# ===== SERVICE TEMPLATES =====
+
 x-backoffice-base: &backoffice-base
   build:
     context: ./new_geneweb/backoffice/
@@ -5,7 +43,12 @@ x-backoffice-base: &backoffice-base
   volumes:
     - ./new_geneweb/backoffice:/src
   ports:
-    - "5173:5173"
+    - "5173"
+  networks:
+    internal_net:
+      ipv4_address: 173.20.0.13
+  environment:
+    <<: *frontends-env
 
 x-frontend-base: &frontend-base
   build:
@@ -14,53 +57,79 @@ x-frontend-base: &frontend-base
   volumes:
     - ./new_geneweb/frontend:/src
   ports:
-    - "5174:5174"
+    - "5174"
+  networks:
+    internal_net:
+      ipv4_address: 173.20.0.12
+  environment:
+    <<: *frontends-env
 
 x-backend-base: &backend-base
   build:
     context: ./new_geneweb/backend
     dockerfile: Dockerfile
   restart: always
-  container_name: geneweb-backend
   volumes:
     - ./new_geneweb/backend/:/app
   env_file:
     - ./new_geneweb/backend/.env
   environment:
-    DB_HOST: db
-    DB_PORT: 5432
-    DB_USER: user
-    DB_PASSWORD: password
-    DB_NAME: geneweb
-    DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
-    MODE: prod
-    PORT: 8000
-    HOST: 0.0.0.0
+    <<: *backend-prod-env
   ports:
-    - "8000:8000"
+    - "2316:8000"
+    - "2317:8000"
+  networks:
+    internal_net:
+      ipv4_address: 173.20.0.10
   depends_on:
     db:
       condition: service_healthy
 
+x-db-base: &db-base
+  image: postgres:16
+  restart: always
+  environment:
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: geneweb
+  volumes:
+    - pgdata:/var/lib/postgresql/data
+  ports:
+    - "5432"
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U user -d geneweb"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
+  networks:
+    internal_net:
+      ipv4_address: 173.20.0.11
+
+x-legacy-geneweb-base: &legacy-geneweb-base
+  build:
+    context: ./geneweb_docker/
+    dockerfile: Dockerfile
+  working_dir: /app/geneweb/distribution
+  volumes:
+    - gw_bases:/app/geneweb/distribution/bases
+  ports:
+    - "2316"
+    - "2317"
+  environment:
+    - GW_ONLY_IP=173.20.0.10
+  networks:
+    - internal_net
+
+
+# ===== SERVICES =====
+
 services:
+  legacy-geneweb:
+    <<: *legacy-geneweb-base
+
   db:
-    profiles: [prod, dev, db]
-    image: postgres:16
-    container_name: geneweb-db
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: geneweb
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d geneweb"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    <<: *db-base
+    profiles: [prod, dev]
 
   backend:
     <<: *backend-base
@@ -76,35 +145,44 @@ services:
 
   # ===== DEV =====
 
-  backend_dev:
+  backend-dev:
     <<: *backend-base
     profiles: [dev]
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: geneweb
-      DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
-      MODE: dev
-      PORT: 8000
-      HOST: 0.0.0.0
-    container_name: geneweb-backend-dev
+      <<: *backend-dev-env
 
-  backoffice_dev:
+  backoffice-dev:
     <<: *backoffice-base
     profiles: [dev]
     build:
       context: ./new_geneweb/backoffice/
       dockerfile: Dockerfile.dev
+    environment:
+      <<: *frontends-dev-env
 
-  frontend_dev:
+  frontend-dev:
     <<: *frontend-base
     profiles: [dev]
     build:
       context: ./new_geneweb/frontend/
       dockerfile: Dockerfile.dev
+    environment:
+      <<: *frontends-dev-env
 
+  # ===== DATABASE ONLY =====
+  db-exposed:
+    <<: *db-base
+    profiles: [db]
+    ports:
+      - "5432:5432"
 
 volumes:
   pgdata:
+  gw_bases:
+
+networks:
+  internal_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 173.20.0.0/16

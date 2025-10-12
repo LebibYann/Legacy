@@ -16,7 +16,6 @@ RUN eval "$(opam env)" \
 && opam install . --deps-only --with-test \
 && ocaml ./configure.ml \
 && make distrib
-RUN echo "172.20.0.1" > /app/geneweb/distribution/gw/only.txt
 RUN useradd -m geneweb
 RUN echo "geneweb ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER geneweb
@@ -24,6 +23,9 @@ USER geneweb
 EXPOSE 2316 2317
 ENTRYPOINT ["sh", "-c", " \
 cd /app/geneweb/distribution && \
+GW_ONLY_IP=${GW_ONLY_IP:-127.0.0.1} && \
+echo Only IP: $GW_ONLY_IP && \
+sudo sh -c \"echo $GW_ONLY_IP > /app/geneweb/distribution/gw/only.txt\" && \
 sudo chown -R geneweb:geneweb /app/geneweb/ && \
 ./gwd.sh & \
 ./gwsetup.sh -lang en; \
