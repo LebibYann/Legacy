@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# VSCode / IDE
+.vscode/
+.idea/
+.coverage
+coverage.xml

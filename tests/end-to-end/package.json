@@ -1,0 +1,33 @@
+{
+  "name": "geneweb-e2e",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^24.3.1",
+    "cross-env": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "scripts": {
+    "test": "npm run test:svelte:chromium",
+    "test:caml:chromium": "cross-env ENV_FILE=.env.caml playwright test --project=chromium-*",
+    "test:caml:firefox": "cross-env ENV_FILE=.env.caml playwright test --project=firefox-*",
+    "test:caml:webkit": "cross-env ENV_FILE=.env.caml playwright test --project=webkit-*",
+    "test:caml:chromium:ci": "cross-env ENV_FILE=.env.caml playwright test --project=chromium-* --reporter=line",
+    "test:caml:firefox:ci": "cross-env ENV_FILE=.env.caml playwright test --project=firefox-* --reporter=line",
+    "test:caml:webkit:ci": "cross-env ENV_FILE=.env.caml playwright test --project=webkit-* --reporter=line",
+    "test:svelte:chromium": "cross-env ENV_FILE=.env.svelte playwright test --project=chromium-*",
+    "test:svelte:firefox": "cross-env ENV_FILE=.env.svelte playwright test --project=firefox-*",
+    "test:svelte:webkit": "cross-env ENV_FILE=.env.svelte playwright test --project=webkit-*",
+    "test:svelte:chromium:ci": "cross-env ENV_FILE=.env.svelte playwright test --project=chromium-* --reporter=line",
+    "test:svelte:firefox:ci": "cross-env ENV_FILE=.env.svelte playwright test --project=firefox-* --reporter=line",
+    "test:svelte:webkit:ci": "cross-env ENV_FILE=.env.svelte playwright test --project=webkit-* --reporter=line",
+    "test:ui": "playwright test --ui",
+    "codegen": "playwright codegen",
+    "install:browsers": "playwright install"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  }
+}

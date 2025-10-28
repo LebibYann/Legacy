@@ -14,7 +14,9 @@ from sqlalchemy.ext.asyncio import (
 from app.settings import settings
 
 # Creation of an async engine
-engine: AsyncEngine = create_async_engine(settings.database_url, future=True, echo=False)
+engine: AsyncEngine = create_async_engine(
+    settings.database_url, future=True, echo=False
+)
 
 # Session factory
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False, autoflush=False)

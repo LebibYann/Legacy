@@ -1,13 +1,13 @@
 # 🧬 GeneWeb Backend
 
-Backend for the modernized **GeneWeb** project, built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.  
-It exposes REST APIs, applies business logic, and persists genealogy data in a relational database.  
+Backend for the modernized **GeneWeb** project, built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
+It exposes REST APIs, applies business logic, and persists genealogy data in a relational database.
 
 ---
 
 ## 📦 Requirements
 
-- **Python 3.12+**
+- **Python 3.13.x**
 - [Poetry](https://python-poetry.org/) (`>=1.8.3`)
 - [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
 
@@ -35,6 +35,11 @@ It exposes REST APIs, applies business logic, and persists genealogy data in a r
    ```bash
    cp .env.example .env
    ```
+
+   **Important environment variables:**
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `DATABASE_ECHO` - Set to `true` to log all SQL queries (useful for debugging)
+   - `ALLOWED_IPS` - IP whitelist for API access
 
 4. Run database migrations:
 
@@ -84,16 +89,58 @@ Run locally with Poetry:
 ```bash
 # Run tests
 poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
+# Show coverage report
+poetry run coverage report
 
-# Code formatting (Black + isort)
+# Linting + autofixing
+poetry run ruff check --fix .
+
+# Code formatting (Black)
 poetry run black .
-poetry run isort .
-
-# Linting
-poetry run flake8 .
 
 # Type checking
 poetry run mypy app/
+```
+
+---
+
+## 🗄️ Database Management
+
+### Quick Start
+
+```bash
+# Setup database with sample data
+poetry run python scripts/setup_database.py
+poetry run python scripts/load_test_data.py
+
+# Reset database
+poetry run python scripts/delete_database.py
+poetry run python scripts/setup_database.py --drop-all
+```
+
+### Available Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `scripts/setup_database.py` | Create all tables | `poetry run python scripts/setup_database.py` |
+| `scripts/delete_database.py` | Drop all tables | `poetry run python scripts/delete_database.py` |
+| `scripts/load_test_data.py` | Load sample data | `poetry run python scripts/load_test_data.py` |
+
+**See** [`scripts/README.md`](scripts/README.md) for detailed documentation.
+
+### Production Migrations
+
+For production deployments, use Alembic:
+
+```bash
+# Generate migration
+poetry run alembic revision --autogenerate -m "Description"
+
+# Apply migrations
+poetry run alembic upgrade head
+
+# Rollback
+poetry run alembic downgrade -1
 ```
 
 ---
@@ -108,7 +155,11 @@ backend/
 │   ├── persistence/      # SQLAlchemy models & repository
 │   ├── utils/            # Helpers (e.g. IP filter)
 │   └── main.py           # Application entrypoint
-├── alembic/              # Migrations
+├── scripts/              # Database management scripts ✨ NEW
+│   ├── setup_database.py
+│   ├── delete_database.py
+│   └── load_test_data.py
+├── alembic/              # Production migrations
 ├── tests/                # Unit & functional tests
 ├── Dockerfile
 ├── docker-compose.yml

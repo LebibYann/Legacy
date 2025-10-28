@@ -1,0 +1,17 @@
+services:
+  db:
+    ports:
+      - "5432:5432"
+
+  backend:
+    ports:
+      - "8000:8000"
+
+  # TODO Renable when frontend is properly implemented
+  # frontend:
+  #   ports:
+  #     - "5174:5174"
+
+  backoffice:
+    ports:
+      - "5173:5173"

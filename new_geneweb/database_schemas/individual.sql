@@ -1,5 +1,8 @@
 CREATE TABLE individual (
     id SERIAL PRIMARY KEY,
+    
+    -- Database reference (REQUIRED for multi-database support)
+    database_id INTEGER NOT NULL,
 
     -- Basic information
     first_name TEXT,
@@ -23,7 +26,7 @@ CREATE TABLE individual (
     insert_nickname BOOLEAN DEFAULT FALSE,
     insert_alias BOOLEAN DEFAULT FALSE,
     insert_firstname_alias BOOLEAN DEFAULT FALSE,
-    insert_lastname_alias BOOLEAN DEFAULT FALSE
+    insert_lastname_alias BOOLEAN DEFAULT FALSE,
 
     -- Birth
     birth_place TEXT,
@@ -64,14 +67,14 @@ CREATE TABLE individual (
     burial_notes TEXT,
     burial_source TEXT,
 
-    -- Family
-    family_id INTEGER,
-
     -- Free notes
-    notes TEXT
+    notes TEXT,
 
-    -- Foreign key to family
-    CONSTRAINT fk_individual_family
-        FOREIGN KEY (family_id) REFERENCES family(id)
-        ON DELETE SET NULL
+    -- Foreign keys
+    CONSTRAINT fk_individual_database
+        FOREIGN KEY (database_id) REFERENCES geneweb_database(id)
+        ON DELETE CASCADE
 );
+
+-- Index for performance (database_id is critical for multi-database queries)
+CREATE INDEX idx_individual_database_id ON individual(database_id);

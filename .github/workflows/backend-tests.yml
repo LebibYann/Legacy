@@ -2,13 +2,27 @@ name: backend-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "new_geneweb/backend/**"
       - ".github/workflows/backend-tests.yml"
   pull_request:
-    branches:
-      - dev
+    paths:
+      - "new_geneweb/backend/**"
+      - "new_geneweb/database_schemas/**"
+      - "!**/*.md"
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.13"
+  POETRY_VERSION: "1.8.3"
+  APP_ENV: test
+  APP_NAME: geneweb
+  APP_HOST: localhost
+  APP_PORT: 8000
+  DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb
+  BACKOFFICE_USERNAME: admin
+  BACKOFFICE_PASSWORD: password
+  BACKOFFICE_URL: http://localhost:2316
+  FRONTEND_URL: http://localhost:2317
 
 defaults:
   run:
@@ -23,13 +37,16 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12.3'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install Poetry
-        run: pip install poetry==1.8.3
+        run: pip install poetry==${{ env.POETRY_VERSION }}
 
       - name: Install deps
         run: poetry install --no-root
+
+      - name: Run ruff (Linting)
+        run: poetry run ruff check .
 
       - name: Run Black (formatting check)
         run: poetry run black --check .
@@ -45,30 +62,23 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12.3'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install Poetry
-        run: pip install poetry==1.8.3
+      - name: Install PostgreSQL Client
+        run: |
+          # Import the repository signing key:
+          sudo apt install curl ca-certificates
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
-      - name: Install deps
-        run: poetry install --no-root
+          # Create the repository configuration file:
+          . /etc/os-release
+          sudo sh -c "echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
 
-      - name: Run pytest
-        env:
-          APP_ENV: test
-          APP_NAME: geneweb
-          APP_HOST: localhost
-          APP_PORT: 8000
-          DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/geneweb_test
-        run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
+          # Update the package lists:
+          sudo apt update
 
-
-  docker-build:
-    name: 🐳 Docker Build Validation
-
-    runs-on: [self-hosted]
-    steps:
-      - uses: actions/checkout@v4
+          sudo apt install -y postgresql-18
 
       - name: Install docker compose
         run: |
@@ -87,16 +97,40 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          registry: docker.io
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build backend Docker image
-        run: docker compose build
+      - name: Install netcat (nc)
+        run: sudo apt-get update && sudo apt-get install -y netcat
+
+      - name: Start New Geneweb
+        run: |
+          cd ../../
+          sh ./scripts/clear-docker-db.sh
+          docker compose -f docker-compose.yml -f compose.http.yml up -d
+          sh ./scripts/wait-for-url.sh ${{ env.BACKOFFICE_URL }}
+          sh ./scripts/wait-for-url.sh ${{ env.FRONTEND_URL }}
+
+      - name: Get backend container name
+        run: |
+          docker ps
+          CONTAINER=$(docker ps --filter "name=backend" --format "{{.Names}}" | head -n 1)
+          echo "Container name : $CONTAINER"
+          echo "CONTAINER=$CONTAINER" >> $GITHUB_ENV
+
+      - name: Installing dependencies in docker
+        run: docker exec -i $CONTAINER sh -c "poetry install"
+
+      - name: Run pytest in docker
+        run: docker exec -i $CONTAINER sh -c "poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml"
+
+      - name: Cleanup Docker
+        if: always()
+        run: |
+          cd ../../
+          docker compose down -v || true
+          docker system prune -af || true

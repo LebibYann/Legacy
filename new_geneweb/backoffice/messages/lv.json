@@ -1,0 +1,49 @@
+{
+	"display_in": "Rādīt latviski:",
+
+	"homepage_title": "Vadība un Veidošana",
+
+	"list_consult": "Konsultēt",
+	"consult_list": "dzimtas kokus",
+	"consult_errors": "kļūdu vēsturi un statistiku",
+
+	"list_save": "Saglabāt",
+	"save_gedcom": "GEDCOM avota datni",
+	"save_gwb_start": "",
+	"save_gwb_end": "avota datni",
+
+	"list_create": "Izveidot dzimtas koku",
+	"create_gedcom": "no GEDCOM avota datnes",
+	"create_gwb_start": "no",
+	"create_gwb_end": "avota datnes",
+	"create_empty": "no tukšas datnes",
+
+	"list_advanced_options": "Papildu opcijas",
+	"ao_cleanup": "Tīrīšana",
+	"ao_rename": "Pārdēvēšana",
+	"ao_delete": "Dzēšana",
+	"ao_merge": "Sapludināšana ar citām datu bāzēm",
+	"ao_restore": "Saglabāšana un atjaunošana",
+	"ao_consang": "Asinsradniecības inicializācija",
+	"ao_update": "Atjaunot saišu lapas / ģimenes hronikas",
+	"ao_compute": "Aprēķināt savienoto komponentu",
+	"ao_compute_diff": "Aprēķināt starpību starp divām bāzēm",
+	"ao_fix": "Labot problēmas bāzē",
+
+	"list_configure": "Konfigurēt",
+	"config_db_param": "Datu bāzes parametri",
+	"config_front_param": "gwd pakalpojuma parametri",
+	"config_cache": "Vārdu un vietu kešatmiņas datnes automātiskajam pabeigšanai",
+
+	"doc": "Jūs varat arī iepazīties ar pilno dokumentāciju",
+	"error_404": "Lapa nav atrasta",
+
+	"databases": "Datu bāzes",
+	"db_consult_info": "Lai konsultētu datu bāzi, gwd pakalpojumam ir jābūt palaistam.",
+	"gwd_info": "gwd informācija",
+	"loading_databases": "Ielādē datu bāzes...",
+	"no_database": "pašlaik nav datu bāzes",
+	"back_to_menu": "Vai atgriezties galvenajā izvēlnē.",
+	"welcome": "laipni lūdzam",
+	"failed_load_databases": "Neizdevās ielādēt datu bāzes. Lūdzu, mēģiniet vēlreiz vēlāk."
+}

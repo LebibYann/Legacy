@@ -1,0 +1,49 @@
+{
+	"display_in": "Display in:",
+
+	"homepage_title": "Management and Creation",
+
+	"list_consult": "Consult",
+	"consult_list": "family Trees",
+	"consult_errors": "the error history and statistics",
+
+	"list_save": "Save",
+	"save_gedcom": "a GEDCOM source file",
+	"save_gwb_start": "a",
+	"save_gwb_end": "source file",
+
+	"list_create": "Create Family Tree",
+	"create_gedcom": "from a GEDCOM source file",
+	"create_gwb_start": "from a",
+	"create_gwb_end": "source file",
+	"create_empty": "from an empty file",
+
+	"list_advanced_options": "Advanced Options",
+	"ao_cleanup": "Clean up",
+	"ao_rename": "Renaming",
+	"ao_delete": "Deletion",
+	"ao_merge": "Merging with other databases",
+	"ao_restore": "Saving and restoring ",
+	"ao_consang": "Initialisation of consanguinities",
+	"ao_update": "Update links page / family chronicle",
+	"ao_compute": "Compute connected components",
+	"ao_compute_diff": "Compute the difference between two bases",
+	"ao_fix": "Fixes problems in a base",
+
+	"list_configure": "Configure",
+	"config_db_param": "The parameters of a database",
+	"config_front_param": "The parameters of the gwd service",
+	"config_cache": "Name and places cache files for auto completion",
+
+	"doc": "You can also consult the complete documentation of",
+	"error_404": "Page not found",
+
+	"databases": "Databases",
+	"db_consult_info": "To consult a database, the gwd service must have been launched.",
+	"gwd_info": "gwd info",
+	"loading_databases": "Loading databases...",
+	"no_database": "there is no database at present",
+	"back_to_menu": "Or go back to the main menu.",
+	"welcome": "welcome",
+	"failed_load_databases": "Failed to load databases. Please try again later."
+}

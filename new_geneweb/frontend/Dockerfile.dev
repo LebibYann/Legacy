@@ -1,0 +1,17 @@
+# ---- Dev stage ----
+FROM node:24-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy the code
+COPY . .
+
+# Install dependencies
+RUN npm install
+
+# Expose Vite dev server port
+EXPOSE 5174
+
+# Start the dev server
+ENTRYPOINT [ "npm", "run", "dev", "--", "--host" ]

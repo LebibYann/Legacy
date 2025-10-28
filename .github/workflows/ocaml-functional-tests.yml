@@ -1,19 +1,18 @@
-name: Unit Tests (OCaml)
-
+name: ocaml-functional-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "geneweb/**"
       - ".github/workflows/functional-tests.yml"
   pull_request:
     paths:
       - "geneweb/**"
+      - "tests/functional/**"
   workflow_dispatch:
 
 jobs:
   run-functional-tests:
+    name: 🧪 OCaml Functional Tests
     runs-on: [self-hosted]
     steps:
       - name: Checkout
@@ -21,11 +20,11 @@ jobs:
 
       - name: Install system packages
         run: |
-          sudo apt-get update -y 
+          sudo apt-get update -y
           sudo apt-get install -y opam m4 libgmp-dev libpcre3-dev zlib1g-dev pkg-config git libpcre2-dev xdot
           opam init --disable-sandboxing -y
           opam switch create 4.14.1 -y
-        
+
       - name: build binaries
         working-directory: geneweb
         run: |

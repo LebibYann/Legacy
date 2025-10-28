@@ -1,0 +1,16 @@
+services:
+
+  # TODO Renable when frontend is properly implemented
+  # frontend:
+  #   build:
+  #     context: ./new_geneweb/frontend/
+  #     dockerfile: Dockerfile.dev
+
+  backoffice:
+    build:
+      context: ./new_geneweb/backoffice/
+      dockerfile: Dockerfile.dev
+
+  backend:
+    environment:
+      MODE: dev

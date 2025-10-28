@@ -1,0 +1,173 @@
+name: frontends-e2e-tests
+
+env:
+  TEST_FOLDER: tests/end-to-end
+  BACKEND_PATH: ./new_geneweb/backend/
+  BACKOFFICE_PATH: ./new_geneweb/backoffice/
+  FRONTEND_PATH: ./new_geneweb/frontend/
+  BACKOFFICE_URL: http://localhost:2316
+  FRONTEND_URL: http://localhost:2317
+
+on:
+  push:
+    paths:
+      - ".github/workflows/frontends-e2e-tests.yml"
+  pull_request:
+    paths:
+      - "new_geneweb/**"
+      - "tests/end-to-end/**"
+      - "docker-compose.yml"
+      - "./**/Dockerfile"
+      - "!**/*.md"
+  workflow_dispatch:
+
+jobs:
+    e2e-tests:
+      strategy:
+        matrix:
+          include:
+            - profile: prod
+              override_file: -f docker-compose.yml
+              dockerfile: Dockerfile
+            - profile: dev
+              override_file: -f docker-compose.yml -f docker-compose.dev.yml
+              dockerfile: Dockerfile.dev
+      name: 🛣️ Frontends End-to-End Tests
+      runs-on: self-hosted
+
+      services:
+        docker:
+          image: docker:dind
+
+      permissions:
+        contents: read
+        packages: write   # required to push to GHCR
+        id-token: write
+        actions: write   # 👈 nécessaire pour le cache GHA
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Install docker compose
+          run: |
+            # Add Docker's official GPG key:
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates curl
+            sudo install -m 0755 -d /etc/apt/keyrings
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+            # Add the repository to Apt sources:
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+        - name: Install xvfb
+          run: sudo apt-get update && sudo apt-get install -y xvfb
+
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 24
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            registry: docker.io
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Add ghcr path to environment
+          run: |
+            ORGA_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+            REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+            echo "GHCR_PATH=ghcr.io/${ORGA_NAME}/${REPO_NAME}" >> $GITHUB_ENV
+
+        # ----------------------------------------------------------
+        # BACKEND (FastAPI)
+        # ----------------------------------------------------------
+        - name: Build backend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.BACKEND_PATH }}
+            file: ${{ env.BACKEND_PATH }}/Dockerfile
+            tags: ${{ env.GHCR_PATH }}:backend
+            push: true
+            cache-from: type=gha,scope=backend
+            cache-to: type=gha,scope=backend,mode=max
+
+        # ----------------------------------------------------------
+        # BACKOFFICE (Svelte ou autre front interne)
+        # ----------------------------------------------------------
+        - name: Build backoffice image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.BACKOFFICE_PATH }}
+            file: ${{ env.BACKOFFICE_PATH }}/${{ matrix.dockerfile }}
+            tags: ${{ env.GHCR_PATH }}:backoffice
+            push: true
+            cache-from: type=gha,scope=backoffice
+            cache-to: type=gha,scope=backoffice,mode=max
+
+        # ----------------------------------------------------------
+        # FRONTEND (public webapp)
+        # ----------------------------------------------------------
+        - name: Build frontend image
+          uses: docker/build-push-action@v6
+          with:
+            context: ${{ env.FRONTEND_PATH }}
+            file: ${{ env.FRONTEND_PATH }}/${{ matrix.dockerfile }}
+            tags: ${{ env.GHCR_PATH }}:frontend
+            push: true
+            cache-from: type=gha,scope=frontend
+            cache-to: type=gha,scope=frontend,mode=max
+
+        - name: Build New Geneweb
+          run: |
+            cat ${{ env.BACKEND_PATH }}/.env.example > ${{ env.BACKEND_PATH }}/.env
+            docker pull ${{ env.GHCR_PATH }}:backend
+            docker pull ${{ env.GHCR_PATH }}:frontend
+            docker pull ${{ env.GHCR_PATH }}:backoffice
+
+        - name: Start New Geneweb
+          run: |
+            sh ./scripts/clear-docker-db.sh
+            docker compose -f docker-compose.yml -f compose.http.yml up -d
+            sh ./scripts/wait-for-url.sh ${{ env.BACKOFFICE_URL }}
+            sh ./scripts/wait-for-url.sh ${{ env.FRONTEND_URL }}
+
+        - name: Setup end-to-end tests
+          run: |
+            cd ${{ env.TEST_FOLDER }}
+            sudo npx playwright install-deps
+            npm i
+            npm run install:browsers
+
+        - name: Run end-to-end tests (chromium / firefox / webkit)
+          run: |
+            # TODO Enable firefox and webkit once project is fully modernized
+            cd ${{ env.TEST_FOLDER }}
+            xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:chromium:ci
+            # xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:firefox:ci
+            # xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:svelte:webkit:ci
+
+        - name: Cleanup Docker
+          if: always()
+          run: |
+            docker compose down -v || true
+            docker system prune -af || true

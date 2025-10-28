@@ -1,105 +1,204 @@
-# GeneWeb python port
+# GeneWeb
 
-This readme will introduce the geneweb migration project
+**Migration/modernization of an OCaml genealogy application to a Python 3 (backend) + Svelte 5 (frontend) stack.**
 
-## Migration: Legacy OCaml (Caml) to Python Tooling
 
-Some auxiliary scripts and future automation may move to Python while core performance‑critical genealogy logic remains in OCaml. This section outlines the migration approach.
 
-Goals:
-* Preserve proven OCaml algorithms (graph traversal, consanguinity, relationship calculus).
-* Allow rapid scripting, data munging, and integration tasks in Python.
-* Maintain a stable RPC / CLI boundary so existing deployments continue to work.
 
-Strategy:
-1. Identify candidates for Python re‑implementation: standalone one‑shot tools, data export filters, reporting, simple format converters where performance is not critical.
-2. Define clear boundaries: OCaml keeps internal database representation, indexing, caching, and heavy computations; Python consumes exposed JSON/RPC endpoints or CLI outputs.
-3. Add thin adapters instead of duplicating logic. Prefer: gwd RPC → Python client library → user scripts.
-4. Introduce a `python/` directory (when first Python module lands) with its own `pyproject.toml` or `requirements.txt` and tests.
-5. Data exchange format: JSON (UTF‑8). Avoid bespoke text parsing; if an endpoint lacks JSON today, add a parallel `--json` or `?fmt=json` flag.
-6. Testing: mirror a small golden dataset; assert parity between OCaml tool output and Python rewrite before deprecating the former.
-7. Gradual deprecation: mark legacy OCaml helper with `@deprecated` note in its help text once the Python version reaches feature parity; remove only after two minor releases.
 
-Interfacing Options (choose case‑by‑case):
-* Process boundary (preferred): Python `subprocess` calls existing binaries with `--json` output.
-* HTTP/RPC: Python client queries running `gwd` for dynamic data.
-* FFI (last resort): Use `pyml` or C stubs only if zero‑copy access gives measurable win (benchmark first).
+## Context and Goals
 
-Commit Tagging for Migration:
-* `feat(python):` new Python module/tool.
-* `refactor(lib):` extracted logic to make it callable from both sides.
-* `chore(build):` added Python packaging / CI wiring.
-* `docs(migration):` updates to this section.
+### Why the migration?
 
-Readiness Checklist for Each Migrated Tool:
-* Parity test added (`tests/python_parity/` suggested path).
-* Benchmark (if performance relevant) shows <10% regression or justified.
-* Documentation updated (usage examples in root or `python/README.md`).
-* Release notes mention availability + any flags changed.
+GeneWeb is a powerful genealogy software originally written in OCaml. While the OCaml implementation has proven robust and performant over the years, we are migrating to modern technologies to address several key challenges:
 
-Open Questions (track via issues):
-* Standard authentication handshake for Python client to authenticated endpoints.
-* Unified schema definition (e.g., JSON Schema or OpenAPI) auto‑generated from OCaml types.
-* Packaging strategy (single `geneweb-tools` PyPI package vs multiple).
+- **Maintainability**: Python offers a larger developer community and more accessible codebase for future contributors
+- **Modern tooling**: Leverage contemporary development tools, testing frameworks, and deployment practices
+- **Infrastructure simplification**: Reduce deployment complexity with containerized Python/Svelte stack
+- **Enhanced compatibility**: Better integration with modern web technologies and third-party services
+- **Developer adoption**: Lower barrier to entry for new team members and contributors
 
-If you plan a Python migration PR: open an issue labeled `migration` describing scope, boundary, expected gains, and deprecation timeline.
+### Final objective
+
+Deliver a new version of GeneWeb with equivalent (or improved) functionality while preserving the core genealogy algorithms and data integrity that users depend on. The migration will maintain backward compatibility with existing databases and provide a clear migration path for current users.
+
+
+
+
+
+## Overall Architecture
+
+The project is organized into distinct components that facilitate both the legacy system consulting and testing as well as the new implementation development:
+
+```
+.
+├── geneweb/            # Legacy OCaml code
+├── geneweb_docker/     # Dockerfiles and configs to run the legacy project
+├── new_geneweb/        # New backend (Python) + frontend (Svelte)
+├── tests/              # End-to-end and integration tests
+├── docs/               # Technical and functional documentation
+├── TESTING.md          # Guide to run and write tests
+├── CONTRIBUTING.md     # Contribution guidelines
+└── README.md           # This file
+```
+
+You can have more detail on new project [here](new_geneweb/README.md).
+
+
+
+## Prerequisites
+
+### System Requirements
+- **Operating System**: Linux, macOS, or Windows with WSL2
+- **Docker**: Version 20.10+ with Docker Compose
+- **Python**: 3.13+
+- **Node.js**: 20+
+
+### Package Managers
+- **Python**: poetry
+- **Node.js**: npm
+- **OCaml**: opam (only for legacy code)
+
+
+
+
+
+## Running the Legacy Project
+
+The original OCaml-based GeneWeb can be run using Docker:
+
+```bash
+cd geneweb_docker
+docker compose up --build
+```
+
+Access the legacy application at `http://localhost:2316` (setup) and `http://localhost:2317` (user)
+
+
+
+
+
+## Installing & Running the New Project
+
+### Docker
+```bash
+docker compose up --build
+```
+
+### Manual
+Follow the respective readme files in each component directory.
+- [Backend](new_geneweb/backend/README.md)
+- [Frontend](new_geneweb/frontend/README.md)
+- [Backoffice](new_geneweb/backoffice/README.md)
+- [Database](new_geneweb/database/README.md)
+
+
+
+
+
+## Testing
+
+Comprehensive testing documentation is available in [`TESTING.md`](TESTING.md).
+
+### Quick Test Commands
+- **Backend tests**: `cd new_geneweb/backend && poetry run pytest`
+- **Frontend tests**: `cd new_geneweb/frontend && pnpm test`
+- **End-to-end tests**: `cd tests/end-to-end && pnpm run test`
+- **Functional tests**: `cd tests/functional && python -m pytest`
+
+
+
+
+
+## Running the docker
+
+To run the Docker containers for the New Geneweb project, you can use the provided `docker-compose.yml` file at the root of this project. Make sure you have Docker and Docker Compose installed on your machine.
+
+### Standard Profiles
+
+```bash
+# Production with HTTPS (default)
+docker compose --profile prod up --build
+
+# Ephemeral with HTTPS (temporary database)
+docker compose --profile ephemeral up --build
+
+# HTTP without SSL (no certificate warnings)
+docker compose --profile http up --build
+```
+
+### Development Mode
+
+```bash
+# Development with HTTPS
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+### Reset database (Fresh Database Every Time)
+
+To quickly get idem-potent behavior with a fresh database on every startup, use the provided scripts:
+
+**Windows (Batch / CMD):**
+```cmd
+./scripts/clear-docker-db.bat
+```
+
+**Linux/Mac (Bash):**
+```bash
+sh ./scripts/clear-docker-db.sh
+```
+
+📖 **See [nginx/README.md](nginx/README.md) for HTTPS/HTTP configuration details**
 
 ## Documentation
-* Main OCaml project README (build, usage, links): [`geneweb/README.md`](geneweb/README.md)
-* Community wiki: https://geneweb.tuxfamily.org/
-* Colab demo / quick exploration: `geneweb/geneweb_colab.ipynb`
-* Contributor guide: `geneweb/CONTRIBUTING.md`
 
-## Commit Convention
+Technical and functional documentation is organized in the [`docs/`](docs/README.md) folder:
 
-We use a lightweight variant of Conventional Commits to keep history and changelog generation coherent.
+All documentation is written in plain Markdown for easy reading and contribution.
 
-Format:
 
-```
-<type>(<scope>): <short summary>
 
-[optional body]
-[optional footer(s)]
-```
 
-Rules:
-* Use lowercase type; imperative mood in summary ("add support", "fix crash", "refactor parser").
-* Keep summary ≤ 72 chars; wrap body at ~100 chars.
-* Reference issues with `Refs: #123` or close them with `Closes: #123` in footers.
-* Multiple scopes allowed: `feat(lib,templates): ...` (keep to ≤2 when possible).
-* Breaking changes: add `!` after type or scope and a `BREAKING CHANGE:` footer explaining migration.
 
-Accepted types:
-* `feat` – new user or API feature
-* `fix` – bug fix
-* `perf` – performance optimization
-* `refactor` – code change without feature/bug impact
-* `docs` – documentation only (README, guides, comments)
-* `test` – add or adjust tests
-* `build` – build system, opam/dune adjustments
-* `ci` – continuous integration / workflows
-* `chore` – maintenance (dependencies, scripts) with no code impact
-* `style` – formatting, whitespace (no logic changes)
-* `i18n` – translations or lexicon updates
-* `templates` – template/UI layer changes
-* `plugins` – plugin additions or modifications
+## Contributing
 
-Common scopes:
-`core`, `lib`, `ui`, `server`, `api`, `templates`, `plugins`, `build`, `deps`, `docs`, `i18n`, `tests`.
+Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed contribution guidelines.
 
-Examples:
-```
-feat(server): add PDF/HTML document route m=DOC
-fix(lib): guard cousin cache when base has single individual
-perf(core): reduce consanguinity computation allocations
-refactor(templates): extract carousel component logic
-docs(readme): add commit convention section
-feat(lib)!: switch default archival format to gwplus
-BREAKING CHANGE: old .gw output requires flag -old_gw to export legacy format.
-```
+### Quick Checklist
+- **Branch naming**: `feature/description` or `fix/description`
+- **Code style**:
+  - Python: Follow PEP 8, use `black` and `isort`
+  - TypeScript/Svelte: Use Prettier and ESLint
+  - OCaml: Follow existing project conventions
+- **Testing**: Add tests for new features and bug fixes
+- **Documentation**: Update relevant docs for user-facing changes
+- **PR process**: Create detailed pull requests with clear descriptions
 
-Commit Hygiene:
-* One logical change per commit; split large refactors.
-* Run `make fmt` and relevant tests/bench (where available) before pushing.
-* Avoid committing generated artifacts (build outputs, temporary caches).
+
+
+
+
+## Roadmap / Project Status
+
+### Completed ✅
+- Legacy OCaml codebase analysis and documentation
+- Docker containerization for legacy system
+- New project structure setup
+- Backend API foundation (Python/FastAPI)
+- Frontend scaffolding (Svelte)
+- Basic testing infrastructure
+
+### In Progress ⏳
+- Reimplementation of core feature
+- Core genealogy algorithms migration
+- Database schema design and migration tools
+- API endpoint implementation
+- Mobile-responsive design
+
+
+
+
+
+## License
+
+This project is licensed under the GPL-2.0 License - see the original GeneWeb license for details.
