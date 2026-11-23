@@ -1,6 +1,33 @@
-# GeneWeb python port
+# GeneWeb modernization: from OCaml to a Python + Svelte stack
 
-This readme will introduce the geneweb migration project
+[GeneWeb](https://github.com/geneweb/geneweb) is a long-lived open-source genealogy software written in OCaml. This team project (Epitech, 2025) studies its legacy code and rebuilds it as a modern web application, while keeping the original as a reference.
+
+| Folder | Content | Stack |
+| --- | --- | --- |
+| [`geneweb/`](geneweb) | Original OCaml code base | OCaml |
+| [`new_geneweb/backend/`](new_geneweb/backend) | REST API and data model | Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL |
+| [`new_geneweb/backoffice/`](new_geneweb/backoffice) | Administration front end | SvelteKit, TypeScript, Playwright, Lighthouse CI |
+| [`new_geneweb/database_schemas/`](new_geneweb/database_schemas) | SQL schemas (individual, family, event…) | SQL |
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Svelte](https://img.shields.io/badge/Svelte-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![OCaml](https://img.shields.io/badge/OCaml-EC6813?style=for-the-badge&logo=ocaml&logoColor=white)
+
+## My contribution
+
+- Set up the **FastAPI backend**: project structure, Alembic migrations, Docker image, pre-commit hooks and its GitHub Actions test workflow
+- Set up the **SvelteKit backoffice** with TypeScript, accessibility checks and Lighthouse CI, plus its Dockerfile and Compose service
+- Added the backoffice CI workflow (lint, tests, Docker validation, accessibility)
+- Wrote the root and per-app contributing guides and the backoffice README
+
+## Run with Docker
+
+```bash
+docker compose up --build   # starts PostgreSQL, the backend and the backoffice
+```
 
 ## Migration: Legacy OCaml (Caml) to Python Tooling
 
