@@ -1,0 +1,3 @@
+# This directory is for mkcert-generated certificates
+# Run setup-trusted-certs.ps1 (Windows) or setup-trusted-certs.sh (Linux/Mac) to generate them
+# The Dockerfile will use these certificates if present, otherwise it generates self-signed certs

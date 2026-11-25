@@ -20,3 +20,12 @@ Thumbs.db
 # Pytest
 __pycache__/
 tests/functional/binaries/
+.vscode/
+
+# SSL/TLS Certificates (should never be committed)
+*.pem
+*.key
+*.crt
+*.csr
+nginx/ssl/*.pem
+nginx/ssl/*.key

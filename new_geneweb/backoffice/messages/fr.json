@@ -1,0 +1,49 @@
+{
+	"display_in": "Afficher en :",
+
+	"homepage_title": "Gestion et Création",
+
+	"list_consult": "Consulter",
+	"consult_list": "arbres généalogiques",
+	"consult_errors": "l'historique des erreurs et statistiques",
+
+	"list_save": "Sauvegarder",
+	"save_gedcom": "un fichier source GEDCOM",
+	"save_gwb_start": "un fichier source",
+	"save_gwb_end": "",
+
+	"list_create": "Créer un arbre généalogique",
+	"create_gedcom": "à partir d'un fichier source GEDCOM",
+	"create_gwb_start": "à partir d'un fichier source",
+	"create_gwb_end": "",
+	"create_empty": "à partir d'un fichier vide",
+
+	"list_advanced_options": "Options avancées",
+	"ao_cleanup": "Nettoyage",
+	"ao_rename": "Renommage",
+	"ao_delete": "Suppression",
+	"ao_merge": "Fusion avec d'autres bases de données",
+	"ao_restore": "Sauvegarde et restauration",
+	"ao_consang": "Initialisation des consanguinités",
+	"ao_update": "Mise à jour des liens page / chronique familiale",
+	"ao_compute": "Calcul des composants connectés",
+	"ao_compute_diff": "Calcul de la différence entre deux bases",
+	"ao_fix": "Correction des problèmes dans une base",
+
+	"list_configure": "Configurer",
+	"config_db_param": "Les paramètres d'une base de données",
+	"config_front_param": "Les paramètres du service gwd",
+	"config_cache": "Fichiers de cache des noms et lieux pour l'autocomplétion",
+
+	"doc": "Vous pouvez également consulter la documentation complète de",
+	"error_404": "Page non trouvée",
+
+	"databases": "Bases de données",
+	"db_consult_info": "Pour consulter une base de données, le service gwd doit avoir été lancé.",
+	"gwd_info": "info gwd",
+	"loading_databases": "Chargement des bases de données...",
+	"no_database": "il n'y a pas de base de données pour le moment",
+	"back_to_menu": "Ou retourner au menu principal.",
+	"welcome": "bienvenue",
+	"failed_load_databases": "Échec du chargement des bases de données. Veuillez réessayer plus tard."
+}

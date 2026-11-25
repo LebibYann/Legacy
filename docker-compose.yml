@@ -1,48 +1,153 @@
+name: geneweb
+
+# ===== ENV =====
+
+x-frontends-env: &frontends-env
+  FRONTEND_DNS: frontend
+  BACKOFFICE_DNS: backoffice
+  LEGACY_DNS: legacy-geneweb
+  NEW_BACKOFFICE_PORT: 5173
+  OLD_BACKOFFICE_PORT: 2316
+  NEW_FRONTEND_PORT: 5174
+  OLD_FRONTEND_PORT: 2317
+
+x-backend-env: &backend-env
+  APP_NAME: geneweb-backend
+  MODE: prod
+  DB_HOST: db
+  DB_PORT: 5432
+  DB_USER: user
+  DB_PASSWORD: password
+  DB_NAME: geneweb
+  DATABASE_URL: postgresql+asyncpg://user:password@db:5432/geneweb?schema=public
+  PORT: 8000
+  HOST: 0.0.0.0
+  BACKOFFICE_USERNAME: admin
+  BACKOFFICE_PASSWORD: admin
+
+# ===== SERVICES =====
+
 services:
+
+  backoffice:
+    build:
+      context: ./new_geneweb/backoffice/
+      dockerfile: Dockerfile
+    volumes:
+      - ./new_geneweb/backoffice:/src
+    ports:
+      - "5173"
+    networks:
+      internal_net:
+        ipv4_address: 173.20.0.3
+    environment:
+      <<: *frontends-env
+
+  # TODO Renable when frontend is properly implemented
+  # frontend:
+  #   build:
+  #     context: ./new_geneweb/frontend/
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./new_geneweb/frontend:/src
+  #   ports:
+  #     - "5174"
+  #   networks:
+  #     internal_net:
+  #       ipv4_address: 173.20.0.2
+  #   environment:
+  #     <<: *frontends-env
+
+  legacy-geneweb:
+    build:
+      context: ./geneweb_docker/
+      dockerfile: Dockerfile
+    working_dir: /app/geneweb/distribution
+    ports:
+      - "2316"
+      - "2317"
+    volumes:
+      - gw_bases:/app/geneweb/distribution/bases
+      - gw_bin:/app/geneweb/distribution/gw
+    networks:
+      internal_net:
+        ipv4_address: 173.20.0.5
+    environment:
+      - GW_ONLY_IP=173.20.0.4
+
   db:
     image: postgres:16
-    container_name: geneweb-db
     restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: geneweb
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d geneweb"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      internal_net:
+        ipv4_address: 173.20.0.6
 
   backend:
     build:
       context: ./new_geneweb/backend
+      dockerfile: Dockerfile
     restart: always
-    container_name: geneweb-backend
-    volumes:
-      - ./new_geneweb/backend/:/app
-    env_file:
-      - ./new_geneweb/backend/.env
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: geneweb
-      DATABASE_URL: postgresql://user:password@db:5432/geneweb?schema=public
-    ports:
-      - "8000:8000"
+      <<: [*backend-env, *frontends-env]
+    expose:
+      - "8000"
     depends_on:
+      backoffice:
+        condition: service_started
+      # TODO Renable when frontend is properly implemented
+      # frontend:
+      #   condition: service_started
+      legacy-geneweb:
+        condition: service_started
       db:
         condition: service_healthy
+    volumes:
+      - ./new_geneweb/backend/:/app
+      - gw_bases:/app/geneweb/distribution/bases
+      - gw_bin:/app/geneweb/distribution/gw
+    networks:
+      internal_net:
+        ipv4_address: 173.20.0.4
 
-  backoffice:
-    build: new_geneweb/backoffice
+  # ===== HTTPS REVERSE PROXY (default) =====
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "2316:2316"  # HTTPS port 2316
+      - "2317:2317"  # HTTPS port 2317
+    networks:
+      internal_net:
+        ipv4_address: 173.20.0.10
+    depends_on:
+      backend:
+        condition: service_started
+
 
 volumes:
   pgdata:
+  gw_bases:
+  gw_bin:
+
+networks:
+  internal_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 173.20.0.0/16
+          gateway: 173.20.0.1

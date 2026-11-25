@@ -1,132 +1,203 @@
-# GeneWeb modernization: from OCaml to a Python + Svelte stack
+# GeneWeb modernization: from OCaml to Python and Svelte
 
-[GeneWeb](https://github.com/geneweb/geneweb) is a long-lived open-source genealogy software written in OCaml. This team project (Epitech, 2025) studies its legacy code and rebuilds it as a modern web application, while keeping the original as a reference.
+[GeneWeb](https://github.com/geneweb/geneweb) is a genealogy application written in OCaml since the 1990s. This project starts replacing it with a **FastAPI** back end and **SvelteKit** front ends, **without switching the old engine off**: a proxy serves the pages that have been rewritten and falls back to the original GeneWeb for all the others.
 
-| Folder | Content | Stack |
-| --- | --- | --- |
-| [`geneweb/`](geneweb) | Original OCaml code base | OCaml |
-| [`new_geneweb/backend/`](new_geneweb/backend) | REST API and data model | Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL |
-| [`new_geneweb/backoffice/`](new_geneweb/backoffice) | Administration front end | SvelteKit, TypeScript, Playwright, Lighthouse CI |
-| [`new_geneweb/database_schemas/`](new_geneweb/database_schemas) | SQL schemas (individual, family, event…) | SQL |
+<p align="center">
+  <img src="assets/readme/backoffice_home.png" width="760" alt="Administration home page rewritten in SvelteKit, with the GeneWeb logo, links to consult, save, create and configure family trees, and a language selector">
+  <br><em>The administration home page, rewritten in SvelteKit. Most of its links still open the OCaml pages.</em>
+</p>
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![Svelte](https://img.shields.io/badge/Svelte-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![OCaml](https://img.shields.io/badge/OCaml-EC6813?style=for-the-badge&logo=ocaml&logoColor=white)
 
-## My contribution
+## Features
 
-- Set up the **FastAPI backend**: project structure, Alembic migrations, Docker image, pre-commit hooks and its GitHub Actions test workflow
-- Set up the **SvelteKit backoffice** with TypeScript, accessibility checks and Lighthouse CI, plus its Dockerfile and Compose service
-- Added the backoffice CI workflow (lint, tests, Docker validation, accessibility)
-- Wrote the root and per-app contributing guides and the backoffice README
+- **Fallback proxy**: each request goes to the new front end first, then to the OCaml server when the new one does not answer or returns an error such as 404
+- **Database API**: list, create and delete GeneWeb databases, with HTTP Basic authentication on writes
+- **`.gwb` connector**: manages databases in the original format through the GeneWeb binaries. Person and family operations, through GEDCOM, are written but not functional yet (see [Project status](#project-status))
+- **Backoffice**: home page and database list in SvelteKit, in 8 languages
+- **Relational model**: SQLAlchemy models and an Alembic migration for 10 PostgreSQL tables, ready for a later move out of `.gwb` files
+- **Tests at each level**: OCaml engine, binaries, back end, front end and end-to-end
 
-## Run with Docker
+## Screenshots
+
+| Rewritten page (SvelteKit and the new API) | Original page (OCaml), served through the proxy |
+|---|---|
+| ![List of databases](assets/readme/database_list.png) | ![Home page of a family tree with 482 individuals](assets/readme/legacy_tree.png) |
+
+## Architecture
+
+```mermaid
+flowchart TB
+    Browser(["Browser"])
+    Nginx["<b>nginx</b><br/>ports 2316 and 2317, HTTPS"]
+
+    subgraph backend["Back end (FastAPI)"]
+        Auth["Basic auth<br/>port 2316 only"]
+        Proxy["Fallback proxy"]
+        Api["REST API, under /api"]
+        Conn["DBConnector"]
+        Legacy["LegacyDB provider"]
+        PgP["PostgresProvider<br/>skeleton"]
+    end
+
+    Back["Backoffice<br/>SvelteKit"]
+    Old["Original GeneWeb, OCaml<br/>gwsetup and gwd"]
+    Gwb[(".gwb files")]
+    Pg[("PostgreSQL")]
+
+    Browser --> Nginx --> Auth --> Proxy
+    Proxy -->|"/api"| Api
+    Proxy -->|"1. rewritten pages"| Back
+    Proxy -->|"2. everything else"| Old
+    Api --> Conn --> Legacy
+    Conn -.-> PgP
+    Legacy -->|"GeneWeb binaries"| Gwb
+    Old --> Gwb
+    PgP -.-> Pg
+```
+
+The new API and the OCaml servers share the same `.gwb` files, so a database created on one side is visible on the other. Pages can then be moved one at a time:
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant P as Fallback proxy
+    participant S as Backoffice (SvelteKit)
+    participant O as gwsetup (OCaml)
+    B->>P: GET /list
+    P->>S: GET /list
+    S-->>P: 200
+    P-->>B: rewritten page
+    B->>P: GET /gwsetup?v=merge.htm
+    P->>S: GET /gwsetup?v=merge.htm
+    S-->>P: 404
+    P->>O: GET /gwsetup?v=merge.htm
+    O-->>P: 200
+    P-->>B: original page
+```
+
+Genealogical data goes through one interface, `DatabaseProvider`, with two implementations: `LegacyDB` for `.gwb` files, and a PostgreSQL one that is still to be written.
+
+```
+new_geneweb/
+  backend/            FastAPI API, proxy, persistence, Alembic migration
+  backoffice/         SvelteKit administration front end
+  frontend/           SvelteKit public front end (scaffold)
+  database_schemas/   SQL tables and their documentation
+nginx/                reverse proxy, HTTPS or HTTP
+geneweb/              original OCaml source code
+geneweb_docker/       Docker image of the original GeneWeb
+tests/functional/     pytest suite for the OCaml binaries
+tests/end-to-end/     Playwright tests, for the original and the new pages
+docs/geneweb/         documentation of the original code
+.github/workflows/    CI for each component
+```
+
+## Run
+
+Requires Docker with Compose. The first build compiles GeneWeb from its sources.
 
 ```bash
-docker compose up --build   # starts PostgreSQL, the backend and the backoffice
+docker compose up --build
 ```
 
-## Migration: Legacy OCaml (Caml) to Python Tooling
+| Address | Content |
+|---|---|
+| `https://localhost:2316` | Administration, with the credentials set in `docker-compose.yml` |
+| `https://localhost:2317` | Family trees |
+| `https://localhost:2317/api/docs` | Swagger documentation of the API |
 
-Some auxiliary scripts and future automation may move to Python while core performance‑critical genealogy logic remains in OCaml. This section outlines the migration approach.
+The certificate is self-signed. For plain HTTP, add `-f docker-compose.yml -f compose.http.yml` after `docker compose`. See [nginx/README.md](nginx/README.md) for trusted certificates.
 
-Goals:
-* Preserve proven OCaml algorithms (graph traversal, consanguinity, relationship calculus).
-* Allow rapid scripting, data munging, and integration tasks in Python.
-* Maintain a stable RPC / CLI boundary so existing deployments continue to work.
+| Method | Route, under `/api` | State |
+|---|---|---|
+| GET, POST | `/bases` | Works on `.gwb` databases |
+| DELETE | `/bases/{base_name}` | Works on `.gwb` databases |
+| POST, GET, DELETE | `/bases/{base_id}/individuals` | Contract only, fixed answers |
+| POST, PUT, PATCH, GET, DELETE | `/bases/{base_id}/families` | Contract only, fixed answers |
 
-Strategy:
-1. Identify candidates for Python re‑implementation: standalone one‑shot tools, data export filters, reporting, simple format converters where performance is not critical.
-2. Define clear boundaries: OCaml keeps internal database representation, indexing, caching, and heavy computations; Python consumes exposed JSON/RPC endpoints or CLI outputs.
-3. Add thin adapters instead of duplicating logic. Prefer: gwd RPC → Python client library → user scripts.
-4. Introduce a `python/` directory (when first Python module lands) with its own `pyproject.toml` or `requirements.txt` and tests.
-5. Data exchange format: JSON (UTF‑8). Avoid bespoke text parsing; if an endpoint lacks JSON today, add a parallel `--json` or `?fmt=json` flag.
-6. Testing: mirror a small golden dataset; assert parity between OCaml tool output and Python rewrite before deprecating the former.
-7. Gradual deprecation: mark legacy OCaml helper with `@deprecated` note in its help text once the Python version reaches feature parity; remove only after two minor releases.
+## Tests
 
-Interfacing Options (choose case‑by‑case):
-* Process boundary (preferred): Python `subprocess` calls existing binaries with `--json` output.
-* HTTP/RPC: Python client queries running `gwd` for dynamic data.
-* FFI (last resort): Use `pyml` or C stubs only if zero‑copy access gives measurable win (benchmark first).
+Requires Python 3.13 with Poetry, Node.js 20 or later, and opam with OCaml 4.14.1. The back end tests call the OCaml binaries, so build the engine first.
 
-Commit Tagging for Migration:
-* `feat(python):` new Python module/tool.
-* `refactor(lib):` extracted logic to make it callable from both sides.
-* `chore(build):` added Python packaging / CI wiring.
-* `docs(migration):` updates to this section.
+```bash
+# Original engine: build and unit tests
+cd geneweb
+opam install . --deps-only --with-test
+ocaml ./configure.ml && make distrib
+dune runtest
 
-Readiness Checklist for Each Migrated Tool:
-* Parity test added (`tests/python_parity/` suggested path).
-* Benchmark (if performance relevant) shows <10% regression or justified.
-* Documentation updated (usage examples in root or `python/README.md`).
-* Release notes mention availability + any flags changed.
+# Functional tests of the OCaml binaries (needs pytest)
+cp -r distribution/gw ../tests/functional/binaries
+cd .. && python3 -m pytest tests/functional
 
-Open Questions (track via issues):
-* Standard authentication handshake for Python client to authenticated endpoints.
-* Unified schema definition (e.g., JSON Schema or OpenAPI) auto‑generated from OCaml types.
-* Packaging strategy (single `geneweb-tools` PyPI package vs multiple).
+# Back end: lint, types and tests
+cd new_geneweb/backend
+poetry install --no-root
+export DATABASE_URL=postgresql+asyncpg://user:password@localhost/geneweb
+export BACKOFFICE_USERNAME=admin BACKOFFICE_PASSWORD=admin
+GW=$(realpath ../../geneweb/distribution/gw)
+export GWB_PATH=$(mktemp -d) GWC_BIN=$GW/gwc GWB2GED_BIN=$GW/gwb2ged GED2GWB_BIN=$GW/ged2gwb
+poetry run ruff check . && poetry run mypy app/
+poetry run pytest
 
-If you plan a Python migration PR: open an issue labeled `migration` describing scope, boundary, expected gains, and deprecation timeline.
+# Backoffice: unit tests and build
+cd ../backoffice
+npm ci
+npm run test:unit -- --run
+npm run build
+```
+
+The end-to-end tests need a running stack: see [tests/end-to-end/Readme.md](tests/end-to-end/Readme.md).
+
+## Project status
+
+This is a school project, kept as it was delivered. The migration is at its beginning, and the code has these known limits:
+
+- the family and individual routes validate their input but do not store anything yet, and they require no authentication
+- the `.gwb` connector runs `gwb2ged` and `ged2gwb` in the wrong folder, so it cannot load persons and families from a real database. Its unit tests mock these binaries
+- PostgreSQL holds the schema only: genealogical data stays in `.gwb` files, and the `DATABASE_URL` in `docker-compose.yml` has a `schema` parameter that `asyncpg` rejects
+- the public front end is an empty scaffold, disabled in `docker-compose.yml`
+- an invalid or duplicate database name returns a 500 error
+- the default credentials are for local use only
+- the Docker network uses `173.20.0.0/16`, which is not a private range
+- the end-to-end workflow refers to a `docker-compose.dev.yml` file that is now `compose.dev.yml`
+- `npm run check` reports type errors in the backoffice, in generated message code and tests
 
 ## Documentation
-* Main OCaml project README (build, usage, links): [`geneweb/README.md`](geneweb/README.md)
-* Community wiki: https://geneweb.tuxfamily.org/
-* Colab demo / quick exploration: `geneweb/geneweb_colab.ipynb`
-* Contributor guide: `geneweb/CONTRIBUTING.md`
 
-## Commit Convention
+- [docs/geneweb/](docs/geneweb/README.md): how the original code works (architecture, storage format, algorithms, binaries)
+- [new_geneweb/README.md](new_geneweb/README.md): target architecture
+- [new_geneweb/backend/](new_geneweb/backend/README.md), [backoffice/](new_geneweb/backoffice/README.md), [database_schemas/](new_geneweb/database_schemas/README.md): component guides
+- [TESTING.md](TESTING.md): testing strategy
+- [CONTRIBUTING.md](CONTRIBUTING.md): workflow and commit convention
 
-We use a lightweight variant of Conventional Commits to keep history and changelog generation coherent.
+Some of these documents describe earlier stages or planned features.
 
-Format:
+## Team
 
-```
-<type>(<scope>): <short summary>
+Epitech team project (September 2025 to February 2026):
 
-[optional body]
-[optional footer(s)]
-```
+- [Yann Lebib](https://github.com/LebibYann): back end foundation, API contract, SvelteKit scaffolds, tests of the OCaml binaries, CI
+- [Lenny Vigeon](https://github.com/Linnchoeuh): documentation of the original code, database design, backoffice pages, fallback proxy, authentication, nginx, Docker, CI and end-to-end tests
+- [Mardochée Zossoungbo](https://github.com/itsmardochee): database connector, `.gwb` and PostgreSQL providers, SQLAlchemy models, migration and scripts, back end tests
+- [Enzo Pfeiffer](https://github.com/diouck01): setup of the original project, test policy and plan, first end-to-end tests
 
-Rules:
-* Use lowercase type; imperative mood in summary ("add support", "fix crash", "refactor parser").
-* Keep summary ≤ 72 chars; wrap body at ~100 chars.
-* Reference issues with `Refs: #123` or close them with `Closes: #123` in footers.
-* Multiple scopes allowed: `feat(lib,templates): ...` (keep to ≤2 when possible).
-* Breaking changes: add `!` after type or scope and a `BREAKING CHANGE:` footer explaining migration.
+The `geneweb/` folder is the work of the [GeneWeb project](https://github.com/geneweb/geneweb) and is distributed under the GPL-2.0: see [geneweb/LICENSE](geneweb/LICENSE).
 
-Accepted types:
-* `feat` – new user or API feature
-* `fix` – bug fix
-* `perf` – performance optimization
-* `refactor` – code change without feature/bug impact
-* `docs` – documentation only (README, guides, comments)
-* `test` – add or adjust tests
-* `build` – build system, opam/dune adjustments
-* `ci` – continuous integration / workflows
-* `chore` – maintenance (dependencies, scripts) with no code impact
-* `style` – formatting, whitespace (no logic changes)
-* `i18n` – translations or lexicon updates
-* `templates` – template/UI layer changes
-* `plugins` – plugin additions or modifications
+## My contribution
 
-Common scopes:
-`core`, `lib`, `ui`, `server`, `api`, `templates`, `plugins`, `build`, `deps`, `docs`, `i18n`, `tests`.
+Several branches were squashed on merge, so some commits group the work of several people: the commit `feat: functionnal hybrid modernized app`, under my name, merges the work of the whole team. My own part, from the commits:
 
-Examples:
-```
-feat(server): add PDF/HTML document route m=DOC
-fix(lib): guard cousin cache when base has single individual
-perf(core): reduce consanguinity computation allocations
-refactor(templates): extract carousel component logic
-docs(readme): add commit convention section
-feat(lib)!: switch default archival format to gwplus
-BREAKING CHANGE: old .gw output requires flag -old_gw to export legacy format.
-```
-
-Commit Hygiene:
-* One logical change per commit; split large refactors.
-* Run `make fmt` and relevant tests/bench (where available) before pushing.
-* Avoid committing generated artifacts (build outputs, temporary caches).
+- **Tests of the original engine**: a pytest suite that runs the OCaml binaries on a sample family tree (import, export, comparison, repair), and the first CI workflows for OCaml unit and functional tests
+- **Back end foundation**: FastAPI project structure, settings, async SQLAlchemy and Alembic setup, Docker image and Compose service, pre-commit hooks, linting and type checking, CI workflow
+- **API contract**: first version of the base, family and individual routes, with their Pydantic schemas, service layer, tests and Swagger documentation. Lenny and Mardochée then connected the base routes to the `.gwb` files
+- **Database schema**: child, individual event and family event tables
+- **SvelteKit scaffolds**: backoffice and public front end with TypeScript, Tailwind CSS, accessibility linting and Lighthouse CI, their Dockerfiles and CI workflows. The backoffice pages were written by Lenny
+- **Guides**: root contributing guide, and README and contributing guides for the back end and both front ends

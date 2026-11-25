@@ -1,0 +1,2 @@
+# Keep the ssl directory but ignore its contents by default
+# When mkcert certificates are generated, they'll be included in the build

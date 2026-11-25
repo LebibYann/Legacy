@@ -1,10 +1,8 @@
-name: Unit Tests (OCaml)
+name: ocaml-unit-tests
 
 on:
   push:
-    branches: ["**"]
     paths:
-      - "geneweb/**"
       - ".github/workflows/unit-tests.yml"
   pull_request:
     paths:
@@ -13,6 +11,7 @@ on:
 
 jobs:
   ocaml-tests:
+    name: 🧪 OCaml Unit Tests
     runs-on: [self-hosted]
     steps:
       - name: Checkout
@@ -20,18 +19,18 @@ jobs:
 
       - name: Install system packages
         run: |
-          sudo apt-get update -y 
+          sudo apt-get update -y
           sudo apt-get install -y opam m4 libgmp-dev libpcre3-dev zlib1g-dev pkg-config git libpcre2-dev xdot
           opam init --disable-sandboxing -y
           opam switch create 4.14.1 -y
 
       - name: Install OCaml deps
         working-directory: geneweb
-        run: | 
+        run: |
           eval "$(opam env)"
           opam install . --deps-only --with-test -y
           ocaml ./configure.ml
-        
+
       - name: Run dune tests
         working-directory: geneweb
         run: |

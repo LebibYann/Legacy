@@ -1,36 +1,32 @@
+import { defineConfig, loadEnv } from 'vite';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
 
-export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
-	test: {
-		expect: { requireAssertions: true },
-		projects: [
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'client',
-					environment: 'browser',
-					browser: {
-						enabled: true,
-						provider: 'playwright',
-						instances: [{ browser: 'chromium', headless: true }]
-					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**'],
-					setupFiles: ['./vitest-setup-client.ts']
-				}
-			},
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
+export default defineConfig(({ mode }) => {
+	// Charge les variables .env selon le mode (development, production, etc.)
+	const env = loadEnv(mode, process.cwd(), '');
+
+	return {
+		plugins: [
+			paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' }),
+			tailwindcss(),
+			sveltekit()
+		],
+		server: {
+			allowedHosts: [process.env.BACKOFFICE_DNS ?? env.BACKOFFICE_DNS ?? 'backoffice'],
+			port: Number(process.env.NEW_BACKOFFICE_PORT ?? env.NEW_BACKOFFICE_PORT ?? 5173),
+			hmr: {
+				protocol: 'ws',
+				host: 'localhost',
+				port: Number(process.env.OLD_BACKOFFICE_PORT ?? env.OLD_BACKOFFICE_PORT ?? 2316)
 			}
-		]
-	}
+		},
+		test: {
+			expect: { requireAssertions: true },
+			environment: 'node',
+			include: ['tests/**/*.{test,spec}.ts'],
+			exclude: ['tests/**/*.svelte.{test,spec}.ts', 'tests/**/*.browser.{test,spec}.ts']
+		}
+	};
 });

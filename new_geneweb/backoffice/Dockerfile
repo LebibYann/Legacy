@@ -1,20 +1,22 @@
-# ---- Dev stage ----
-FROM node:20-alpine
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy the code
+COPY . .
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the code
-COPY . .
+# Build the application
+RUN npm run build
 
 # Expose Vite dev server port
 EXPOSE 5173
 
+# Create .env file
+RUN echo "PORT=5173" > .env
+
 # Start the dev server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["node", "--env-file=.env", "build"]

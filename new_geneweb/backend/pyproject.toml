@@ -4,7 +4,7 @@ version = "0.1.0"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "3.12.3"
+python = "^3.13"
 fastapi = "^0.117.1"
 uvicorn = {extras = ["standard"], version = "^0.36.0"}
 pydantic = "^2.11.9"
@@ -12,6 +12,10 @@ pydantic-settings = "^2.10.1"
 sqlalchemy = "^2.0.43"
 asyncpg = "^0.30.0"
 alembic = "^1.16.5"
+gunicorn = "^23.0.0"
+python-gedcom = "^1.0.0"
+httpx = "^0.28.1"
+websockets = "^15.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"
@@ -23,24 +27,23 @@ ruff = "^0.13.1"
 pre-commit = "^4.3.0"
 pytest-watch = "^4.2.0"
 pytest-cov = "^7.0.0"
+pytest-mock = "^3.15.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 100
-target-version = ["py312"]
+target-version = ["py313"]
 
 [tool.ruff]
-line-length = 100
-target-version = "py312"
+target-version = "py313"
 lint.select = ["E","F","I","B","UP","N","S","W","C90"]
-lint.ignore = ["S101"]
+lint.ignore = ["E203","S101"]
 exclude = ["alembic"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 strict = true
 warn_unreachable = true
 disallow_untyped_defs = true

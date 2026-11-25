@@ -1,5 +1,9 @@
 CREATE TABLE title (
     id SERIAL PRIMARY KEY,                -- Unique identifier for this title
+    
+    -- Database reference (REQUIRED for multi-database support)
+    database_id INTEGER NOT NULL,
+    
     individual_id INTEGER NOT NULL,       -- Person holding this title
 
     title TEXT,                           -- Title (e.g., Duke, Baron)
@@ -13,8 +17,15 @@ CREATE TABLE title (
     begin_date_alt DATE,                  -- Alternative/approx start date
     end_date_alt DATE,                    -- Alternative/approx end date
 
-    -- Foreign key
+    -- Foreign keys
+    CONSTRAINT fk_title_database
+        FOREIGN KEY (database_id) REFERENCES geneweb_database(id)
+        ON DELETE CASCADE,
     CONSTRAINT fk_title_individual
         FOREIGN KEY (individual_id) REFERENCES individual(id)
         ON DELETE CASCADE
 );
+
+-- Index for performance
+CREATE INDEX idx_title_database_id ON title(database_id);
+CREATE INDEX idx_title_individual_id ON title(individual_id);

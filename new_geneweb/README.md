@@ -1,36 +1,99 @@
 # New Python-Based Architecture Overview
 
+[UML Version Here](https://editor.plantuml.com/uml/XLLDazf64BtFh-ZQYvq3zfRjNBPSb148JCA7WjOcARo7GMh4r8gHQcO4LbB-x-cPaLZ1PXqEW6RUwtxzgK_QS6MgGywCC3d212MUS0k78aKbnT-OmX6L5eK4hfAzC9YOIY5Z-b78aYj-WAGub8L4QM9JamL522wp73kG57Uyoisua6R13mXJQL1rxa-AbskHcZsykxrbRBEOJ1T_GgIAx_K3S0t--UD7TzBlCrRov95d23S1_K6PGW-Yskn9vNlw6qgZwh8GqjnOTZ0O_Wx_CA3FcRSAutiOH5EOyHeLSSPS6tfs17lkyHUSkKZJ74zSeNQm-Rg3if_DcEVvbk0TwUE0T3ynIVm58-1Q932eAFIeK0Q6UqmU7xpgbuW_daiBPUhYzSB2nIYwbjPnT0OxFoj2awSXrKOLUOxgMkAoH7d5MVw4uzNzOEvdCoeEN4YVvMyogBIGg3NCYamapjHiEPaEoLQCwYYIDan_sjliANwK3pdk35KuNCNJ-3vS3CF_0YcHxGb5nMENjPxAdQBggigrhjVYyjGns4dNPeLbeOKfL0s3b9VKgasYeYK9ROuw4M_YFsQ3FDdZeORbQkupj9eJbhwxk1bcFAbX53pXPk5aqCMUmSxRERQgx5dAJsuRGqtoAVqREyfh6kKOJLN2M56n_AJ4HymDmg--F-tvPEr1jgJDC9EMiuN_uLxHdeQpYRVPAJTjlCE_ccm_S-2iJjRZAuiNMAUq0SOl0UqA6t736vnjrjKecCTl0o6v4gWRiFLraKR2DXVnymlAQaf6jrnJSDODpukiTexS6RLeeKsca1hYcmHwfbRAUOBm9ZjjeUMwH8o2LfDDsIRAgupc9AwrmODJ7Ss-qDQp4ORVAJTs1LiaRMknuuc1cpSeZzuBpU5EP9NYXa3D1lZgvvFEBUiLASdTjMPk-Keqq4kBa-pr_NQzWy_tzr7yzhTukM1-txRtuu0nMcCzDuLzMaoCqN9gRzsoyMnFjb3AMF_S7luINazt80i37su__F8CvFll9MJZgccUBWfFiBCMDBrtQBgbzYJcL5cAtH6isHJEeHqTnlm0zTsStj5sItYfAyeGCdlIEgGYtG4L4uw2mzEKdzdjz5vQQ4zRAxPrMAET7jl2tj4Mv2czOBa1_nOkcNjLkQH-TKQFWe8xK7F3aTgMRtFKZ7sYIR5lx7y1)
 ```mermaid
 ---
 config:
   layout: elk
 ---
-flowchart TD
- subgraph Frontends["Frontends"]
-        F1["**Open frontend**<br><br>Front svelte base (gw)<br>Same behaviour and feature as gw"]
-        F2["**Front svelte config (gwsetup)**<br><br>Same behaviour and feature as gwsetup"]
-  end
- subgraph API["API (Framework FAST API)"]
-        API1["**Open endpoints**<br><br>Same behaviour and feature as gw"]
-        API2["**Restricted endpoints (IP restricted)**<br><br>Same behaviour and feature as gwsetup<br>New endpoints to replace binaries:<br>• gwc<br>• gwb2ged<br>• ged2gwb<br>• etc..."]
-  end
- subgraph DB["DB Connector (Encapsulation)"]
-        DBS["DB Connector (SQLAlchemy)"]
-  end
- subgraph Backend_Python["Backend Python (gw/gwsetup)"]
-        API
-        DP["**Data processing**<br><br>consang<br>ged2gwb<br>gwb2ged<br>gwu"]
-        DB
-  end
-    ENV["env file<br>to set parameters"] --> Backend_Python
-    PLUG["Plugins"] --> Backend_Python
-    F1 <--> API1
-    F2 <--> API2
-    API --> DP
-    DP <--> DB
-    DBS --> DB
-    DBP["DB postgre (.gwb)"] <--> DBS
-    API1 <--> DB
+%%----------------------------------------------------
+%% Geneweb modernized version architecture (Mermaid)
+%%----------------------------------------------------
+%% Syntax: GitHub-compatible Mermaid 10.x
+%%----------------------------------------------------
+flowchart TB
+    %% General direction: top-to-bottom
+    classDef proxy fill:#f0f0f0,stroke:#888,stroke-width:1px
+    classDef backend fill:#f7faff,stroke:#3366cc,stroke-width:1px
+    classDef domain fill:#eef7ff,stroke:#3366cc,stroke-width:1px
+    classDef infra fill:#f4faff,stroke:#6699cc,stroke-width:1px
+    classDef frontend fill:#fef7ff,stroke:#b366cc,stroke-width:1px
+    classDef legacy fill:#fff9f4,stroke:#cc9966,stroke-width:1px
+    classDef db fill:#f5fff5,stroke:#66aa66,stroke-width:1px
+    classDef config fill:#fffff5,stroke:#aaaa44,stroke-width:1px
+
+    %%----------------------------------------------------
+    %% Proxy layer
+    %%----------------------------------------------------
+    NGINX["NGINX Proxy<br/><i>&lt;&lt;Proxy&gt;&gt;</i>"]:::proxy
+
+    %%----------------------------------------------------
+    %% Backend
+    %%----------------------------------------------------
+    subgraph BACK["Backend - Python 3 - Entrypoint"]
+        subgraph API["REST API Layer - FastAPI"]
+            subgraph MW["Middlewares"]
+                FB["Fallback Proxy<br/><i>&lt;&lt;Middleware&gt;&gt;</i>"]
+                BA["Basic Auth Port Check<br/><i>&lt;&lt;Middleware&gt;&gt;</i>"]
+            end
+            subgraph ENDP["Endpoints"]
+                REND["Basic Auth Endpoints<br/><i>&lt;&lt;Controller&gt;&gt;</i>"]
+                OEND["Open Endpoints<br/><i>&lt;&lt;Controller&gt;&gt;</i>"]
+            end
+        end
+
+        LOGIC["Domain Layer<br/>Business Logic<br/><i>&lt;&lt;Service&gt;&gt;</i>"]:::domain
+
+        subgraph PERSISTENCE["Infrastructure Layer"]
+            REPO["Repository Adapter<br/><i>&lt;&lt;Adapter&gt;&gt;</i>"]
+            ORM["SQLAlchemy ORM<br/><i>&lt;&lt;ORM&gt;&gt;</i>"]
+            LEGAORM["Legacy DBy ORM<br/><i>&lt;&lt;ORM&gt;&gt;</i>"]
+        end
+    end
+
+    PLUGINS["Plugin System<br/><i>&lt;&lt;Extension&gt;&gt;</i>"]
+    ENV[".env Configuration<br/><i>&lt;&lt;Config&gt;&gt;</i>"]:::config
+
+    %%----------------------------------------------------
+    %% Frontends
+    %%----------------------------------------------------
+    FrontGWSetup["GeneWeb Setup Frontend - Svelte 5<br/><i>&lt;&lt;Component&gt;&gt;</i>"]:::frontend
+    FrontGW["GeneWeb Frontend - Svelte 5<br/><i>&lt;&lt;Component&gt;&gt;</i>"]:::frontend
+
+    %%----------------------------------------------------
+    %% Legacy
+    %%----------------------------------------------------
+    subgraph LEGACY["Legacy Geneweb"]
+        GWF["GeneWeb Frontend<br/><i>&lt;&lt;Component&gt;&gt;</i>"]
+        GWS["GeneWeb Setup<br/><i>&lt;&lt;Component&gt;&gt;</i>"]
+        GWD["Geneweb Data<br/><i>&lt;&lt;RDBMS/Binaries&gt;&gt;</i>"]
+    end
+
+    %%----------------------------------------------------
+    %% Databases
+    %%----------------------------------------------------
+    DB["Genealogy Database - PostgreSQL<br/>Replace .gwb database<br/><i>&lt;&lt;RDBMS&gt;&gt;</i>"]:::db
+
+    %%----------------------------------------------------
+    %% Relations
+    %%----------------------------------------------------
+    Internet -->|HTTPS/JSON| NGINX
+    NGINX --> FB
+    FB --> BA
+    BA -->|HTTP/JSON| ENDP
+    FB -->|HTTP - If not 404| FrontGW
+    FB -->|HTTP - If not 404| FrontGWSetup
+    FB -->|HTTP - If new fronts returns 404| LEGACY
+
+    ENDP --> LOGIC
+    LOGIC --> REPO
+    REPO -->|Encapsulate| ORM
+    ORM -->|SQL via SQLAlchemy| DB
+    REPO -->|Encapsulate| LEGAORM
+    LEGAORM --> GWD
+
+    LEGACY -->|Loaded at startup| PLUGINS
+    BACK -->|Environment variables| ENV
 ```
 
 ## Purpose
@@ -91,7 +154,7 @@ Encapsulates migrated logic of legacy binaries:
 | Legacy Binary | New Form | Notes |
 |---------------|----------|-------|
 | gw / gwc (read) | API1 endpoints | Aggregated under resource controllers |
-| gwsetup | API2 endpoints + Admin UI | Auth & IP restriction applied |
+| gwsetup | API2 endpoints + Admin UI | IP restriction applied |
 | ged2gwb | Import service + background task | Streams GEDCOM -> staging -> normalized tables |
 | gwb2ged | Export service | Query -> assemble GEDCOM with consistent ordering |
 | gwu | Maintenance endpoints | Idempotent operations (rebuild indexes, recalc metrics) |
@@ -105,38 +168,13 @@ Encapsulates migrated logic of legacy binaries:
 - Consistency enforcement: database constraints + service invariant checks (e.g. no circular parentage, chronological sanity for life events).
 
 ## Security & Access Control
-- Split open vs restricted routers; enforce authentication/authorization middleware on restricted routes.
-- Optional IP allowlist for sensitive operations (import/export, system maintenance) as defense-in-depth.
-- Input validation & size limits (upload GEDCOM, media attachments) to mitigate resource exhaustion.
-- Planned rate limiting + audit logging of administrative actions.
-
-## Observability
-- Structured logging (JSON) with correlation IDs per request.
-- Metrics (Prometheus): request latency, DB query counts, background job durations.
-- Tracing (OpenTelemetry) optional for complex import/export flows.
-
-## Deployment & Scaling
-- Stateless API layer (horizontal scale with load balancer).
-- Background workers scaled separately for CPU-heavy tasks (consanguinity, diff, import parsing).
-- PostgreSQL vertical scaling + read replicas (future) for heavy read patterns.
-- Plugin hot-reload optional in development; disabled in production for determinism.
-
-## Extensibility Principles
-- Stable public API versioning (`/api/v1/...`).
-- Backward-compatible schema migrations (Liquibase/Alembic) with downgrade scripts where feasible.
-- Domain services expose pure functions for core transforms -> easier unit testing.
-
-## Future Enhancements
-- GraphQL overlay for richer client queries (optional).
-- WebSocket channels for long-running job progress updates (imports, consang recalculation).
-- Caching layer (Redis) for high-traffic endpoints (e.g. person detail, ancestry views).
-- Fine-grained authorization (role/permission matrix) beyond current open/restricted split.
-- Incremental adoption of event sourcing for auditing critical mutations.
+- Split open vs restricted routers
+- Mandatory IP allowlist for sensitive operations (import/export, system maintenance)
 
 ## Related Documentation
-- Legacy storage format: `../docs/geneweb/architecture/storage-format.md`
-- Enumerations & schema: `./database_schemas/README.md`
-- Consanguinity algorithm deep-dive: `../docs/geneweb/algorithms/consanguinity.md`
+- [Legacy storage format](../docs/geneweb/architecture/storage-format.md)
+- [Enumerations & schema](./database_schemas/README.md)
+- [Consanguinity algorithm deep-dive](../docs/geneweb/algorithms/consanguinity.md)
 
 ## Change Log
 - 2025-09-12: Added architecture explanation sections below diagram.
